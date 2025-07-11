@@ -45,11 +45,22 @@ zinit snippet https://github.com/sainnhe/dotfiles/raw/master/.zsh-theme/gruvbox-
 zinit load 'zsh-users/zsh-history-substring-search'
 zinit ice wait atload'_history_substring_search_config'
 
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
 zinit ice wait'1' lucid as"completion" mv'chezmoi.zsh -> _chezmoi'
 zinit snippet https://raw.githubusercontent.com/twpayne/chezmoi/master/completions/chezmoi.zsh
 
-zinit ice wait'1' lucid as"completion"
-zinit snippet https://github.com/jdx/mise/raw/refs/heads/main/completions/_mise
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
+zinit light wintermi/zsh-mise
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 
 ################
 ### OPTIONS
@@ -62,11 +73,11 @@ HISTFILE=~/.zsh_history
 ### ENVIRONMENT
 ################
 export EDITOR='nvim'
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 ################
 ### ALIASES
 ################
 alias n=nvim
-alias nvc='NVIM_APPNAME=nvimclean nvim'
 
 eval "$(mise activate zsh)"

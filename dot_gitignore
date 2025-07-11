@@ -1,3 +1,7 @@
 .vscode/
 .crossnote/
 .factorypath
+mise.toml
+.project
+.classpath
+.settings/

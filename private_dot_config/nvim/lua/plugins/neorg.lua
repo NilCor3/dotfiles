@@ -1,25 +1,25 @@
 return {
   {
-    "nvim-neorg/neorg",
+    'nvim-neorg/neorg',
     lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-    version = "*", -- Pin Neorg to the latest stable release
-    build = ":Neorg sync-parsers",
+    version = '*', -- Pin Neorg to the latest stable release
+    build = ':Neorg sync-parsers',
     config = function()
-      require("nvim-treesitter.install").compilers = { "gcc-14" }
-      require("neorg").setup({
+      require('nvim-treesitter.install').compilers = { 'gcc-14' }
+      require('neorg').setup {
         load = {
-          ["core.defaults"] = {},
-          ["core.concealer"] = {},
-          ["core.dirman"] = {
+          ['core.defaults'] = {},
+          ['core.concealer'] = {},
+          ['core.dirman'] = {
             config = {
               workspaces = {
-                notes = "~/notes",
+                notes = '~/notes',
               },
-              default_workspace = "notes",
+              default_workspace = 'notes',
             },
           },
         },
-      })
+      }
 
       vim.wo.foldlevel = 99
       vim.wo.conceallevel = 2

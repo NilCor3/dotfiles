@@ -6,11 +6,11 @@
 [core]
 	excludesfile = ~/.gitignore
 [diff]
-	tool = nvimdiff
+	tool = diffview
 [merge]
-	tool = nvimdiff
+	tool = diffview
 [mergetool]
 	prompt = false
 	keepBackup = false
-[mergetool "vimdiff"]
-  	layout = "LOCAL,REMOTE / MERGED"
+[mergetool "diffview"]
+	cmd = n -n -c "DiffviewOpen" "$MERGE"
