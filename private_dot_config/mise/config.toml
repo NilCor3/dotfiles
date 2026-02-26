@@ -30,6 +30,8 @@ bottom = 'latest'
 chezmoi = 'latest'
 delta = 'latest'
 age = "latest"
+golangci-lint-langserver = "latest"
+golangci-lint = "latest"
 
 
 [env]

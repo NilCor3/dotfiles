@@ -54,9 +54,84 @@ roots = ["pom.xml", "build.gradle", "mvnw", "gradlew", ".git"]
 language-servers = ["jdtls", "copilot"]
 auto-format = true
 
+[language-server.rust-analyzer.config]
+checkOnSave = true
+# Use clippy instead of plain cargo check — catches more issues and non-idiomatic code
+check.command = "clippy"
+# Run clippy across all feature flag combinations
+check.features = "all"
+# Make rust-analyzer aware of code behind all #[cfg(feature = "...")] guards
+cargo.features = "all"
+# Expand procedural macros (#[derive], tokio::main, etc.) so LSP understands generated code
+procMacro.enable = true
+# Show ref/ref mut hints on pattern bindings
+inlayHints.bindingModeHints.enable = true
+# Show what each closure captures from the environment and how (move, borrow, etc.)
+inlayHints.closureCaptureHints.enable = true
+# Show return type hint on block-body closures |x| { ... }, skip one-liners
+inlayHints.closureReturnTypeHints.enable = "with_block"
+# Show numeric discriminant values on fieldless enum variants (A = 0, B = 1)
+inlayHints.discriminantHints.enable = "fieldless"
+# Show &* reborrow hints to make implicit reborrows in function calls visible
+inlayHints.expressionAdjustmentHints.enable = "reborrow"
+# Show elided lifetimes on functions, skip trivially obvious ones
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+
 [[language]]
 name = "rust"
 roots = ["Cargo.toml", "Cargo.lock"]
 language-servers = ["rust-analyzer", "copilot"]
+# Format with rustfmt using the 2024 edition ruleset on save
 formatter = { command = "rustfmt", args = ["--edition", "2024"] }
 auto-format = true
+
+[language-server.gopls]
+command = "gopls"
+
+[language-server.gopls.config.hints]
+# Show inferred type on := assignments, e.g. x := foo() shows x: MyType
+assignVariableTypes = true
+# Show field names in struct/slice literals that omit them, e.g. Point{1,2} -> Point{x:1, y:2}
+compositeLiteralFields = true
+# Show resolved values of constants inline
+constantValues = true
+# Show inferred generic type parameters on function calls
+functionTypeParameters = true
+# Show parameter names at call sites, e.g. foo(count: 5, verbose: true)
+parameterNames = true
+# Show types of k, v variables in for k, v := range ... loops
+rangeVariableTypes = true
+
+[language-server.gopls.config.analyses]
+# Warn on unused function parameters
+unusedparams = true
+# Warn on unused variables beyond what the compiler catches
+unusedvariable = true
+# Suggest replacing interface{} with any (Go 1.18+)
+useany = true
+# Detect nil pointer dereferences the compiler misses
+nilness = true
+
+[language-server.gopls.config]
+# Use gofumpt rules inside gopls — stricter than gofmt (blank lines, grouping, etc.)
+gofumpt = true
+# Run staticcheck analyses through gopls (style, correctness, performance)
+staticcheck = true
+
+[[language]]
+name = "go"
+roots = ["go.work", "go.mod"]
+language-servers = ["gopls", "copilot"]
+# Format and auto-manage import blocks on save
+formatter = { command = "goimports" }
+auto-format = true
+
+[[language]]
+# LSP support (hover, diagnostics) in go.mod files
+name = "gomod"
+language-servers = ["gopls"]
+
+[[language]]
+# LSP support (hover, diagnostics) in go.work files
+name = "gowork"
+language-servers = ["gopls"]
