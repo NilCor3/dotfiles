@@ -41,6 +41,8 @@ local config = {
 	-- front_end = "WebGpu",
 	webgpu_power_preference = "HighPerformance",
 	disable_default_key_bindings = true,
+
+	native_macos_fullscreen_mode = true,
 }
 
 local colors = require("colors")

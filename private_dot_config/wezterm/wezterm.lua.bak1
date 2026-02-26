@@ -1,0 +1,151 @@
+local wezterm = require("wezterm")
+local config = {}
+
+config.color_scheme = "Gruvbox Material (Gogh)"
+config.font = wezterm.font("FiraMono Nerd Font Mono")
+config.font_size = 14
+
+config.use_fancy_tab_bar = false
+config.native_macos_fullscreen_mode = true
+-- config.window_decorations = "RESIZE"
+
+local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+tabline.setup({
+	options = {
+		icons_enabled = true,
+		theme = "Gruvbox Material (Gogh)",
+		tabs_enabled = true,
+		theme_overrides = {},
+		section_separators = {
+			left = wezterm.nerdfonts.pl_left_hard_divider,
+			right = wezterm.nerdfonts.pl_right_hard_divider,
+		},
+		component_separators = {
+			left = wezterm.nerdfonts.pl_left_soft_divider,
+			right = wezterm.nerdfonts.pl_right_soft_divider,
+		},
+		tab_separators = {
+			left = wezterm.nerdfonts.pl_left_hard_divider,
+			right = wezterm.nerdfonts.pl_right_hard_divider,
+		},
+	},
+	sections = {
+		tabline_a = { "mode" },
+		tabline_b = { "workspace" },
+		tabline_c = { " " },
+		tab_active = {
+			"index",
+			{ "parent", padding = 0 },
+			"/",
+			{ "cwd", padding = { left = 0, right = 1 } },
+			{ "zoomed", padding = 0 },
+		},
+		tab_inactive = { "index", { "process", padding = { left = 0, right = 1 } } },
+		tabline_x = { "ram", "cpu" },
+		tabline_y = { "datetime", "battery" },
+		tabline_z = { "domain" },
+	},
+	extensions = {},
+})
+
+-- local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
+-- smart_splits.apply_to_config(config, {
+-- 	-- the default config is here, if you'd like to use the default keys,
+-- 	-- you can omit this configuration table parameter and just use
+-- 	-- smart_splits.apply_to_config(config)
+
+-- 	-- directional keys to use in order of: left, down, up, right
+-- 	direction_keys = { "h", "j", "k", "l" },
+-- 	-- if you want to use separate direction keys for move vs. resize, you
+-- 	-- can also do this:
+-- 	direction_keys = {
+-- 		move = { "h", "j", "k", "l" },
+-- 		resize = { "LeftArrow", "DownArrow", "UpArrow", "RightArrow" },
+-- 	},
+-- 	-- modifier keys to combine with direction_keys
+-- 	modifiers = {
+-- 		move = "CTRL", -- modifier to use for pane movement, e.g. CTRL+h to move left
+-- 		resize = "META", -- modifier to use for pane resize, e.g. META+h to resize to the left
+-- 	},
+-- 	-- log level to use: info, warn, error
+-- 	log_level = "info",
+-- })
+
+local act = wezterm.action
+
+config.disable_default_key_bindings = true
+config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 2000 }
+config.keys = {
+	
+	---------------------- Window Management ----------------------
+	{ mods = "CTRL|SHIFT", key = "p", action = act.ActivateCommandPalette },
+	-- Open new Wezterm Window
+	{
+		mods = "LEADER",
+		key = "n",
+		action = act.SpawnCommandInNewWindow({ args = { "zsh" }, cwd = default_cwd }),
+	},
+	-- Scrolling using Shortcut
+	{ mods = "SHIFT", key = "PageUp", action = act.ScrollByPage(-0.25) },
+	{ mods = "SHIFT", key = "PageDown", action = act.ScrollByPage(0.25) },
+
+	---------------------- Editing Text ----------------------
+	{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
+	{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
+	{ mods = "CTRL|SHIFT|ALT", key = "c", action = act.ActivateCopyMode },
+	{ mods = "ALT", key = "Escape", action = act.CopyMode("Close") },
+
+	---------------------- Tab Management ----------------------
+	{
+		mods = "LEADER",
+		key = "t",
+		action = act.SpawnTab "CurrentPaneDomain",
+	},
+	{
+    mods = 'LEADER|SHIFT',
+    key = 't',
+    action = act.ShowTabNavigator,
+  },
+  {
+    mods = 'LEADER',
+    key = 'r',
+    action = act.PromptInputLine {
+      description = 'Enter new name for tab',
+      action = wezterm.action_callback(function(window, _, line)
+        -- line will be `nil` if they hit escape without entering anything
+        -- An empty string if they just hit enter
+        -- Or the actual line of text they wrote
+        if line then
+          window:active_tab():set_title(line)
+        end
+      end),
+    },
+  },
+  -- Navigate through Tabs Relatively
+	{ mods = "CTRL", key = "Tab", action = act.ActivateTabRelative(-1) },
+	{ mods = "SHIFT|CTRL", key = "Tab", action = act.ActivateTabRelative(1) },
+	-- Close current active tab
+	{ mods = "LEADER|CTRL", key = "w", action = act.CloseCurrentTab({ confirm = true }) },
+
+	---------------------- Font Management ----------------------
+	{ mods = "LEADER|CTRL", key = "=", action = act.IncreaseFontSize },
+	{ mods = "LEADER|CTRL", key = "-", action = act.DecreaseFontSize },
+	{ mods = "LEADER|CTRL", key = "0", action = act.ResetFontSize },
+
+	---------------------- Pane / Multiplexer Management ----------------------
+	{ mods = "LEADER|SHIFT", key = "|", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ mods = "LEADER", key = "\\", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ mods = "CTRL|ALT|SHIFT", key = "|", action = act.PaneSelect({ alphabet = "0123456789" }) },
+	{ mods = "LEADER|SHIFT", key = "X", action = act.CloseCurrentPane({ confirm = false }) },
+	{ mods = "ALT", key = "Enter", action = act.ToggleFullScreen },
+	{ mods = "ALT", key = "h", action = act.Hide },
+	{ mods = "CTRL|SHIFT", key = "UpArrow", action = act.AdjustPaneSize({ "Up", 1 }) },
+	{ mods = "CTRL|SHIFT", key = "DownArrow", action = act.AdjustPaneSize({ "Down", 1 }) },
+	{ mods = "CTRL|SHIFT", key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 1 }) },
+	{ mods = "CTRL|SHIFT", key = "RightArrow", action = act.AdjustPaneSize({ "Right", 1 }) },
+	{ mods = "CTRL", key = "LeftArrow", action = act.SendString "\x1bb" }, -- Navigate left 1 word
+	{ mods = "CTRL", key = "RightArrow", action = act.SendString "\x1bf" }, -- Navigate right 1 word
+  -- other keys
+}
+
+return config
