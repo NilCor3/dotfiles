@@ -1,0 +1,364 @@
+% git, log
+
+# Show commit log graph  [gl]
+gl
+
+# Show commits by author
+git log --oneline --author="<author>"
+
+# Show changes in a commit
+git show <commit>
+
+# Search commit messages
+git log --oneline --grep="<query>"
+
+# Show file history
+git log --oneline --follow -- <file>
+
+% git, branches
+
+# List all branches including remote  [gb]
+gb -a
+
+# Switch to branch  [gsw]
+gsw <branch>
+
+# Create and switch to new branch  [gsw]
+gsw -c <branch>
+
+# Delete local branch  [gbd]
+gbd <branch>
+
+# Delete remote branch  [gp]
+gp origin --delete <branch>
+
+# Rename current branch  [gb]
+gb -m <new_name>
+
+% git, staging
+
+# Stage all changes  [gaa]
+gaa
+
+# Stage interactively hunk by hunk  [ga]
+ga -p
+
+# Unstage a file
+git restore --staged <file>
+
+# Discard changes in working directory
+git restore <file>
+
+# Show staged diff  [gds]
+gds
+
+% git, commits
+
+# Commit with message  [gcm]
+gcm "<message>"
+
+# Amend last commit without changing message  [gca]
+gca
+
+# Amend last commit message  [gc]
+gc --amend -m "<message>"
+
+# Undo last commit keep changes staged  [gc]
+gc --soft HEAD~1
+
+# Create fixup commit for a specific commit  [gc]
+gc --fixup <commit>
+
+% git, remote
+
+# Push  [gp]
+gp
+
+# Push and set upstream  [gp]
+gp -u origin <branch>
+
+# Force push safely  [gpf]
+gpf
+
+# Pull with rebase  [gpl]
+gpl
+
+# Fetch all remotes and prune deleted branches
+git fetch --all --prune
+
+% git, stash
+
+# Stash with description  [gst]
+gst push -m "<message>"
+
+# List stashes  [gst]
+gst list
+
+# Apply specific stash  [gst]
+gst apply stash@{<index>}
+
+# Pop latest stash  [gstp]
+gstp
+
+# Drop a stash  [gst]
+gst drop stash@{<index>}
+
+% git, rebase
+
+# Interactive rebase on last N commits  [grbi]
+grbi HEAD~<n>
+
+# Interactive rebase on main  [grbi]
+grbi origin/main
+
+# Autosquash fixup commits  [grbi]
+grbi --autosquash origin/main
+
+# Abort rebase  [grb]
+grb --abort
+
+# Continue rebase after resolving conflicts  [grb]
+grb --continue
+
+% git, misc
+
+# Open lazygit  [lg]
+lg
+
+# Cherry-pick a commit
+git cherry-pick <commit>
+
+# Show who changed a line
+git blame <file>
+
+# Clean untracked files dry run
+git clean -nd
+
+# Clean untracked files
+git clean -fd
+
+% go, build & run
+
+# Run current module
+go run .
+
+# Build all packages  [gob]
+gob
+
+# Build with race detector
+go build -race ./...
+
+# Cross-compile for Linux
+GOOS=linux GOARCH=amd64 go build -o <output> ./...
+
+% go, testing
+
+# Run all tests verbose  [gota]
+gota
+
+# Run all tests in specific package  [gota]
+gota ./<package>/...
+
+# Run tests matching name partial or full  [got]
+got <name>
+
+# Run tests matching name in specific package  [got]
+got <name> ./<package>/...
+
+# Run with race detector
+go test -race ./...
+
+# Run with coverage report
+go test -cover ./...
+
+# Generate html coverage report
+go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
+
+# Clear test cache  [gocc]
+gocc
+
+% go, modules
+
+# Initialize a new module
+go mod init <module>
+
+# Add missing and remove unused modules  [gom]
+gom
+
+# Upgrade a dependency
+go get <module>@latest
+
+# Upgrade all dependencies
+go get -u ./...
+
+% go, tools
+
+# Run linter  [gol]
+gol
+
+# Run linter with auto-fix
+golangci-lint run --fix
+
+# Generate code  [gog]
+gog
+
+# Vet code
+go vet ./...
+
+% rust, build & run
+
+# Build debug  [cb]
+cb
+
+# Build release  [cb]
+cb --release
+
+# Run  [cr]
+cr
+
+# Run with arguments  [cr]
+cr -- <args>
+
+# Run release  [cr]
+cr --release
+
+% rust, testing
+
+# Run all tests  [ct]
+ct
+
+# Run tests matching name  [ct]
+ct <name>
+
+# Run tests with output  [ctv]
+ctv
+
+# Run specific test with output  [ctv]
+ctv <name> -- --nocapture
+
+# Run with all features  [ct]
+ct --all-features
+
+% rust, code quality
+
+# Check without building  [cc]
+cc
+
+# Run clippy  [ccl]
+ccl
+
+# Run clippy auto-fix  [cclf]
+cclf
+
+# Format code  [cf]
+cf
+
+# Format all  [cfa]
+cfa
+
+# Format check only (CI)  [cf]
+cf -- --check
+
+% rust, dependencies
+
+# Add a dependency
+cargo add <crate>
+
+# Add a dev dependency
+cargo add --dev <crate>
+
+# Update all dependencies
+cargo update
+
+# Show dependency tree
+cargo tree
+
+% rust, misc
+
+# Generate and open docs  [cdoc]
+cdoc
+
+# Clean build artifacts
+cargo clean
+
+% npm, packages
+
+# Install dependencies
+npm install
+
+# Add a dependency
+npm install <package>
+
+# Add a dev dependency
+npm install --save-dev <package>
+
+# Remove a package
+npm uninstall <package>
+
+# Show outdated packages
+npm outdated
+
+# Audit for vulnerabilities
+npm audit
+
+# Fix audit issues
+npm audit fix
+
+% npm, scripts
+
+# Run a script
+npm run <script>
+
+# List available scripts
+npm run
+
+# Run tests
+npm test
+
+# Run build
+npm run build
+
+# Run dev server
+npm run dev
+
+% chezmoi, daily
+
+# Check what has changed home vs source
+chezmoi diff
+
+# Pull home dir changes back into source
+chezmoi re-add
+
+# Apply source to home dir
+chezmoi apply
+
+# Add a new file to chezmoi
+chezmoi add <file>
+
+# Show managed files
+chezmoi managed
+
+# Show status of all managed files
+chezmoi status
+
+# Edit a managed file in source
+chezmoi edit <file>
+
+% chezmoi, git
+
+# Show git log of dotfiles repo
+chezmoi git -- log --oneline
+
+# Push dotfiles
+chezmoi git -- push
+
+# Pull latest dotfiles from remote
+chezmoi update
+
+% chezmoi, secrets & misc
+
+# Force re-run of a run_once script
+chezmoi state delete-bucket --bucket=scriptState
+
+# Open source directory
+chezmoi cd
