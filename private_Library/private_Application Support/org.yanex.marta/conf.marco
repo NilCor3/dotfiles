@@ -1,0 +1,7 @@
+behavior {
+    theme "Kon"
+}
+
+keyBindings {
+    "Shift+Space" "core.select"
+}
