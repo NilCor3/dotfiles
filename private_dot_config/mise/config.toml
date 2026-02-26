@@ -32,6 +32,7 @@ delta = 'latest'
 age = "latest"
 golangci-lint-langserver = "latest"
 golangci-lint = "latest"
+rumdl = "latest"
 
 
 [env]
