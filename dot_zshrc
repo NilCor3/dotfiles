@@ -81,4 +81,52 @@ export SSH_AUTH_SOCK=/Users/joakim.karlsson/Library/Containers/com.bitwarden.des
 ################
 alias n=nvim
 
+# --- Git ---
+alias g='git'
+alias gs='git status'
+alias ga='git add'
+alias gaa='git add --all'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias gca='git commit --amend --no-edit'
+alias gp='git push'
+alias gpf='git push --force-with-lease'
+alias gpl='git pull --rebase'
+alias gco='git checkout'
+alias gsw='git switch'
+alias gb='git branch'
+alias gbd='git branch -d'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gl='git log --oneline --graph --decorate'
+alias gst='git stash'
+alias gstp='git stash pop'
+alias grb='git rebase'
+alias grbi='git rebase -i'
+alias lg='lazygit'
+
+# --- Go ---
+alias gob='go build ./...'
+alias gom='go mod tidy'
+alias gog='go generate ./...'
+alias gol='golangci-lint run'
+alias gocc='go clean -testcache'
+
+# Run all tests
+gota() { go test -v "${1:-./...}" }
+# Run tests matching a partial or full name: got myFunc, got TestMyFunc, got myFunc ./pkg/...
+got() { go test -v -run ".*${1}.*" "${2:-./...}" }
+
+# --- Rust ---
+alias cb='cargo build'
+alias cr='cargo run'
+alias ct='cargo test'
+alias ctv='cargo test -- --nocapture'
+alias cc='cargo check'
+alias ccl='cargo clippy'
+alias cclf='cargo clippy --fix'
+alias cf='cargo fmt'
+alias cfa='cargo fmt --all'
+alias cdoc='cargo doc --open'
+
 eval "$(mise activate zsh)"
