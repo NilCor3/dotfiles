@@ -72,8 +72,9 @@ HISTFILE=~/.zsh_history
 ################
 ### ENVIRONMENT
 ################
-export EDITOR='nvim'
-export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+export EDITOR='hx'
+export PATH="/opt/homebrew/opt/postgresql@15/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
+export SSH_AUTH_SOCK=/Users/joakim.karlsson/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
 ################
 ### ALIASES

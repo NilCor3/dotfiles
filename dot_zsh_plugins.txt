@@ -1,0 +1,6 @@
+# Basic Zsh plugins are defined in user/repo format
+jeffreytse/zsh-vi-mode
+
+agkozak/zsh-z
+
+mattmc3/ez-compini

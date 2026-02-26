@@ -1,72 +1,197 @@
 local wezterm = require("wezterm")
-local config = {}
+local mux = wezterm.mux
+wezterm.log_info("The config was reloaded for this window!")
 
-config.color_scheme = "Gruvbox Material (Gogh)"
-config.font = wezterm.font("FiraMono Nerd Font Mono")
+local function mergeTables(t1, t2)
+	for key, value in pairs(t2) do
+		t1[key] = value
+	end
+end
 
-config.use_fancy_tab_bar = false
-config.native_macos_fullscreen_mode = true
+local function basename(s)
+	return string.gsub(s, "(.*[/\\])(.*)", "%2")
+end
 
-local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-tabline.setup({
-	options = {
-		icons_enabled = true,
-		theme = "Gruvbox Material (Gogh)",
-		tabs_enabled = true,
-		theme_overrides = {},
-		section_separators = {
-			left = wezterm.nerdfonts.pl_left_hard_divider,
-			right = wezterm.nerdfonts.pl_right_hard_divider,
-		},
-		component_separators = {
-			left = wezterm.nerdfonts.pl_left_soft_divider,
-			right = wezterm.nerdfonts.pl_right_soft_divider,
-		},
-		tab_separators = {
-			left = wezterm.nerdfonts.pl_left_hard_divider,
-			right = wezterm.nerdfonts.pl_right_hard_divider,
-		},
+local config = {
+	enable_kitty_keyboard = true,
+	default_workspace = "~",
+	font = require("font").font,
+	font_rules = require("font").font_rules,
+	warn_about_missing_glyphs = false,
+
+	window_padding = {
+		left = 0,
+		right = 0,
+		top = 0,
+		bottom = 0,
 	},
-	sections = {
-		tabline_a = { "mode" },
-		tabline_b = { "workspace" },
-		tabline_c = { " " },
-		tab_active = {
-			"index",
-			{ "parent", padding = 0 },
-			"/",
-			{ "cwd", padding = { left = 0, right = 1 } },
-			{ "zoomed", padding = 0 },
-		},
-		tab_inactive = { "index", { "process", padding = { left = 0, right = 1 } } },
-		tabline_x = { "ram", "cpu" },
-		tabline_y = { "datetime", "battery" },
-		tabline_z = { "domain" },
+	hide_tab_bar_if_only_one_tab = false,
+	hide_mouse_cursor_when_typing = true,
+	inactive_pane_hsb = {
+		brightness = 0.7,
 	},
-	extensions = {},
+	scrollback_lines = 10000,
+	audible_bell = "Disabled",
+	enable_scroll_bar = true,
+
+	status_update_interval = 1000,
+	xcursor_theme = "Adwaita", -- fix cursor bug on gnome + wayland
+
+	max_fps = 120,
+	-- front_end = "WebGpu",
+	webgpu_power_preference = "HighPerformance",
+	disable_default_key_bindings = true,
+}
+
+local colors = require("colors")
+mergeTables(config, colors)
+
+config.leader = { key = "Space", mods = "CTRL|SHIFT", timeout_milliseconds = 1000 }
+config.keys = require("keybinds")
+-- config.mouse_bindings = require("mousebinds")
+
+local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
+modal.apply_to_config(config)
+
+wezterm.on("modal.enter", function(name, window, pane)
+	modal.set_right_status(window, name)
+	modal.set_window_title(pane, name)
+end)
+
+wezterm.on("modal.exit", function(name, window, pane)
+	local title = basename(window:active_workspace())
+	window:set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = colors.colors.ansi[5] } },
+		{ Text = title .. "  " },
+	}))
+	modal.reset_window_title(pane)
+end)
+
+local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
+resurrect.state_manager.periodic_save({
+	interval_seconds = 15 * 60,
+	save_workspaces = true,
+	save_windows = true,
+	save_tabs = true,
 })
+
+resurrect.state_manager.set_encryption({
+	enable = false,
+	private_key = wezterm.home_dir .. "/.age/resurrect.txt",
+	public_key = "age1ddyj7qftw3z5ty84gyns25m0yc92e2amm3xur3udwh2262pa5afqe3elg7",
+})
+
+wezterm.on("resurrect.error", function(err)
+	wezterm.log_error("ERROR!")
+	wezterm.gui.gui_windows()[1]:toast_notification("resurrect", err, nil, 3000)
+end)
+
+local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+workspace_switcher.apply_to_config({})
+
+workspace_switcher.workspace_formatter = function(label)
+	return wezterm.format({
+		{ Attribute = { Italic = true } },
+		{ Foreground = { Color = colors.colors.ansi[3] } },
+		{ Background = { Color = colors.colors.background } },
+		{ Text = "󱂬 : " .. label },
+	})
+end
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, path, label)
+	window:gui_window():set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = colors.colors.ansi[5] } },
+		{ Text = basename(path) .. "  " },
+	}))
+	local workspace_state = resurrect.workspace_state
+
+	workspace_state.restore_workspace(resurrect.state_manager.load_state(label, "workspace"), {
+		window = window,
+		relative = true,
+		restore_text = true,
+
+		resize_window = false,
+		on_pane_restore = resurrect.tab_state.default_on_pane_restore,
+	})
+end)
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window, path, label)
+	wezterm.log_info(window)
+	window:gui_window():set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = colors.colors.ansi[5] } },
+		{ Text = basename(path) .. "  " },
+	}))
+end)
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.selected", function(window, path, label)
+	wezterm.log_info(window)
+	local workspace_state = resurrect.workspace_state
+	resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+	resurrect.state_manager.write_current_state(label, "workspace")
+end)
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.start", function(window, _)
+	wezterm.log_info(window)
+end)
+wezterm.on("smart_workspace_switcher.workspace_switcher.canceled", function(window, _)
+	wezterm.log_info(window)
+end)
 
 local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
 smart_splits.apply_to_config(config, {
-	-- the default config is here, if you'd like to use the default keys,
-	-- you can omit this configuration table parameter and just use
-	-- smart_splits.apply_to_config(config)
-
-	-- directional keys to use in order of: left, down, up, right
 	direction_keys = { "h", "j", "k", "l" },
-	-- if you want to use separate direction keys for move vs. resize, you
-	-- can also do this:
-	direction_keys = {
-		move = { "h", "j", "k", "l" },
-		resize = { "LeftArrow", "DownArrow", "UpArrow", "RightArrow" },
-	},
-	-- modifier keys to combine with direction_keys
 	modifiers = {
-		move = "CTRL", -- modifier to use for pane movement, e.g. CTRL+h to move left
-		resize = "META", -- modifier to use for pane resize, e.g. META+h to resize to the left
+		move = "CTRL",
+		resize = "ALT",
 	},
-	-- log level to use: info, warn, error
-	log_level = "info",
 })
+
+local domains = wezterm.plugin.require("https://github.com/DavidRR-F/quick_domains.wezterm")
+domains.apply_to_config(config, {
+	keys = {
+		attach = {
+			key = "t",
+			mods = "ALT|SHIFT",
+			tbl = "",
+		},
+		vsplit = {
+			key = "_",
+			mods = "CTRL|ALT",
+			tbl = "",
+		},
+		hsplit = {
+			key = "-",
+			mods = "CTRL|ALT",
+			tbl = "",
+		},
+	},
+	auto = {
+		ssh_ignore = true,
+		exec_ignore = {
+			ssh = true,
+			docker = true,
+			kubernetes = true,
+		},
+	},
+})
+
+wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
+	local zoomed = ""
+	if tab.active_pane.is_zoomed then
+		zoomed = " "
+	end
+
+	local index = ""
+	if #tabs > 1 then
+		index = string.format("(%d/%d) ", tab.tab_index + 1, #tabs)
+	end
+
+	return zoomed .. index .. tab.active_pane.title
+end)
+
+wezterm.on("gui-startup", resurrect.state_manager.resurrect_on_gui_startup)
 
 return config

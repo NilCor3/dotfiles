@@ -1,0 +1,14 @@
+[language-server.copilot]
+command = "copilot-language-server"
+args = ["--stdio"]
+
+[language-server.copilot.config]
+editorInfo = { name = "Helix", version = "25.01" }
+editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
+
+[[language]]
+name = "rust"
+roots = ["Cargo.toml", "Cargo.lock"]
+language-servers = ["rust-analyzer", "copilot"]
+formatter = { command = "rustfmt", args = ["--edition", "2024"] }
+auto-format = true

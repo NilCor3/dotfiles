@@ -1,3 +1,5 @@
+[include]
+	path = /Users/joakim.karlsson/.config/delta/themes.gitconfig
 [user]
 	name = Joakim Karlsson
 	email = joakim.karlsson@fortnox.se
@@ -5,12 +7,16 @@
 	rebase = true
 [core]
 	excludesfile = ~/.gitignore
-[diff]
-	tool = diffview
+	pager = delta
+[interactive]
+    diffFilter = delta --color-only
 [merge]
-	tool = diffview
+    conflictStyle = zdiff3
 [mergetool]
 	prompt = false
 	keepBackup = false
-[mergetool "diffview"]
-	cmd = n -n -c "DiffviewOpen" "$MERGE"
+[delta]
+	navigate = true
+	dark = true
+	features = gruvmax-fang
+	side-by-side = false

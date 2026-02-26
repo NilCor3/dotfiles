@@ -3,7 +3,7 @@ idiomatic_version_file_enable_tools = ["node"]
 experimental = true
 
 [tools]
-zellij = "latest"
+java = 'latest'
 lua = "5.1"
 go = "latest"
 "go:github.com/golang-migrate/migrate/v4/cmd/migrate" = { version = "latest", tags = "postgres" }
@@ -11,5 +11,27 @@ node = 'latest'
 'npm:prettier' = 'latest'
 'npm:@bitwarden/cli' = 'latest'
 'npm:tldr' = 'latest'
+'npm:@github/copilot-language-server' = 'latest'
 fzf = 'latest'
+kafka = 'latest'
+python = "latest"
+bat = 'latest'
+glow = 'latest'
+gum = 'latest'
+hurl = 'latest'
+lazygit = 'latest'
+"go:github.com/jorgerojas26/lazysql" = { version = 'latest' }
+maven = 'latest'
+cmake = 'latest'
+ripgrep = 'latest'
+pnpm = 'latest'
+yarn = 'latest'
+bottom = 'latest'
+chezmoi = 'latest'
+delta = 'latest'
+age = "latest"
 
+
+[env]
+_.path = ["/Users/joakim.karlsson/hx/builds/current/bin"]
+HELIX_RUNTIME="~/hx/builds/current/runtime"

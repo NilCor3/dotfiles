@@ -1,0 +1,343 @@
+let mapleader=" "
+
+""" Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+set surround
+set multiple-cursors
+set commentary
+
+set argtextobj
+let g:argtextobj_pairs="[:],(:),<:>
+
+set easymotion
+set notimeout
+
+set textobj-entire
+set mini-ai
+set functiontextobj
+
+set ReplaceWithRegister
+set exchange
+set highlightedyank
+set nerdtree
+
+""" Intellij plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://plugins.jetbrains.com/plugin/23451-fuzzier
+" https://plugins.jetbrains.com/plugin/13360-ideavim-easymotion
+" https://plugins.jetbrains.com/plugin/25897-vim-functiontextobj
+" https://plugins.jetbrains.com/plugin/15976-which-key
+
+""" WhichKey settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set which-key
+let g:WhichKey_FontSize = 16
+let g:WhichKey_CommandColor = "#41ead4"
+let g:WhichKey_PrefixColor = "#f335b2"
+let g:WhichKey_SortOrder = "by_key_prefix_first"
+
+let g:WhichKeyDesc_leader = "<leader> Leader key"
+
+let g:WhichKeyDesc_leader = "<leader>x Open file explorer"
+
+let g:WhichKeyDesc_easymotion = "<leader>j Jump with Easymotion"
+let g:WhichKeyDesc_easymotion_prefix = "<leader><leader>"
+
+let g:WhichKeyDesc_comment = "<leader>c Comment line"
+
+let g:WhichKeyDesc_fold = "<leader>z Folding"
+let g:WhichKeyDesc_fold_all = "<leader>zc Fold all regions"
+let g:WhichKeyDesc_unfold_all = "<leader>zo Unfold all regions"
+
+let g:WhichKeyDesc_window = "<leader>w Window operations"
+let g:WhichKeyDesc_window_split_vertically = "<leader>wv Split vertically"
+let g:WhichKeyDesc_window_split_horizontally = "<leader>ws Split horizontally"
+let g:WhichKeyDesc_window_split_unsplit = "<leader>wu Unsplit"
+let g:WhichKeyDesc_window_split_move_editor = "<leader>wm Move editor to opposite tab group"
+let g:WhichKeyDesc_window_hide_all = "<leader>wf Hide all other windows"
+let g:WhichKeyDesc_window_open_terminal = "<leader>wt Open terminal"
+
+let g:WhichKeyDesc_display = "<leader>d Display options"
+let g:WhichKeyDesc_zen_mode = "<leader>dz Toggle Zen mode"
+let g:WhichKeyDesc_df_mode = "<leader>dd Toggle Distraction-Free mode"
+let g:WhichKeyDesc_fullscreen = "<leader>df Toggle full screen"
+
+let g:WhichKeyDesc_action= "<leader>c Code actions"
+let g:WhichKeyDesc_action_context_menu = "<leader>ca Open context menu"
+let g:WhichKeyDesc_action_format_code = "<leader>cf Format current file"
+let g:WhichKeyDesc_action_optimize_imports = "<leader>co Optimize imports in current file"
+let g:WhichKeyDesc_action_comment_line = "<leader>cl Comment line"
+let g:WhichKeyDesc_action_comment_block = "<leader>cb Comment block"
+
+let g:WhichKeyDesc_file_quickLook = "<leader><leader> Recent files"
+
+let g:WhichKeyDesc_file_nav = "<leader>f File navigation"
+let g:WhichKeyDesc_file_nav_open_file = "<leader>fF Open file by name"
+let g:WhichKeyDesc_file_nav_fuzzy_file = "<leader>ff Fuzzy search file in project"
+let g:WhichKeyDesc_file_nav_fuzzy_file_vcs = "<leader>fv Fuzzy search file in VCS"
+let g:WhichKeyDesc_file_nav_show_recent_files = "<leader>fr Show recent files"
+let g:WhichKeyDesc_file_nav_show_recent_locations = "<leader>fl Show recent locations"
+let g:WhichKeyDesc_file_nav_new_scratch_file = "<leader>fs New scratch file"
+
+let g:WhichKeyDesc_file_manip = "<leader>m File manipulation"
+let g:WhichKeyDesc_file_manip_move_file = "<leader>mf Move file to another directory"
+
+let g:WhichKeyDesc_action= "<leader>s Search"
+let g:WhichKeyDesc_action_search_everywhere = "<leader>ss Search everywhere"
+let g:WhichKeyDesc_action_search_in_path = "<leader>sf Search in path"
+let g:WhichKeyDesc_action_fuzzy_grep = "<leader>sg Fuzzy grep in project"
+
+let g:WhichKeyDesc_close_tab = "<leader>q Close active tab"
+
+let g:WhichKeyDesc_refactoring = "<leader>r Refactoring menu"
+let g:WhichKeyDesc_refactoring_rename = "<leader>rn Rename element"
+let g:WhichKeyDesc_refactoring_method = "<leader>rm Extract method"
+let g:WhichKeyDesc_refactoring_variable = "<leader>rv Introduce variable"
+let g:WhichKeyDesc_refactoring_field = "<leader>rf Introduce field"
+let g:WhichKeyDesc_refactoring_signature = "<leader>rs Change signature"
+let g:WhichKeyDesc_refactoring_all = "<leader>rr Open refactorings list"
+
+let g:WhichKeyDesc_goto = "<leader>g Go to X"
+let g:WhichKeyDesc_goto_declaration = "<leader>gd Go to Definition"
+let g:WhichKeyDesc_goto_type_declaration = "<leader>gy Go to Type Definition"
+let g:WhichKeyDesc_goto_implementation = "<leader>gi Go to Implementation"
+let g:WhichKeyDesc_goto_symbol = "<leader>gs Go to Symbol"
+let g:WhichKeyDesc_goto_usages = "<leader>gu Go to Usages"
+let g:WhichKeyDesc_goto_usages2 = "<leader>gr Go to Usages"
+let g:WhichKeyDesc_goto_test = "<leader>gt Go to Test"
+let g:WhichKeyDesc_goto_back = "<leader>gb Go Back"
+let g:WhichKeyDesc_goto_forward = "<leader>gf Go Forward"
+
+let g:WhichKeyDesc_git = "<leader>v Git operations"
+let g:WhichKeyDesc_git_commit = "<leader>vc Open Git commit dialog"
+let g:WhichKeyDesc_git_status = "<leader>vs Open Git status dialog"
+let g:WhichKeyDesc_git_branches = "<leader>vb Open Git branches list"
+let g:WhichKeyDesc_git_context = "<leader>vv Open Git context menu"
+let g:WhichKeyDesc_git_fuzzier = "<leader>vf Fuzzy search in VCS tracked files"
+let g:WhichKeyDesc_git_rollback = "<leader>vrl Revert selected lines"
+
+let g:WhichKeyDesc_errors = "<leader>e Error navigation"
+let g:WhichKeyDesc_errors_next = "<leader>en Go to next error in solution"
+let g:WhichKeyDesc_errors_prev = "<leader>ep Go to previous error in solution"
+
+let g:WhichKeyDesc_run = "<leader>t Run actions"
+let g:WhichKeyDesc_run_test = "<leader>tr Run current test or class"
+let g:WhichKeyDesc_run_test_class = "<leader>trs Run all tests in current class"
+et g:WhichKeyDesc_run_test_rerun = "<leader>tre Rerun previous run"
+let g:WhichKeyDesc_run_config = "<leader>tc Open run configurations"
+let g:WhichKeyDesc_run_stop = "<leader>h Stop currently running process"
+
+let g:WhichKeyDesc_debug = "<leader>d Debug actions"
+let g:WhichKeyDesc_debug_run = "<leader>dr Debug current test or class"
+let g:WhichKeyDesc_debug_rerun = "<leader>dre Rerun previous debug"
+let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
+let g:WhichKeyDesc_debug_breakpoint_clear_all = "<leader>dx Clear all breakpoints"
+let g:WhichKeyDesc_debug_continue = "<leader>i Continue running from breakpoint"
+let g:WhichKeyDesc_debug_breakpoint_edit_group = "<leader>de Edit breakpoint"
+let g:WhichKeyDesc_debug_breakpoint_edit = "<leader>deb Edit breakpoint"
+let g:WhichKeyDesc_debug_ee = "<leader>dee Open evaluate expression dialog"
+let g:WhichKeyDesc_debug_breakpoint_toggle = "<leader>dt Enable/disable breakpoint"
+let g:WhichKeyDesc_debug_run_to_cursor = "<leader>dc Run to cursor"
+
+let g:WhichKeyDesc_ai = "<leader>a AI actions"
+let g:WhichKeyDesc_ai_chat = "<leader>ac Open AI chat"
+let g:WhichKeyDesc_ai_prompt = "<leader>ap Open AI prompt"
+let g:WhichKeyDesc_ai_suggest = "<leader>as Request AI suggestions"
+
+""" Common settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set showmode
+set showcmd
+set scrolloff=10
+set incsearch
+set ignorecase
+set smartcase
+set hlsearch
+set number
+set relativenumber
+set clipboard+=unnamed
+
+""" Idea specific settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set ideajoin
+set ideastatusicon=gray
+
+" Key mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Choose autocomplete item with Ctrl+y (both normal and insert mode)
+imap <C-y> <Action>(EditorChooseLookupItem)<Action>(InsertInlineCompletionAction)<Action>(EditorChooseLookupItemReplace)
+
+" Save file with Ctrl+s (both normal and insert mode)
+map <C-s> <Action>(SaveAll)
+imap <C-s> <Action>(SaveAll)
+
+" File navigation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>fF <action>(GotoFile)
+map <Leader>ff <action>(com.mituuz.fuzzier.search.Fuzzier)
+map <leader>fr <action>(RecentFiles)
+map <leader><leader> <Action>(RecentFiles)
+map <leader>fl <action>(RecentLocations)
+map <leader>fs <action>(NewScratchFile)
+map <Leader>fv <action>(com.mituuz.fuzzier.search.FuzzierVCS)
+
+" File manipulation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Move file to another directory
+map <Leader>mf <action>(com.mituuz.fuzzier.operation.FuzzyMover)
+
+" Search
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>ss <action>(SearchEverywhere)
+map <leader>sf <action>(FindInPath)
+map <Leader>sg <action>(com.mituuz.fuzzier.grep.FuzzyGrep)
+
+" Tab navigation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <A-n> :tabnext<CR>
+nnoremap <A-p> :tabprev<CR>\
+
+" Pane navigation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-k> <C-w>k
+nnoremap <C-j> <C-w>j
+
+" Jump between methods
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map [[ <Action>(MethodUp)
+map ]] <Action>(MethodDown)
+
+" Easy visual indentation
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Stay in visual mode when indenting
+vnoremap < <gv
+" Stay in visual mode when indenting
+vnoremap > >gv
+
+" Jump around with easymotion
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>j <Plug>(easymotion-s)
+
+" Open NERDTree (use q to exit)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>x :NERDTreeToggle<CR>
+
+" Folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>zc :action CollapseAllRegions<CR>
+map <leader>zo :action ExpandAllRegions<CR>
+
+" Window operations
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>wv <Action>(SplitVertically)
+map <leader>ws <Action>(SplitHorizontally)
+map <leader>wu <Action>(Unsplit)
+map <leader>wm <Action>(MoveEditorToOppositeTabGroup)
+map <leader>wf <Action>(HideAllWindows)
+" Open terminal
+map <leader>wt <Action>(ActivateTerminalToolWindow)
+
+" Code Actions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open the context menu with available code actions
+map <leader>ca <action>(ShowIntentionActions)
+" Format current file
+map <Leader>cf <action>(ReformatCode)
+" Optimize imports in current file
+map <Leader>co <action>(OptimizeImports)
+" Comment line
+map <leader>cl <action>(CommentByLineComment)
+" Comment block
+map <leader>cb <action>(CommentByBlockComment)
+
+" Refactoring
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>rn <Action>(RenameElement)
+map <leader>rm <Action>(ExtractMethod)
+map <leader>rv <Action>(IntroduceVariable)
+map <leader>rf <Action>(IntroduceField)
+map <leader>rs <Action>(ChangeSignature)
+map <leader>rr <Action>(Refactorings.QuickListPopupAction)
+
+" Go to code
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>gd <Action>(GotoDeclaration)
+nmap <leader>gy <Action>(GotoTypeDeclaration)
+nmap <leader>gi <Action>(GotoImplementation)
+nmap <leader>gs <Action>(GotoSymbol)
+nmap <leader>gu <Action>(ShowUsages)
+nmap <leader>gr <Action>(ShowUsages)
+nmap <leader>gt <Action>(GotoTest)
+nmap <leader>gf <Action>(Back)
+nmap <leader>gb <Action>(Forward)
+
+" Git windows
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open the commit dialog
+map <leader>vc <Action>(CheckinProject)
+" Open the version control tool window
+map <leader>vs <Action>(ActivateVersionControlToolWindow)
+" Open the branches popup
+map <leader>vb <Action>(Git.Branches)
+" Show info about the object under cursor
+map <Leader>vv <action>(Git.ContextMenu)
+" Fuzzy search in VCS tracked files
+map <Leader>vf <action>(com.mituuz.fuzzier.FuzzierVCS)
+" Reverts selected lines
+map <Leader>vrl <action>(Vcs.RollbackChangedLines)
+
+" Errors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Go to next/previous error in the whole solution
+map <leader>en <Action>(ReSharperGotoNextErrorInSolution)
+map <leader>ep <Action>(ReSharperGotoPrevErrorInSolution)
+
+" Run actions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Run the current class or test under the cursor
+map <Leader>tr <action>(ContextRun)
+" Run all tests in a class or the current class
+map <Leader>trs gg<action>(RunClass)<C-O>
+" Rerun previous job
+map <Leader>tre <action>(Run)
+" Open the run configuration dialog
+map <Leader>tc <action>(ChooseRunConfiguration)
+" Stop currently running process(es)
+map <Leader>h <action>(Stop)
+
+" Debug
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Debug the current class or test under the cursor
+map <Leader>dr <action>(ContextDebug)
+" Debug previous job
+map <Leader>dre <action>(Debug)
+" Add or remove breakpoint
+map <Leader>db <action>(ToggleLineBreakpoint)
+" Clear every breakpoint in the project
+map <Leader>dx <action>(Debugger.RemoveAllBreakpoints)
+" Continue running from a breakpoint
+map <Leader>i <action>(Resume)
+" Open breakpoint dialog (add conditionals etc.)
+map <Leader>deb <action>(EditBreakpoint)
+" Enable or disable breakpoint without removing it
+map <Leader>dt <action>(ToggleBreakpointEnabled)
+" Open ee dialog to run code at a breakpoint
+map <Leader>dee <action>(EvaluateExpression)
+" Continue running until cursor
+map <Leader>dc <action>(RunToCursor)
+
+" AI, copilot
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <Leader>ac <action>(copilot.chat.show)
+map <Leader>ap <action>(copilot.chat.inline)
+" Instead of having to deal with auto suggestions, I want to request them manually
+map <leader>as <action>(copilot.requestCompletions)
+" imap <C-a> <action>(copilot.requestCompletions)
+imap <C-a> <action>(CallInlineCompletionAction)
+
+" Other
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <esc> :noh<return><esc>
