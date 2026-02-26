@@ -79,9 +79,16 @@ export EDITOR='hx'
 export PATH="/opt/homebrew/opt/postgresql@15/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 export SSH_AUTH_SOCK=/Users/joakim.karlsson/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
-################
-### ALIASES
-################
+# yazi wrapper — changes shell dir to yazi's last location on exit
+# and sends chosen file to open in the calling pane (used by hx-explorer)
+ya() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
 alias n=nvim
 
 # --- Git ---
