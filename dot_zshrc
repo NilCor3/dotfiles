@@ -62,6 +62,9 @@ zinit light wintermi/zsh-mise
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 
+# Ctrl+N to open navi cheatsheet
+eval "$(navi widget zsh)"
+
 ################
 ### OPTIONS
 ################
