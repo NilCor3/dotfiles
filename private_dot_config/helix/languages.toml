@@ -6,6 +6,54 @@ args = ["--stdio"]
 editorInfo = { name = "Helix", version = "25.01" }
 editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
 
+[language-server.jdtls]
+command = "jdtls"
+args = [
+  "--jvm-arg=-javaagent:/Users/joakim.karlsson/.config/helix/lang_servers/lombok.jar",
+  "-data", "/Users/joakim.karlsson/code/workspace/helix-jdtls"
+]
+
+[language-server.jdtls.config.settings.java]
+format.enabled = true
+format.settings.url = "/Users/joakim.karlsson/.config/helix/lang_servers/java-code-style.xml"
+format.settings.profile = "fortnoxStyle"
+eclipse.downloadSource = true
+maven.downloadSources = true
+signatureHelp.enabled = true
+contentProvider.preferred = "fernflower"
+saveActions.organizeImports = false
+configuration.updateBuildConfiguration = "interactive"
+referencesCodeLens.enabled = true
+inlayHints.parameterNames.enabled = "all"
+
+[language-server.jdtls.config.settings.java.completion]
+favoriteStaticMembers = [
+  "org.hamcrest.MatcherAssert.assertThat",
+  "org.hamcrest.Matchers.*",
+  "org.hamcrest.CoreMatchers.*",
+  "org.junit.jupiter.api.Assertions.*",
+  "java.util.Objects.requireNonNull",
+  "java.util.Objects.requireNonNullElse",
+  "org.mockito.Mockito.*"
+]
+filteredTypes = ["com.sun.*", "io.micrometer.shaded.*", "java.awt.*", "jdk.*", "sun.*"]
+importOrder = ["java", "jakarta", "javax", "com", "org"]
+
+[language-server.jdtls.config.settings.java.sources.organizeImports]
+starThreshold = 9999
+staticThreshold = 9999
+
+[language-server.jdtls.config.settings.java.codeGeneration]
+toString.template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}"
+hashCodeEquals.useJava7Objects = true
+useBlocks = true
+
+[[language]]
+name = "java"
+roots = ["pom.xml", "build.gradle", "mvnw", "gradlew", ".git"]
+language-servers = ["jdtls", "copilot"]
+auto-format = true
+
 [[language]]
 name = "rust"
 roots = ["Cargo.toml", "Cargo.lock"]
