@@ -31,7 +31,9 @@ C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 
 [keys.normal.space.","]
 b = ":sh ~/.config/helix/scripts/hx-blame.sh %{buffer_name} %{cursor_line}"
-e = ":sh ~/.config/helix/scripts/hx-explorer.sh"
+e = ":sh ~/.config/helix/scripts/hx-explorer.sh open"
+v = ":sh ~/.config/helix/scripts/hx-explorer.sh vsplit"
+s = ":sh ~/.config/helix/scripts/hx-explorer.sh hsplit"
 
 [keys.insert]
 "A-;" = "collapse_selection"
