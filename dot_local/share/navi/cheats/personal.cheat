@@ -414,3 +414,20 @@ xh --session=<name> <url>
 
 # Pipe response through jq
 xh --print=b <url> | jq '<filter>'
+
+% eza, files
+
+# Detailed list with icons and git status  [ll]
+eza -lah --icons --git
+
+# Tree view N levels deep  [lt]
+eza --tree --icons --git -L <levels>
+
+# Sort by modified time newest first
+eza -lah --icons --git --sort=modified --reverse
+
+# Show only directories
+eza -lah --icons --only-dirs
+
+# Group directories first
+eza -lah --icons --group-directories-first

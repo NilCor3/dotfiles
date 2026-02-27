@@ -62,7 +62,11 @@ zinit light wintermi/zsh-mise
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 
-# Ctrl+N to open navi cheatsheet
+# Ctrl+G to open navi cheatsheet (bound after zsh-vi-mode via its hook)
+function zvm_after_init() {
+  eval "$(navi widget zsh)"
+}
+# Fallback if zsh-vi-mode is not active
 eval "$(navi widget zsh)"
 
 ################
@@ -94,7 +98,10 @@ alias n=nvim
 # --- Navigation ---
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ll='ls -lah'
+alias ll='eza -lah --icons --git'
+alias la='eza -a --icons'
+alias lt='eza --tree --icons --git -L 2'
+alias llt='eza -lah --tree --icons --git -L 2'
 alias mkdir='mkdir -p'
 alias reload='source ~/.zshrc'
 

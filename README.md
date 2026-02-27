@@ -19,6 +19,7 @@ the best tools are ones you can configure, compose, and own.
 - 🍎 **macOS defaults** applied via reproducible shell script with drift detection
 - 🗂️ **[yazi](https://yazi-rs.github.io/)** file explorer and **[tig](https://jonas.github.io/tig/)** blame — both integrated into Helix
 - 🌐 **[xh](https://github.com/ducaale/xh)** — fast, friendly HTTP client for the terminal (httpie compatible)
+- 📂 **[eza](https://eza.rocks)** — modern `ls` with icons, git status, and tree view
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -161,7 +162,6 @@ brew install \
   markdown-oxide \
   marksman \
   usage \
-  xh \
   mergiraf
 ```
 
@@ -385,6 +385,23 @@ Configured globally via `~/.gitconfig` (merge driver) and `~/.gitattributes` (fi
 mgsolve <file>     # alias: mergiraf solve — clean up remaining markers in a file
 mergiraf review <file>  # compare mergiraf resolution vs line-based
 ```
+
+---
+
+## File Listing — eza
+
+**[eza](https://eza.rocks)** replaces `ls` with icons, colour coding, git status per file, and tree view. Installed via mise.
+
+```sh
+ll      # eza -lah --icons --git   — detailed list with git status
+la      # eza -a --icons           — all files including hidden
+lt      # eza --tree --icons -L 2  — tree view, 2 levels
+llt     # eza -lah --tree -L 2     — detailed tree
+```
+
+The `--git` flag shows per-file status inline (`N` new, `M` modified, `I` ignored) — useful for seeing what's dirty without running `git status`.
+
+Requires a Nerd Font — `font-fira-mono-nerd-font` is installed via brew cask.
 
 ---
 
