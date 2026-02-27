@@ -33,6 +33,8 @@ age = "latest"
 golangci-lint-langserver = "latest"
 golangci-lint = "latest"
 rumdl = "latest"
+yq = "latest"
+yazi = "latest"
 
 
 [env]

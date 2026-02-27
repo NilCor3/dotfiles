@@ -3,7 +3,7 @@
 # Usage: hx-blame.sh <buffer_name> <cursor_line>
 #
 # Add to ~/.config/helix/config.toml:
-# [keys.normal."space,\""]
+# [keys.normal.space.","]
 # b = ":sh ~/.config/helix/scripts/hx-blame.sh %{buffer_name} %{cursor_line}"
 
 buffer_name=$1
