@@ -224,6 +224,8 @@ nsync() {
   # post-commit hook auto-pushes
   cd - > /dev/null
 }
+
+nf() {
   local q="${1:-}"
   local file
   file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --query "$q" --preview 'bat --color=always {}')
