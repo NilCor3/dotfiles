@@ -69,6 +69,7 @@ chezmoi add ~/.config/something/secret   # or manually place the .age file in so
 
 Key configs tracked in chezmoi:
 - Shell: `.zshrc`, `.zshenv`, `.zprofile`, `.zsh_plugins.txt`, `.p10k.zsh`
+  - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editor: `.config/helix/` (config, languages, scripts)
 - Terminal + multiplexer: `.config/wezterm/` (WezTerm handles both — panes, tabs, splits)
 - Git: `.gitconfig`, `.gitignore`, `.config/git/personal.gitconfig`
