@@ -185,7 +185,13 @@ export NOTES_DIR="$HOME/notes"
 
 n()      { hx "$NOTES_DIR" }
 ns()     { hx "$NOTES_DIR/scratch.md" }
-ng()     { glow "$NOTES_DIR" }
+ngl()    { glow "$NOTES_DIR" }
+ng() {
+  local query="${1:?usage: ng <pattern>}"
+  local file
+  file=$(rg "$query" "$NOTES_DIR" -l | fzf --preview "rg --color=always '$query' {}")
+  [[ -n "$file" ]] && hx "$file"
+}
 
 nj() {
   local file="$NOTES_DIR/journal/$(date +%Y-%m-%d).md"
