@@ -524,3 +524,32 @@ oapi-codegen -generate types,server -package api openapi.yaml > api/api.gen.go
 
 # Generate only types
 oapi-codegen -generate types -package api openapi.yaml > api/types.gen.go
+
+% rust, cargo, bacon, nextest, audit, expand
+
+# Start bacon (background test/check watcher)
+bacon
+
+# bacon check mode (no test run)
+bacon check
+
+# bacon clippy mode
+bacon clippy
+
+# Run tests with nextest
+cargo nextest run
+
+# Run a specific test with nextest
+cargo nextest run <test_name>
+
+# Audit dependencies for vulnerabilities
+cargo audit
+
+# Fix vulnerable dependencies automatically
+cargo audit fix
+
+# Expand macros for a module
+cargo expand <module>
+
+# Expand the whole crate
+cargo expand

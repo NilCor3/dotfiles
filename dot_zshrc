@@ -173,6 +173,11 @@ alias cclf='cargo clippy --fix'
 alias cf='cargo fmt'
 alias cfa='cargo fmt --all'
 alias cdoc='cargo doc --open'
+alias bac='bacon'
+alias nt='cargo nextest run'
+alias nta='cargo nextest run --all'
+alias audit='cargo audit'
+alias expand='cargo expand'
 
 # --- Mise ---
 alias mi='mise install'
