@@ -627,8 +627,14 @@ nn <work/my-note.md>
 # Open scratch.md (quick capture)
 ns
 
+# Ripgrep search → fzf file picker with match preview
+ng <pattern>
+
+# Live interactive content search (type to filter, opens hx at exact line)
+ngs
+
 # Browse notes with glow TUI
-ng
+ngl
 
 # Fuzzy find notes by filename
 nf <query>
@@ -638,9 +644,6 @@ nft <type>
 
 # Filter notes by tag
 ntag <tag>
-
-# Browse all notes in glow
-glow ~/notes
 
 # Render a single markdown file
 glow <file.md>
