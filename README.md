@@ -369,6 +369,22 @@ auto-commit without applying.
 
 ---
 
+## Git — Merge Conflicts
+
+Mergiraf + lazygit covers the full conflict resolution workflow:
+
+- **[mergiraf](https://mergiraf.org)** — syntax-aware merge driver; fires automatically on `git merge`/`git rebase` for supported files (Go, Rust, Java, TypeScript, JSON, YAML, TOML, etc.). Pre-resolves structural conflicts (e.g. two branches adding different functions in the same file) so you never see them.
+- **lazygit** — handles remaining conflicts interactively. `e` on a conflicted file → 3-panel view, pick ours/theirs/base per hunk.
+
+Configured globally via `~/.gitconfig` (merge driver) and `~/.gitattributes` (file type routing).
+
+```sh
+mgsolve <file>     # alias: mergiraf solve — clean up remaining markers in a file
+mergiraf review <file>  # compare mergiraf resolution vs line-based
+```
+
+---
+
 ## SSH
 
 SSH agent provided by **Bitwarden desktop app**.
