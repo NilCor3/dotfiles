@@ -1,0 +1,27 @@
+[main]
+# Use vi key bindings
+vi = True
+
+# Multi-line mode - use Esc+Enter to run query
+multi_line = False
+
+# Destroy confirmation prompt for destructive queries
+destructive_warning = True
+
+# Log every query and its results to a file
+log_file = default
+
+# Highlight matching brackets
+highlight_matching_bracket = True
+
+# Syntax style (monokai, manni, etc.)
+syntax_style = monokai
+
+# Show timing of each query
+timing = True
+
+# Row limit - warn when > N rows returned (0 = unlimited)
+row_limit = 1000
+
+# Keyword casing (upper, lower, auto)
+keyword_casing = upper
