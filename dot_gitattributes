@@ -1,0 +1,18 @@
+# mergiraf — syntax-aware merge driver
+*.go        merge=mergiraf
+go.mod      merge=mergiraf
+go.sum      merge=mergiraf
+*.rs        merge=mergiraf
+*.java      merge=mergiraf
+*.kt        merge=mergiraf
+*.ts        merge=mergiraf
+*.tsx       merge=mergiraf
+*.js        merge=mergiraf
+*.jsx       merge=mergiraf
+*.json      merge=mergiraf
+*.yaml      merge=mergiraf
+*.yml       merge=mergiraf
+*.toml      merge=mergiraf
+*.xml       merge=mergiraf
+*.html      merge=mergiraf
+*.cs        merge=mergiraf
