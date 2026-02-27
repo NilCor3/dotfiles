@@ -1,0 +1,4 @@
+[core]
+workspace = [
+  { root = "~/notes" }
+]
