@@ -54,10 +54,11 @@ fx = "latest"
 jnv = "latest"
 marksman = "latest"
 ollama = "latest"
+"npm:@biomejs/biome" = "latest"
 "npm:tsx" = "latest"
 "npm:knip" = "latest"
 
 
 [env]
-_.path = ["/Users/joakim.karlsson/hx/builds/current/bin"]
+_.path = ["$HOME/.local/share/mise/shims", "~/hx/builds/current/bin"]
 HELIX_RUNTIME="~/hx/builds/current/runtime"
