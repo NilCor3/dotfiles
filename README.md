@@ -181,10 +181,11 @@ brew install \
   rsync \
   wget \
   markdown-oxide \
-  marksman \
   usage \
   mergiraf \
-  pgcli
+  mods \
+  pgcli \
+  slides
 ```
 
 > Most dev tools (go, node, java, python, etc.) are managed via **mise**, not brew.
