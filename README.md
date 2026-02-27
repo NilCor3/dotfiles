@@ -1,6 +1,25 @@
 # NilCor3's Mac Setup
 
-Personal development machine setup for macOS. Dotfiles managed with [chezmoi](https://chezmoi.io).
+> A terminal-first, keyboard-driven macOS development environment.
+> Everything is version-controlled, reproducible, and fast.
+
+This repo contains my personal dotfiles and machine setup — managed with [chezmoi](https://chezmoi.io),
+secrets encrypted with [age](https://age-encryption.org), and built around the philosophy that
+the best tools are ones you can configure, compose, and own.
+
+## Features
+
+- 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal with Lua config
+- ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
+- 🔍 **[Helix × WezTerm integration](##helix-wezterm-integration)** — blame, explorer, lazygit, and test runner via pane scripts
+- 🧪 **[hx-gotest](#hx-gotest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
+- 🔐 **Age-encrypted secrets** in dotfiles — key backed up to Bitwarden
+- 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
+- 🐚 **Zsh + Zinit** with curated plugins, aliases, and `navi` cheatsheet
+- 🍎 **macOS defaults** applied via reproducible shell script with drift detection
+- 🗂️ **[yazi](https://yazi-rs.github.io/)** file explorer and **[tig](https://jonas.github.io/tig/)** blame — both integrated into Helix
+
+---
 
 ## Quick Start
 
@@ -95,6 +114,7 @@ brew install \
   jdtls \
   mise \
   mkcert \
+  navi \
   rsync \
   wget \
   markdown-oxide \
@@ -159,9 +179,57 @@ LSP setup:
 - **Rust** — rust-analyzer with Clippy on save, proc macros, inlay hints
 - **All languages** — Copilot LSP
 
+### Helix WezTerm Integration
+
+All keybindings live under `Space , ` (Space comma) in normal mode.
+Scripts at `~/.config/helix/scripts/`.
+
+| Key | Action | Script |
+|-----|--------|--------|
+| `Space , b` | Git blame at cursor line (tig) | `hx-blame.sh` |
+| `Space , e` | File explorer — open in current window (yazi) | `hx-explorer.sh` |
+| `Space , v` | File explorer — open in vertical split | `hx-explorer.sh` |
+| `Space , s` | File explorer — open in horizontal split | `hx-explorer.sh` |
+| `Space , g` | Lazygit in zoomed overlay pane | `hx-lazygit.sh` |
+| `Space , t` | Run Go test under cursor | `hx-gotest.sh` |
+| `Space , T` | Run whole Go test func | `hx-gotest.sh` |
+| `Space , F` | Run all Go tests in file | `hx-gotest.sh` |
+
+Each script reuses or creates a WezTerm pane, runs the tool, then returns focus to Helix.
+`wezterm-find-hx.sh` is a helper that finds the Helix pane by title when focus needs to return.
+
+### hx-gotest
+
+Source: `~/source/hx-gotest/` — a small Go CLI using `go/ast` to determine the exact
+`go test -run` pattern for the cursor position.
+
+```sh
+hx-gotest <file> <line> [cursor|func|file]
+```
+
+**Modes:**
+
+| Mode | What runs | Example pattern |
+|------|-----------|-----------------|
+| `cursor` | Subtest at cursor (or whole func if none) | `^TestFoo$/^bar_case$` |
+| `func` | Whole test func, all subtests | `^TestFoo$` |
+| `file` | All Test* funcs in the file | `^(TestFoo\|TestBar)$` |
+
+**Smart detection:**
+- `t.Run("name", ...)` → exact subtest match
+- Table-driven `{"my test", ...}` → matches by first string field
+- Table-driven `{name: "my test", ...}` → matches by named field (`name`, `desc`, `description`, `scenario`, etc.)
+- Variable `t.Run(name, ...)` → uses `.*` wildcard
+- Nested subtests → `^TestA$/^SubB$/^SubC$`
+
+To rebuild after changes:
+```sh
+cd ~/source/hx-gotest && go build -o ~/.local/bin/hx-gotest .
+```
+
 ---
 
-## Git
+
 
 - **Pager**: [delta](https://dandavison.github.io/delta/) with `gruvmax-fang` theme
 - **Merge style**: `zdiff3` (shows base in conflicts)
