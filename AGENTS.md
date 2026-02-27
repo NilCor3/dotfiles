@@ -27,7 +27,7 @@ When helping with this setup, apply the same principles:
 - **New tool config belongs in chezmoi** — if you configure a new tool, `chezmoi add` its config file
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
-- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, yazi over Finder, helix over VS Code)
+- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, yazi over Finder, helix over VS Code). WezTerm replaces both terminal emulator and multiplexer — use its pane/tab API in scripts rather than adding tmux or zellij.
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
 ---
@@ -69,13 +69,13 @@ chezmoi add ~/.config/something/secret   # or manually place the .age file in so
 Key configs tracked in chezmoi:
 - Shell: `.zshrc`, `.zshenv`, `.zprofile`, `.zsh_plugins.txt`, `.p10k.zsh`
 - Editor: `.config/helix/` (config, languages, scripts)
-- Terminal: `.config/wezterm/`, `.config/ghostty/`
+- Terminal + multiplexer: `.config/wezterm/` (WezTerm handles both — panes, tabs, splits)
 - Git: `.gitconfig`, `.gitignore`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`
-- Multiplexer: `.tmux.conf`, `.config/zellij/`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`
+- Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`, `.config/zellij/`
 
 ## What to NEVER add
 
