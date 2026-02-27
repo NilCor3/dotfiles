@@ -653,7 +653,19 @@ nsync
 
 % ai, ollama, mods
 
-# Start ollama server
+# Start ollama as background launchd service (auto-starts on login)
+launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist
+
+# Stop ollama background service
+launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist
+
+# Check if ollama service is running
+curl -s http://localhost:11434
+
+# View ollama service logs
+tail -f /tmp/ollama.log
+
+# Start ollama server (foreground / manual)
 ollama serve
 
 # Pull a model
