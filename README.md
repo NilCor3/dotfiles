@@ -58,11 +58,40 @@ chezmoi init --apply git@github.com:NilCor3/dotfiles.git
 mise install
 
 # 7. Install brew packages (see sections below)
+
+# 8. Set up GitHub Copilot CLI (see section below)
 ```
 
 ---
 
-## Dotfiles (chezmoi)
+## GitHub Copilot CLI
+
+The terminal AI assistant used in this setup. Runs in WezTerm, reads `~/AGENTS.md` and folder-level `AGENTS.md` files for context.
+
+### Setup
+
+```sh
+# Install GitHub CLI
+brew install gh
+
+# Authenticate (opens browser)
+gh auth login
+
+# Install the Copilot CLI extension
+gh extension install github/gh-copilot
+
+# Launch the interactive CLI
+gh copilot
+```
+
+The `~/.copilot/` directory contains:
+- `agents/` — custom sub-agents (agent-writer, security-reviewer, tech-tutor, notes)
+- `mcp-config.json` — MCP server configs (e.g. postgres via docker)
+- `config.json` — UI preferences (theme, allowed URLs, trusted folders)
+
+These are tracked in chezmoi. After a fresh `chezmoi apply`, run `gh auth login` to re-authenticate (auth token is not stored in dotfiles).
+
+
 
 Repo: `git@github.com:jokaro/dotfiles.git`
 
