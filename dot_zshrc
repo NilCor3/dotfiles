@@ -221,7 +221,11 @@ nn() {
   hx "$file"
 }
 
-nf() {
+nsync() {
+  cd "$NOTES_DIR" && git add -A && git commit -m "sync: $(date '+%Y-%m-%d %H:%M')"
+  # post-commit hook auto-pushes
+  cd - > /dev/null
+}
   local q="${1:-}"
   local file
   file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --query "$q" --preview 'bat --color=always {}')

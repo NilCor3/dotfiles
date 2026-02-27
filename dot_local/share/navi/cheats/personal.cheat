@@ -644,3 +644,6 @@ glow ~/notes
 
 # Render a single markdown file
 glow <file.md>
+
+# Sync notes to git remote (commit + push)
+nsync
