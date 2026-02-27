@@ -39,9 +39,10 @@ if [ -z "$output_pane" ]; then
   # Split below the Helix pane ($WEZTERM_PANE = Helix when running :sh)
   output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35)
   echo "$output_pane" > "$pane_id_file"
-  # Set a recognisable terminal title for the pane
-  printf "\033]0;go-test\007\r" \
+  # Set a recognisable terminal title (no trailing \r — avoids spurious Enter in new shell)
+  printf "\033]0;go-test\007" \
     | wezterm cli send-text --pane-id "$output_pane" --no-paste
+  sleep 0.3  # Wait for shell to be ready before sending commands
 fi
 
 # Clear pane then run tests — echo the command first so it's visible
