@@ -138,6 +138,9 @@ alias lg='lazygit'
 alias http='xh'
 alias https='xh --https'
 
+# --- Postgres ---
+alias pgc='pgcli'
+
 # --- Go ---
 alias gob='go build ./...'
 alias gom='go mod tidy'

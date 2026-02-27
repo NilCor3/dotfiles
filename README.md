@@ -20,6 +20,7 @@ the best tools are ones you can configure, compose, and own.
 - 🗂️ **[yazi](https://yazi-rs.github.io/)** file explorer and **[tig](https://jonas.github.io/tig/)** blame — both integrated into Helix
 - 🌐 **[xh](https://github.com/ducaale/xh)** — fast, friendly HTTP client for the terminal (httpie compatible)
 - 📂 **[eza](https://eza.rocks)** — modern `ls` with icons, git status, and tree view
+- 🐘 **[pgcli](https://www.pgcli.com)** — postgres CLI with autocomplete, syntax highlighting and named queries
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -162,7 +163,8 @@ brew install \
   markdown-oxide \
   marksman \
   usage \
-  mergiraf
+  mergiraf \
+  pgcli
 ```
 
 > Most dev tools (go, node, java, python, etc.) are managed via **mise**, not brew.
@@ -369,6 +371,39 @@ auto-commit without applying.
 
 - **DBeaver Community** — GUI client
 - **lazysql** — TUI SQL client (via mise)
+- **pgcli** — postgres CLI with autocomplete and named queries (brew)
+
+---
+
+## Postgres CLI — pgcli
+
+**[pgcli](https://www.pgcli.com)** enhances the standard `psql` with autocomplete (tables, columns, keywords), syntax highlighting, and named query shortcuts.
+
+```sh
+pgc <database>                                    # alias for pgcli
+pgcli -h <host> -U <user> <database>
+pgcli postgresql://user:pass@host/db
+```
+
+Config at `~/.config/pgcli/config` (vi mode, monokai theme, 1000 row limit, uppercase keywords).
+
+### Key meta-commands
+
+| Command | Description |
+|---------|-------------|
+| `\dt` | List all tables |
+| `\d <table>` | Describe table |
+| `\l` | List databases |
+| `\ns <name> <query>` | Save named query |
+| `\n <name>` | Run named query |
+| `\copy (...) TO 'file.csv'` | Export to CSV |
+| `\e` | Open query in `$EDITOR` (Helix) |
+
+### Workflow tips
+
+- Set `EDITOR=hx` — `\e` opens the current query in Helix, save to execute
+- Named queries (`\ns`) are great for frequently used reports — stored in `~/.config/pgcli/named_queries.cfg`
+- Pairs with **DBeaver** for GUI exploration and **lazysql** for a TUI overview
 
 ---
 
