@@ -54,6 +54,8 @@ fx = "latest"
 jnv = "latest"
 marksman = "latest"
 ollama = "latest"
+"npm:tsx" = "latest"
+"npm:knip" = "latest"
 
 
 [env]
