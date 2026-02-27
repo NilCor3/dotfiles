@@ -246,6 +246,11 @@ ntag() {
   [[ -n "$file" ]] && hx "$file"
 }
 
+# --- AI ---
+alias ai='mods -a ollama -m gemma3:4b'       # local: fast general
+alias aic='mods -a ollama -m qwen2.5-coder:7b' # local: code
+alias m='mods'                                # shorthand for mods (uses default API)
+
 # --- Mise ---
 alias mi='mise install'
 alias mu='mise use'

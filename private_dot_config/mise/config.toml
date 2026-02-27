@@ -53,6 +53,7 @@ oapi-codegen = "latest"
 fx = "latest"
 jnv = "latest"
 marksman = "latest"
+ollama = "latest"
 
 
 [env]
