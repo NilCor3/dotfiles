@@ -553,3 +553,56 @@ cargo expand <module>
 
 # Expand the whole crate
 cargo expand
+
+% json, jq, fx, jnv
+
+# Interactive JSON explorer (pipe)
+<command> | fx
+
+# Open JSON file in fx
+fx <file.json>
+
+# fx: JS expression filter
+fx <file.json> '.<field>'
+
+# Interactive jq filter builder (pipe)
+<command> | jnv
+
+# Open JSON file in jnv
+jnv <file.json>
+
+# jq: pretty print
+jq . <file.json>
+
+# jq: extract field
+jq '.<field>' <file.json>
+
+# jq: filter array
+jq '.[] | select(.<field> == "<value>")' <file.json>
+
+# jq: extract keys
+jq 'keys' <file.json>
+
+# jq: map over array
+jq '[.[] | {name: .<name_field>, id: .<id_field>}]' <file.json>
+
+# jq: compact output (no pretty print)
+jq -c '.' <file.json>
+
+# jq: raw string output (no quotes)
+jq -r '.<field>' <file.json>
+
+# jq: count array elements
+jq 'length' <file.json>
+
+# jq: sort by field
+jq 'sort_by(.<field>)' <file.json>
+
+# jq: group by field
+jq 'group_by(.<field>)' <file.json>
+
+# Pipe xh response into jnv for exploration
+xh <url> | jnv
+
+# Pipe xh response into fx for scripting
+xh <url> | fx '.<field>'

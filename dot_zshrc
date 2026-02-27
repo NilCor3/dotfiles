@@ -138,6 +138,9 @@ alias lg='lazygit'
 alias http='xh'
 alias https='xh --https'
 
+# --- JSON ---
+# fx and jnv are short enough — used directly
+
 # --- Mock REST ---
 alias mock='prism mock'
 alias jsr='json-server'
