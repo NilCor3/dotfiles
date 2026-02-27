@@ -33,6 +33,8 @@ the best tools are ones you can configure, compose, and own.
 - 🔬 **[cargo-expand](https://github.com/dtolnay/cargo-expand)** — expand Rust macros to see generated code
 - 🔎 **[jnv](https://github.com/ynqa/jnv)** — interactive jq filter builder (live preview as you type)
 - 🌿 **[fx](https://fx.wtf)** — interactive JSON explorer and processor (pipe or file)
+- 📓 **[marksman](https://github.com/artempyanykh/marksman)** — markdown LSP with `[[wiki links]]`, backlinks, and cross-note navigation
+- ✨ **[glow](https://github.com/charmbracelet/glow)** — terminal markdown reader and notes browser TUI
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -543,6 +545,59 @@ json-server --port 3001 db.json
 - **Prism validates** requests and responses against the spec — good for catching drift early
 - **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
 - **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
+
+---
+
+## Notes — marksman + glow
+
+Plain markdown files in `~/notes/` with frontmatter conventions. No app, no sync service — just files, ripgrep, fzf, and Helix.
+
+**Structure:**
+```
+~/notes/
+├── journal/      # daily notes (type: daily)
+├── work/         # meetings, issues, system docs (type: meeting|issue|system)
+├── dev/          # tech reference (type: ref)
+├── projects/     # personal projects, learning
+└── scratch.md    # quick capture inbox
+```
+
+**Frontmatter convention:**
+```yaml
+---
+type: meeting        # meeting | issue | system | ref | daily | scratch
+tags: [blink, api]
+date: 2026-02-27
+---
+```
+
+### Shell functions
+
+```sh
+n              # open ~/notes in Helix
+ns             # open scratch.md (quick capture)
+ng             # browse notes with glow TUI
+nj             # create/open today's journal (journal/YYYY-MM-DD.md)
+nmeet <title>  # new meeting note with template
+nissue <id>    # new issue note (work/issue-NOV-123.md)
+nn <path>      # new note at relative path (creates frontmatter)
+nf [query]     # fuzzy find notes by filename → open in Helix
+nft <type>     # filter by frontmatter type (rg + fzf)
+ntag <tag>     # filter by frontmatter tag (rg + fzf)
+```
+
+### Tools
+
+- **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references across the vault. Also **markdown-oxide** and **rumdl** linter are configured.
+- **[glow](https://github.com/charmbracelet/glow)** (mise) — charmbracelet TUI markdown browser. `ng` opens the whole vault; `glow file.md` renders a single file beautifully.
+
+### Workflow
+
+- Capture fast: `ns` → type → save. Sort to proper folder later.
+- Daily standup: `nj` → today's journal is ready with the date
+- During a meeting: `nmeet blink-planning` → structured template opens instantly
+- Find anything: `nf blink` (filename), `nft meeting` (by type), `ntag api` (by tag)
+- Read/review: `ng` for TUI browsing, `glow file.md` to render before sharing
 
 ---
 

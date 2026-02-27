@@ -606,3 +606,41 @@ xh <url> | jnv
 
 # Pipe xh response into fx for scripting
 xh <url> | fx '.<field>'
+
+% notes, markdown, glow, marksman
+
+# Open notes folder in Helix
+n
+
+# Open today's journal entry
+nj
+
+# New meeting note
+nmeet <title>
+
+# New issue note
+nissue <NOV-123>
+
+# New note at path (relative to ~/notes)
+nn <work/my-note.md>
+
+# Open scratch.md (quick capture)
+ns
+
+# Browse notes with glow TUI
+ng
+
+# Fuzzy find notes by filename
+nf <query>
+
+# Filter notes by frontmatter type (meeting, issue, daily, ref, system)
+nft <type>
+
+# Filter notes by tag
+ntag <tag>
+
+# Browse all notes in glow
+glow ~/notes
+
+# Render a single markdown file
+glow <file.md>

@@ -16,7 +16,7 @@ fzf = 'latest'
 kafka = 'latest'
 python = "latest"
 bat = 'latest'
-glow = 'latest'
+glow = "latest"
 gum = 'latest'
 hurl = 'latest'
 lazygit = 'latest'
@@ -52,6 +52,7 @@ oapi-codegen = "latest"
 "cargo:cargo-expand" = "latest"
 fx = "latest"
 jnv = "latest"
+marksman = "latest"
 
 
 [env]
