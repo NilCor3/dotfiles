@@ -4,18 +4,33 @@
 # Launches yazi, waits for selection, then sends :open/:vsplit/:hsplit to Helix.
 
 hx_pane="$1"
+# If no pane passed, auto-detect helix pane in same tab
+if [ -z "$hx_pane" ]; then
+  hx_pane=$(~/.config/helix/scripts/wezterm-find-hx.sh --same-tab)
+fi
+if [ -z "$hx_pane" ]; then
+  hx_pane=$(~/.config/helix/scripts/wezterm-find-hx.sh)
+fi
 mode="${2:-open}"
 chooser_file=$(mktemp)
+log="/tmp/hx-yazi-debug.log"
+
+echo "hx_pane=$hx_pane mode=$mode chooser=$chooser_file" > "$log"
 
 yazi --chooser-file="$chooser_file"
 
-if [ -s "$chooser_file" ]; then
-  while IFS= read -r f; do
+selected=$(cat "$chooser_file" 2>/dev/null)
+echo "yazi exited, selected=[$selected]" >> "$log"
+
+if [ -n "$selected" ]; then
+  printf "%s\n" "$selected" | while IFS= read -r f; do
+    echo "sending: :$mode $f" >> "$log"
     printf ":%s %s\r" "$mode" "$f" \
       | wezterm cli send-text --pane-id "$hx_pane" --no-paste
-    # After first file use open so subsequent files become buffers
     mode="open"
-  done < "$chooser_file"
+  done
+else
+  echo "nothing selected" >> "$log"
 fi
 
 rm -f "$chooser_file"
