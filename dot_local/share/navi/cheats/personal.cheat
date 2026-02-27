@@ -651,6 +651,12 @@ glow <file.md>
 # Sync notes to git remote (commit + push)
 nsync
 
+# Review current note with local AI (structure, gaps, clarity)
+nreview
+
+# Review a specific note with local AI
+nreview <path/to/note.md>
+
 % ai, ollama, mods
 
 # Start ollama as background launchd service (auto-starts on login)
@@ -697,3 +703,26 @@ cat <file> | m "summarize this in 3 bullet points"
 
 # Ask a question (no pipe)
 ai "what is the difference between INNER JOIN and LEFT JOIN"
+
+% typescript, biome, tsx, knip
+
+# Format and lint fix
+biome check --apply
+
+# Format only
+biome format --write <path>
+
+# Lint check (no fix)
+biome check <path>
+
+# Run TypeScript file directly
+tsx <file.ts>
+
+# Find unused exports, deps, files
+knip
+
+% slides, presentations
+
+# Start a slideshow from markdown
+slides <presentation.md>
+

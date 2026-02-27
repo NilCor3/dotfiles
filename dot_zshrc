@@ -251,6 +251,16 @@ nsync() {
   cd "$prev_dir"
 }
 
+# Review current note with local AI — pipe through mods for structure/clarity feedback
+nreview() {
+  local file="${1:-}"
+  if [[ -z "$file" ]]; then
+    file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --preview 'bat --color=always {}')
+  fi
+  [[ -z "$file" ]] && return 1
+  cat "$file" | mods -a ollama -m gemma3:4b "Review this markdown note. Check: 1) Is the structure clear? 2) Are there gaps or incomplete sections? 3) Any grammar/clarity issues? Be concise and specific."
+}
+
 nf() {
   local q="${1:-}"
   local file
@@ -276,6 +286,14 @@ ntag() {
 alias ai='mods -a ollama -m gemma3:4b'       # local: fast general
 alias aic='mods -a ollama -m qwen2.5-coder:7b' # local: code
 alias m='mods'                                # shorthand for mods (uses default API)
+
+# --- TypeScript ---
+alias bio='biome'
+alias biof='biome format --write'
+alias bioc='biome check --apply'
+
+# --- Slides ---
+alias sl='slides'
 
 # --- Mise ---
 alias mi='mise install'

@@ -35,8 +35,12 @@ the best tools are ones you can configure, compose, and own.
 - 🌿 **[fx](https://fx.wtf)** — interactive JSON explorer and processor (pipe or file)
 - 📓 **[marksman](https://github.com/artempyanykh/marksman)** — markdown LSP with `[[wiki links]]`, backlinks, and cross-note navigation
 - ✨ **[glow](https://github.com/charmbracelet/glow)** — terminal markdown reader and notes browser TUI
-- 🦙 **[ollama](https://ollama.com)** — local LLM runtime, runs on Apple Silicon GPU via Metal
+- 🦙 **[ollama](https://ollama.com)** — local LLM runtime, runs on Apple Silicon GPU via Metal (background service)
 - 💬 **[mods](https://github.com/charmbracelet/mods)** — pipe anything through AI on the command line
+- 🎨 **[biome](https://biomejs.dev)** — fast all-in-one JS/TS formatter + linter (replaces ESLint + Prettier)
+- ⚡ **[tsx](https://github.com/privatenumber/tsx)** — run TypeScript files directly without compiling
+- 🔍 **[knip](https://knip.dev)** — finds unused exports, dependencies, and files in TypeScript projects
+- 📽️ **[slides](https://github.com/maaslalani/slides)** — render markdown as a terminal slideshow
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -609,7 +613,7 @@ cat file.go | mods -m gpt-4o "refactor this"
 - ollama runs as a background service — always available, no manual start needed
 - Use `ai` / `aic` for offline/private work (code, notes, internal docs)
 - Use `m` (default API) for cloud models when you need higher quality
-- Pairs with `nreview` (coming) for AI-assisted note review before committing
+- Pairs with `nreview` for AI-assisted note review: `nreview` (current file) or `nreview <path>`
 
 ---
 
@@ -835,3 +839,42 @@ export SSH_AUTH_SOCK=~/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-
 
 Set in `~/.zshrc`. Make sure Bitwarden SSH agent is enabled in Bitwarden →
 Settings → SSH Agent.
+
+---
+
+## TypeScript Tools — biome, tsx, knip
+
+**[biome](https://biomejs.dev)** (mise) — fast all-in-one formatter + linter for JS/TS/JSON. Replaces ESLint + Prettier with a single tool. No config needed for basic use.
+
+**[tsx](https://github.com/privatenumber/tsx)** (mise) — run TypeScript files directly without compiling. Drop-in replacement for `ts-node`.
+
+**[knip](https://knip.dev)** (mise) — finds unused exports, dependencies, and files in TypeScript projects.
+
+```sh
+bio check --apply   # biof alias: format + lint fix
+bio check           # bioc alias: check only
+tsx file.ts         # run TypeScript directly
+knip                # find dead code and unused deps
+```
+
+### Aliases
+
+```sh
+bio='biome'
+biof='biome format --write'
+bioc='biome check --apply'
+```
+
+---
+
+## Slides — terminal presentations
+
+**[slides](https://github.com/maaslalani/slides)** (brew) — render markdown as a terminal slideshow. Uses `---` as slide separator.
+
+```sh
+slides presentation.md   # sl alias: start slideshow
+```
+
+Navigate with arrow keys, `q` to quit.
+
+---
