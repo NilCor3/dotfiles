@@ -50,6 +50,8 @@ oapi-codegen = "latest"
 "cargo:cargo-nextest" = "latest"
 "cargo:cargo-audit" = "latest"
 "cargo:cargo-expand" = "latest"
+fx = "latest"
+jnv = "latest"
 
 
 [env]

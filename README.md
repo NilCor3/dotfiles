@@ -31,6 +31,8 @@ the best tools are ones you can configure, compose, and own.
 - ⚡ **[cargo-nextest](https://nexte.st)** — faster Rust test runner with better output
 - 🔒 **[cargo-audit](https://rustsec.org)** — audit Cargo.lock for security vulnerabilities
 - 🔬 **[cargo-expand](https://github.com/dtolnay/cargo-expand)** — expand Rust macros to see generated code
+- 🔎 **[jnv](https://github.com/ynqa/jnv)** — interactive jq filter builder (live preview as you type)
+- 🌿 **[fx](https://fx.wtf)** — interactive JSON explorer and processor (pipe or file)
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -541,6 +543,42 @@ json-server --port 3001 db.json
 - **Prism validates** requests and responses against the spec — good for catching drift early
 - **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
 - **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
+
+---
+
+## JSON — jq, jnv, fx
+
+Three tools that compose into a complete JSON workflow.
+
+- **jq** — system-installed (1.7.1); the standard for scripting and one-liners
+- **[jnv](https://github.com/ynqa/jnv)** — interactive filter builder; type a jq expression and see results live
+- **[fx](https://fx.wtf)** — interactive explorer and JS-powered processor; installed via mise
+
+```sh
+# Explore an unknown API response
+xh api.example.com/data | jnv
+
+# Navigate a JSON file interactively (arrows, /, q)
+fx file.json
+
+# Filter with a JS expression
+fx file.json '.users.filter(u => u.active)'
+
+# One-liner scripting
+xh api.example.com/data | jq -r '.items[].name'
+
+# Extract + reshape
+jq '[.[] | {name: .name, id: .id}]' file.json
+
+# Raw string (no quotes), compact output
+jq -rc '.[].field' file.json
+```
+
+### Workflow
+
+1. **Discover** — pipe to `jnv` to build the filter interactively
+2. **Script** — paste the filter into `jq` for use in scripts/pipelines
+3. **Navigate** — use `fx` for large/nested structures where you want to collapse/expand nodes
 
 ---
 
