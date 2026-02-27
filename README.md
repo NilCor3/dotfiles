@@ -35,6 +35,8 @@ the best tools are ones you can configure, compose, and own.
 - 🌿 **[fx](https://fx.wtf)** — interactive JSON explorer and processor (pipe or file)
 - 📓 **[marksman](https://github.com/artempyanykh/marksman)** — markdown LSP with `[[wiki links]]`, backlinks, and cross-note navigation
 - ✨ **[glow](https://github.com/charmbracelet/glow)** — terminal markdown reader and notes browser TUI
+- 🦙 **[ollama](https://ollama.com)** — local LLM runtime, runs on Apple Silicon GPU via Metal
+- 💬 **[mods](https://github.com/charmbracelet/mods)** — pipe anything through AI on the command line
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -545,6 +547,60 @@ json-server --port 3001 db.json
 - **Prism validates** requests and responses against the spec — good for catching drift early
 - **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
 - **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
+
+---
+
+## Local AI — ollama + mods
+
+**[ollama](https://ollama.com)** runs LLMs locally on Apple Silicon via Metal GPU acceleration. **[mods](https://github.com/charmbracelet/mods)** (charmbracelet) is a CLI wrapper that pipes anything through an LLM — local or cloud.
+
+ollama installed via mise. mods installed via brew. mods config at `~/Library/Application Support/mods/mods.yml`.
+
+### Models
+
+```sh
+ollama serve                    # start local inference server (localhost:11434)
+ollama pull gemma3:4b           # ~2.5GB, fast general purpose
+ollama pull qwen2.5-coder:7b    # ~4.5GB, best for code tasks
+ollama list                     # list installed models
+```
+
+### Aliases
+
+```sh
+ai='mods -a ollama -m gemma3:4b'          # local general
+aic='mods -a ollama -m qwen2.5-coder:7b'  # local coder
+m='mods'                                   # shorthand (uses default API)
+```
+
+### Usage
+
+```sh
+# Explain code
+cat file.go | ai "explain this code"
+
+# Write commit message
+git diff | ai "write a concise commit message"
+
+# Review for bugs
+cat file.go | aic "review this for bugs and improvements"
+
+# Summarize
+cat file.md | m "summarize in 3 bullet points"
+
+# Ask a question
+ai "what is the difference between a mutex and a semaphore"
+
+# Use cloud model explicitly
+cat file.go | mods -m gpt-4o "refactor this"
+```
+
+### Workflow
+
+- `ollama serve` runs on demand — start it when you need local AI, stop it to free GPU memory
+- Use `ai` / `aic` for offline/private work (code, notes, internal docs)
+- Use `m` (default API) for cloud models when you need higher quality
+- Pairs with `nreview` (coming) for AI-assisted note review before committing
 
 ---
 

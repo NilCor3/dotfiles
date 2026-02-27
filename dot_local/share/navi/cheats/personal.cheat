@@ -647,3 +647,38 @@ glow <file.md>
 
 # Sync notes to git remote (commit + push)
 nsync
+
+% ai, ollama, mods
+
+# Start ollama server
+ollama serve
+
+# Pull a model
+ollama pull <gemma3:4b>
+
+# List installed models
+ollama list
+
+# Chat with local model interactively
+ollama run <gemma3:4b>
+
+# Pipe to local AI (general)
+<command> | mods -a ollama -m gemma3:4b "<prompt>"
+
+# Pipe to local coder model
+<command> | mods -a ollama -m qwen2.5-coder:7b "<prompt>"
+
+# Explain code
+cat <file> | ai "explain this code"
+
+# Write a commit message from diff
+git diff | ai "write a concise commit message"
+
+# Review code for issues
+cat <file> | aic "review this for bugs and improvements"
+
+# Summarize a file
+cat <file> | m "summarize this in 3 bullet points"
+
+# Ask a question (no pipe)
+ai "what is the difference between INNER JOIN and LEFT JOIN"
