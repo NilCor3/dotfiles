@@ -91,6 +91,13 @@ ya() {
 }
 alias n=nvim
 
+# --- Navigation ---
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ll='ls -lah'
+alias mkdir='mkdir -p'
+alias reload='source ~/.zshrc'
+
 # --- Git ---
 alias g='git'
 alias gs='git status'
@@ -113,6 +120,10 @@ alias gst='git stash'
 alias gstp='git stash pop'
 alias grb='git rebase'
 alias grbi='git rebase -i'
+alias gf='git fetch --all --prune'
+alias gcl='git clone'
+alias gcp='git cherry-pick'
+alias gclean='git clean -fd'
 alias lg='lazygit'
 
 # --- Go ---
@@ -138,5 +149,19 @@ alias cclf='cargo clippy --fix'
 alias cf='cargo fmt'
 alias cfa='cargo fmt --all'
 alias cdoc='cargo doc --open'
+
+# --- Mise ---
+alias mi='mise install'
+alias mu='mise use'
+alias ml='mise list'
+
+# --- fzf ---
+fbr()   { git switch "$(git branch -a | fzf | tr -d '* ')" }
+fgl()   { git log --oneline | fzf --preview 'git show {1}' | awk '{print $1}' | xargs git show }
+fga()   { git status --short | fzf -m | awk '{print $2}' | xargs git add }
+fkill() { ps aux | fzf | awk '{print $2}' | xargs kill }
+fcd()   { cd "$(fd --type d | fzf)" }
+fh()    { print -z $(fc -l 1 | fzf --tac | sed 's/^ *[0-9]* *//') }
+fhx()   { hx $(fzf --preview 'bat --color=always {}') }
 
 eval "$(mise activate zsh)"
