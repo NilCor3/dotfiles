@@ -27,6 +27,10 @@ the best tools are ones you can configure, compose, and own.
 - 🧪 **[gotestsum](https://github.com/gotestyourself/gotestsum)** — prettier Go test output with watch mode
 - 🐛 **[dlv](https://github.com/go-delve/delve)** — Go debugger with DAP support for editor integration
 - 📐 **[oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)** — generate Go types and server stubs from OpenAPI specs
+- 🥓 **[bacon](https://dystroy.org/bacon/)** — background Rust checker/tester that reruns on save
+- ⚡ **[cargo-nextest](https://nexte.st)** — faster Rust test runner with better output
+- 🔒 **[cargo-audit](https://rustsec.org)** — audit Cargo.lock for security vulnerabilities
+- 🔬 **[cargo-expand](https://github.com/dtolnay/cargo-expand)** — expand Rust macros to see generated code
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -537,6 +541,56 @@ json-server --port 3001 db.json
 - **Prism validates** requests and responses against the spec — good for catching drift early
 - **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
 - **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
+
+---
+
+## Rust Tools — bacon, cargo-nextest, cargo-audit, cargo-expand
+
+All installed via mise (`cargo:` prefix).
+
+### bacon — background watcher
+
+**[bacon](https://dystroy.org/bacon/)** is a background Rust checker that reruns on every file save — like air for Rust.
+
+```sh
+bac           # alias: bacon — default watch (test)
+bacon check   # watch cargo check
+bacon clippy  # watch clippy (most useful default)
+```
+
+### cargo-nextest — faster tests
+
+**[cargo-nextest](https://nexte.st)** is a drop-in replacement for `cargo test` with better output, parallelism, and retry support.
+
+```sh
+nt            # alias: cargo nextest run
+nta           # alias: cargo nextest run --all
+cargo nextest run <test_name>
+```
+
+### cargo-audit — security audit
+
+**[cargo-audit](https://rustsec.org)** checks `Cargo.lock` against the RustSec advisory database.
+
+```sh
+audit         # alias: cargo audit
+cargo audit fix   # attempt automatic remediation
+```
+
+### cargo-expand — macro expansion
+
+**[cargo-expand](https://github.com/dtolnay/cargo-expand)** shows the fully expanded Rust source after macro substitution — invaluable for debugging proc macros.
+
+```sh
+expand <module>   # alias: cargo expand <module>
+expand            # expand entire crate
+```
+
+### Workflow
+
+- Run `bacon clippy` in a WezTerm split while coding — instant feedback without leaving the editor
+- `nt` instead of `cargo test` everywhere — faster, cleaner output, JUnit XML for CI
+- `cargo audit` in pre-push hook or CI to catch vulnerabilities before they ship
 
 ---
 

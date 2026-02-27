@@ -46,6 +46,10 @@ sqlc = "latest"
 gotestsum = "latest"
 oapi-codegen = "latest"
 "go:github.com/go-delve/delve/cmd/dlv" = "latest"
+"cargo:bacon" = "latest"
+"cargo:cargo-nextest" = "latest"
+"cargo:cargo-audit" = "latest"
+"cargo:cargo-expand" = "latest"
 
 
 [env]
