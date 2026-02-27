@@ -38,6 +38,7 @@ yq = "latest"
 yazi = "latest"
 eza = "latest"
 xh = "latest"
+uv = "latest"
 
 
 [env]

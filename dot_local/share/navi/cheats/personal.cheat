@@ -431,3 +431,32 @@ eza -lah --icons --only-dirs
 
 # Group directories first
 eza -lah --icons --group-directories-first
+
+% pgcli, postgres
+
+# Connect to local database
+pgcli <database>
+
+# Connect with user and host
+pgcli -h <host> -U <user> <database>
+
+# Connect via URL
+pgcli postgresql://<user>:<password>@<host>/<database>
+
+# Inside pgcli: describe a table
+\d <table>
+
+# Inside pgcli: list all tables
+\dt
+
+# Inside pgcli: list databases
+\l
+
+# Inside pgcli: save a named query
+\ns <name> SELECT * FROM <table> WHERE <condition>
+
+# Inside pgcli: run a named query
+\n <name>
+
+# Inside pgcli: export query result to CSV
+\copy (SELECT * FROM <table>) TO '<file>.csv' CSV HEADER
