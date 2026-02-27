@@ -74,7 +74,7 @@ Key configs tracked in chezmoi:
 - Editor: `.config/helix/` (config, languages, scripts)
 - Terminal + multiplexer: `.config/wezterm/` (WezTerm handles both — panes, tabs, splits)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
-- Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`
+- Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`

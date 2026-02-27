@@ -138,6 +138,10 @@ alias lg='lazygit'
 alias http='xh'
 alias https='xh --https'
 
+# --- Mock REST ---
+alias mock='prism mock'
+alias jsr='json-server'
+
 # --- Postgres ---
 alias pgc='pgcli'
 
