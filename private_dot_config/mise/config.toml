@@ -36,6 +36,8 @@ golangci-lint = "latest"
 rumdl = "latest"
 yq = "latest"
 yazi = "latest"
+eza = "latest"
+xh = "latest"
 
 
 [env]
