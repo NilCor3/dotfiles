@@ -460,3 +460,26 @@ pgcli postgresql://<user>:<password>@<host>/<database>
 
 # Inside pgcli: export query result to CSV
 \copy (SELECT * FROM <table>) TO '<file>.csv' CSV HEADER
+
+% http, mock, prism, json-server
+
+# Mock from OpenAPI spec (local file)
+prism mock <openapi.yaml>
+
+# Mock from OpenAPI spec (remote URL)
+prism mock <https://api.example.com/openapi.yaml>
+
+# Mock with verbose logging
+prism mock --verbose <openapi.yaml>
+
+# Proxy to real API + validate requests/responses
+prism proxy <openapi.yaml> <https://real-api.example.com>
+
+# Start json-server from a db.json file
+json-server <db.json>
+
+# json-server with custom port
+json-server --port <port> <db.json>
+
+# json-server with custom routes file
+json-server --routes <routes.json> <db.json>

@@ -21,6 +21,7 @@ the best tools are ones you can configure, compose, and own.
 - 🌐 **[xh](https://github.com/ducaale/xh)** — fast, friendly HTTP client for the terminal (httpie compatible)
 - 📂 **[eza](https://eza.rocks)** — modern `ls` with icons, git status, and tree view
 - 🐘 **[pgcli](https://www.pgcli.com)** — postgres CLI with autocomplete, syntax highlighting and named queries
+- 🎭 **[prism](https://stoplight.io/open-source/prism)** + **[json-server](https://github.com/typicode/json-server)** — mock REST APIs from OpenAPI spec or plain JSON
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -486,6 +487,51 @@ xh --follow https://example.com
 - **Pipe to bat**: `xh --print=b api.example.com | bat -l json` — syntax-highlighted output
 - **In scripts**: drop-in replacement for `curl -s` + JSON parsing boilerplate
 - **Sessions** are stored in `~/.config/xh/sessions/` — useful for multi-step API flows
+
+---
+
+## Mock REST — prism + json-server
+
+Two complementary tools for mocking APIs without a running backend.
+
+**[prism](https://stoplight.io/open-source/prism)** mocks from an OpenAPI/Swagger spec — start a realistic mock server in one command. Can also act as a validating proxy to a real API.
+
+**[json-server](https://github.com/typicode/json-server)** creates a full CRUD REST API from a plain JSON file — ideal for quick prototyping when you don't have a spec yet.
+
+Both installed via mise (npm).
+
+```sh
+# Aliases
+mock='prism mock'
+jsr='json-server'
+```
+
+### Usage
+
+```sh
+# Mock from local OpenAPI spec
+prism mock openapi.yaml
+
+# Mock from remote spec URL
+prism mock https://api.example.com/openapi.yaml
+
+# Validating proxy to real API
+prism proxy openapi.yaml https://real-api.example.com
+
+# Quick CRUD API from a JSON file — GET/POST/PUT/DELETE /users, /posts etc.
+echo '{"users":[],"posts":[]}' > db.json
+json-server db.json
+
+# Custom port
+json-server --port 3001 db.json
+```
+
+### Workflow tips
+
+- **Compose with xh**: `prism mock openapi.yaml &` then `xh :3000/users` — full request/response flow locally
+- **Prism validates** requests and responses against the spec — good for catching drift early
+- **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
+- **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
 
 ---
 
