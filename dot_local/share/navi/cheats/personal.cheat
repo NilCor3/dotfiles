@@ -137,6 +137,15 @@ git clean -nd
 # Clean untracked files
 git clean -fd
 
+# Get a single file from a branch without checking out
+git show <branch>:<path/to/file> > <output_file>
+
+# Get all files from a branch into working tree without checking out
+git checkout origin/<branch> -- .
+
+# Bring all changes from a branch as a single staged diff (no commits)
+git merge --squash origin/<branch>
+
 % go, build & run
 
 # Run current module
