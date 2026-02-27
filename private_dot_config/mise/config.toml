@@ -39,6 +39,13 @@ yazi = "latest"
 eza = "latest"
 xh = "latest"
 uv = "latest"
+"npm:@stoplight/prism-cli" = "latest"
+"npm:json-server" = "latest"
+air = "latest"
+sqlc = "latest"
+gotestsum = "latest"
+oapi-codegen = "latest"
+"go:github.com/go-delve/delve/cmd/dlv" = "latest"
 
 
 [env]
