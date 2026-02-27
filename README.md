@@ -179,6 +179,7 @@ brew install \
   mkcert \
   navi \
   rsync \
+  tig \
   wget \
   markdown-oxide \
   usage \
