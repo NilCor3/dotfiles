@@ -632,20 +632,23 @@ date: 2026-02-27
 ```sh
 n              # open ~/notes in Helix
 ns             # open scratch.md (quick capture)
-ng             # browse notes with glow TUI
 nj             # create/open today's journal (journal/YYYY-MM-DD.md)
-nmeet <title>  # new meeting note with template
+nmeet <title>  # new meeting note with template (won't overwrite existing)
 nissue <id>    # new issue note (work/issue-NOV-123.md)
 nn <path>      # new note at relative path (creates frontmatter)
 nf [query]     # fuzzy find notes by filename → open in Helix
 nft <type>     # filter by frontmatter type (rg + fzf)
 ntag <tag>     # filter by frontmatter tag (rg + fzf)
+ng <pattern>   # ripgrep search → fzf file picker with match preview
+ngs            # live interactive content search (rg reloads as you type, opens at exact line)
+ngl            # browse notes with glow TUI
+nsync          # commit all changes and push
 ```
 
 ### Tools
 
 - **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references across the vault. Also **markdown-oxide** and **rumdl** linter are configured.
-- **[glow](https://github.com/charmbracelet/glow)** (mise) — charmbracelet TUI markdown browser. `ng` opens the whole vault; `glow file.md` renders a single file beautifully.
+- **[glow](https://github.com/charmbracelet/glow)** (mise) — charmbracelet TUI markdown browser. `ngl` opens the whole vault; `glow file.md` renders a single file beautifully.
 
 ### Git sync
 
@@ -662,7 +665,8 @@ Auto-push on every commit via post-commit hook. Run `nsync` to commit all change
 - Daily standup: `nj` → today's journal is ready with the date
 - During a meeting: `nmeet blink-planning` → structured template opens instantly
 - Find anything: `nf blink` (filename), `nft meeting` (by type), `ntag api` (by tag)
-- Read/review: `ng` for TUI browsing, `glow file.md` to render before sharing
+- Search content: `ng <word>` (static), `ngs` (live interactive, opens at exact line), `<space>/` in Helix
+- Read/review: `ngl` for TUI browsing, `glow file.md` to render before sharing
 
 ---
 
