@@ -36,16 +36,15 @@ if [ -f "$pane_id_file" ]; then
 fi
 
 if [ -z "$output_pane" ]; then
-  # Split below the Helix pane ($WEZTERM_PANE = Helix when running :sh)
-  output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35)
+  # New pane: run command directly at spawn time — no send-text timing issues
+  run_cmd="echo '» go test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'; exec zsh"
+  output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35 \
+    -- zsh -c "$run_cmd")
   echo "$output_pane" > "$pane_id_file"
-  # Set a recognisable terminal title (no trailing \r — avoids spurious Enter in new shell)
-  printf "\033]0;go-test\007" \
-    | wezterm cli send-text --pane-id "$output_pane" --no-paste
-  sleep 0.3  # Wait for shell to be ready before sending commands
+  wezterm cli activate-pane --pane-id "$output_pane"
+else
+  # Existing pane: clear then run
+  cmd="clear; echo '» go test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'"
+  printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$output_pane" --no-paste
+  wezterm cli activate-pane --pane-id "$output_pane"
 fi
-
-# Clear pane then run tests — echo the command first so it's visible
-cmd="clear; echo '» go test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'"
-printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$output_pane" --no-paste
-wezterm cli activate-pane --pane-id "$output_pane"
