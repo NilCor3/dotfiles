@@ -29,6 +29,7 @@ When helping with this setup, apply the same principles:
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
 - **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, yazi over Finder, helix over VS Code). WezTerm replaces both terminal emulator and multiplexer — use its pane/tab API in scripts rather than adding tmux or zellij.
+- **Merge conflicts** — mergiraf fires automatically as a git merge driver for Go, Rust, Java, TypeScript, JSON, YAML etc. Do not suggest separate merge tools. For remaining conflicts: lazygit (`e` on conflicted file).
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
 ---
@@ -72,7 +73,7 @@ Key configs tracked in chezmoi:
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editor: `.config/helix/` (config, languages, scripts)
 - Terminal + multiplexer: `.config/wezterm/` (WezTerm handles both — panes, tabs, splits)
-- Git: `.gitconfig`, `.gitignore`, `.config/git/personal.gitconfig`
+- Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`

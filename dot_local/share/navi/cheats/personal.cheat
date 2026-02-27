@@ -120,6 +120,17 @@ grb --abort
 # Continue rebase after resolving conflicts  [grb]
 grb --continue
 
+% git, merge conflicts
+
+# Solve conflict markers in a file (mergiraf post-process)
+mergiraf solve <file>
+
+# Review how mergiraf resolved a merge vs line-based
+mergiraf review <file>
+
+# Solve all conflicted files in repo
+git diff --name-only --diff-filter=U | xargs -I{} mergiraf solve {}
+
 % git, misc
 
 # Open lazygit  [lg]

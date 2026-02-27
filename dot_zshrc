@@ -124,6 +124,7 @@ alias gf='git fetch --all --prune'
 alias gcl='git clone'
 alias gcp='git cherry-pick'
 alias gclean='git clean -fd'
+alias mgsolve='mergiraf solve'  # solve remaining conflict markers in a file
 alias lg='lazygit'
 
 # --- Go ---
