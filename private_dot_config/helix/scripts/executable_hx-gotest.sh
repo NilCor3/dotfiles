@@ -11,26 +11,40 @@
 file="$1"
 line="$2"
 mode="${3:-cursor}"
+pane_id_file="/tmp/hx-gotest-output-pane"
 
 # Get -run pattern from AST tool
 pattern=$(~/.local/bin/hx-gotest "$file" "$line" "$mode" 2>/tmp/hx-gotest-err.log)
 if [ $? -ne 0 ]; then
   msg=$(cat /tmp/hx-gotest-err.log)
-  wezterm cli send-text --pane-id "$WEZTERM_PANE" --no-paste \
-    ":echo 'hx-gotest: $msg'\r"
+  printf ":echo 'hx-gotest: %s'\r" "$msg" \
+    | wezterm cli send-text --pane-id "$WEZTERM_PANE" --no-paste
   exit 1
 fi
 
 pkg_dir=$(dirname "$file")
 
-# Reuse or create a bottom pane for output
-pane_id=$(wezterm cli get-pane-direction down)
-if [ -z "$pane_id" ]; then
-  pane_id=$(wezterm cli split-pane --bottom --percent 35)
+# Find or create the dedicated output pane
+output_pane=""
+if [ -f "$pane_id_file" ]; then
+  stored=$(cat "$pane_id_file")
+  # Verify the pane still exists
+  if wezterm cli list --format json 2>/dev/null \
+      | python3 -c "import json,sys; ids=[p['pane_id'] for p in json.load(sys.stdin)]; exit(0 if $stored in ids else 1)" 2>/dev/null; then
+    output_pane="$stored"
+  fi
 fi
 
-wezterm cli activate-pane --pane-id "$pane_id"
+if [ -z "$output_pane" ]; then
+  # Split below the Helix pane ($WEZTERM_PANE = Helix when running :sh)
+  output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35)
+  echo "$output_pane" > "$pane_id_file"
+  # Set a recognisable terminal title for the pane
+  printf "\033]0;go-test\007\r" \
+    | wezterm cli send-text --pane-id "$output_pane" --no-paste
+fi
 
-# Run tests, stream output into the pane
-cmd="cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo '--- done ---'"
-printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+# Clear pane then run tests
+cmd="clear; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo '--- done ---'"
+printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$output_pane" --no-paste
+wezterm cli activate-pane --pane-id "$output_pane"
