@@ -93,8 +93,6 @@ ya() {
   fi
   rm -f -- "$tmp"
 }
-alias n=nvim
-
 # --- Navigation ---
 alias ..='cd ..'
 alias ...='cd ../..'
