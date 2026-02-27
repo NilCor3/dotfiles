@@ -13,7 +13,7 @@ the best tools are ones you can configure, compose, and own.
 - ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
 - 🔍 **[Helix × WezTerm integration](##helix-wezterm-integration)** — blame, explorer, lazygit, and test runner via pane scripts
 - 🧪 **[hx-gotest](#hx-gotest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
-- 🔐 **Age-encrypted secrets** in dotfiles — key backed up to Bitwarden
+- 🔐 **Age-encrypted secrets** in dotfiles — key stored at `~/.config/age/chezmoi-key.txt`
 - 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
 - 🐚 **Zsh + Zinit** with curated plugins, aliases, and `navi` cheatsheet
 - 🍎 **macOS defaults** applied via reproducible shell script with drift detection
@@ -31,9 +31,8 @@ the best tools are ones you can configure, compose, and own.
 brew install mise
 mise use -g chezmoi age
 
-# 3. Restore age key from Bitwarden before applying dotfiles
-#    Log in to Bitwarden, retrieve the secure note "chezmoi-age-key"
-#    and save it to ~/.config/age/chezmoi-key.txt
+# 3. Restore your age key before applying dotfiles
+#    Save your age key to ~/.config/age/chezmoi-key.txt
 mkdir -p ~/.config/age
 # paste key contents:
 nano ~/.config/age/chezmoi-key.txt
@@ -98,7 +97,6 @@ chezmoi git -- push
 Secrets in `~/.mise.toml` are encrypted with [age](https://age-encryption.org).
 
 - Age key lives at `~/.config/age/chezmoi-key.txt` — **never commit this**
-- Age key is backed up as a secure note in Bitwarden (`chezmoi-age-key`)
 - chezmoi config at `~/.config/chezmoi/chezmoi.toml` references the key
 
 ---
