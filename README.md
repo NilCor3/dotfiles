@@ -18,6 +18,7 @@ the best tools are ones you can configure, compose, and own.
 - 🐚 **Zsh + Zinit** with curated plugins, aliases, and `navi` cheatsheet
 - 🍎 **macOS defaults** applied via reproducible shell script with drift detection
 - 🗂️ **[yazi](https://yazi-rs.github.io/)** file explorer and **[tig](https://jonas.github.io/tig/)** blame — both integrated into Helix
+- 🌐 **[xh](https://github.com/ducaale/xh)** — fast, friendly HTTP client for the terminal (httpie compatible)
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -159,7 +160,9 @@ brew install \
   wget \
   markdown-oxide \
   marksman \
-  usage
+  usage \
+  xh \
+  mergiraf
 ```
 
 > Most dev tools (go, node, java, python, etc.) are managed via **mise**, not brew.
@@ -382,6 +385,55 @@ Configured globally via `~/.gitconfig` (merge driver) and `~/.gitattributes` (fi
 mgsolve <file>     # alias: mergiraf solve — clean up remaining markers in a file
 mergiraf review <file>  # compare mergiraf resolution vs line-based
 ```
+
+---
+
+## HTTP Client — xh
+
+**[xh](https://github.com/ducaale/xh)** is a fast, friendly HTTP client (httpie-compatible syntax, written in Rust).
+
+```sh
+# Aliases
+http=xh
+https='xh --https'
+```
+
+### Usage
+
+```sh
+# GET
+xh httpbin.org/get
+
+# POST JSON — string values use =, raw/number values use :=
+xh POST api.example.com/users name=Alice age:=30
+
+# Auth header
+xh api.example.com Authorization:"Bearer $TOKEN"
+
+# Print only response body (pipe-friendly)
+xh --print=b api.example.com/data
+
+# Download file
+xh --download https://example.com/file.zip
+
+# Persist session (cookies + headers) across requests
+xh --session=myapp POST api.example.com/login username=me password=secret
+xh --session=myapp api.example.com/profile   # reuses session
+
+# Preview request without sending
+xh --offline POST api.example.com key=value
+
+# Follow redirects
+xh --follow https://example.com
+```
+
+### Workflow integration
+
+- **Pipe to jq**: `xh api.example.com/data | jq '.items[]'`
+- **Pipe to fx**: `xh api.example.com/data | fx` — interactive JSON explorer
+- **Pipe to bat**: `xh --print=b api.example.com | bat -l json` — syntax-highlighted output
+- **In scripts**: drop-in replacement for `curl -s` + JSON parsing boilerplate
+- **Sessions** are stored in `~/.config/xh/sessions/` — useful for multi-step API flows
 
 ---
 
