@@ -78,6 +78,7 @@ Key configs tracked in chezmoi:
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`
 - Navi cheats: `.local/share/navi/cheats/personal.cheat`
+- GitHub Copilot CLI: `.copilot/config.json`, `.copilot/mcp-config.json`, `.copilot/agents/`
 - Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`, `.config/zellij/`
 
 ## What to NEVER add
