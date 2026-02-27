@@ -556,6 +556,15 @@ json-server --port 3001 db.json
 
 ollama installed via mise. mods installed via brew. mods config at `~/Library/Application Support/mods/mods.yml`.
 
+ollama runs as a **launchd background service** (`~/Library/LaunchAgents/com.ollama.serve.plist`) — starts automatically on login, always available at `localhost:11434`.
+
+```sh
+launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist    # start service
+launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist  # stop service
+curl -s http://localhost:11434                                    # check running
+tail -f /tmp/ollama.log                                          # view logs
+```
+
 ### Models
 
 ```sh
@@ -597,7 +606,7 @@ cat file.go | mods -m gpt-4o "refactor this"
 
 ### Workflow
 
-- `ollama serve` runs on demand — start it when you need local AI, stop it to free GPU memory
+- ollama runs as a background service — always available, no manual start needed
 - Use `ai` / `aic` for offline/private work (code, notes, internal docs)
 - Use `m` (default API) for cloud models when you need higher quality
 - Pairs with `nreview` (coming) for AI-assisted note review before committing
