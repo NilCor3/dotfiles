@@ -127,6 +127,10 @@ alias gclean='git clean -fd'
 alias mgsolve='mergiraf solve'  # solve remaining conflict markers in a file
 alias lg='lazygit'
 
+# --- HTTP ---
+alias http='xh'
+alias https='xh --https'
+
 # --- Go ---
 alias gob='go build ./...'
 alias gom='go mod tidy'

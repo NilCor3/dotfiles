@@ -382,3 +382,35 @@ chezmoi state delete-bucket --bucket=scriptState
 
 # Open source directory
 chezmoi cd
+
+% xh, http requests
+
+# GET request
+xh <url>
+
+# GET with custom header
+xh <url> <Header>:<value>
+
+# POST JSON (string=value, number:=value)
+xh POST <url> key=value key2:=123
+
+# POST with Bearer token
+xh <url> Authorization:"Bearer <token>"
+
+# Print only response body (pipe-friendly)
+xh --print=b <url>
+
+# Download a file
+xh --download <url>
+
+# Follow redirects
+xh --follow <url>
+
+# Preview request without sending
+xh --offline POST <url> key=value
+
+# Persistent session (persists cookies/headers)
+xh --session=<name> <url>
+
+# Pipe response through jq
+xh --print=b <url> | jq '<filter>'
