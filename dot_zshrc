@@ -214,8 +214,8 @@ nissue() {
 }
 
 nn() {
-  local path="${1:?usage: nn work/my-note.md}"
-  local file="$NOTES_DIR/$path"
+  local note_path="${1:?usage: nn work/my-note.md}"
+  local file="$NOTES_DIR/$note_path"
   mkdir -p "$(dirname "$file")"
   if [[ ! -f "$file" ]]; then
     printf -- "---\ntype: ref\ntags: []\ndate: %s\n---\n\n# %s\n\n" "$(date +%Y-%m-%d)" "$(basename "${path%.md}")" > "$file"
