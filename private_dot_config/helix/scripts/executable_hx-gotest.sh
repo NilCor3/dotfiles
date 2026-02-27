@@ -44,7 +44,7 @@ if [ -z "$output_pane" ]; then
     | wezterm cli send-text --pane-id "$output_pane" --no-paste
 fi
 
-# Clear pane then run tests
-cmd="clear; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo '--- done ---'"
+# Clear pane then run tests — echo the command first so it's visible
+cmd="clear; echo '» go test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && go test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'"
 printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$output_pane" --no-paste
 wezterm cli activate-pane --pane-id "$output_pane"
