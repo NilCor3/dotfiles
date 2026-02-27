@@ -25,6 +25,7 @@ When helping with this setup, apply the same principles:
 - **Write small, single-purpose scripts** rather than one large script that does everything
 - **Avoid adding new tool dependencies** without asking — mise manages runtimes, and adding a tool has real cost
 - **New tool config belongs in chezmoi** — if you configure a new tool, `chezmoi add` its config file
+- **When you teach the user a useful command**, add it as a navi cheat to `~/.local/share/navi/cheats/personal.cheat` and `chezmoi re-add` it. Cheats are grouped by `% topic, subtopic` headers; each entry is a `# Description` comment followed by the command on the next line. Use `<placeholder>` for variable parts.
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
 - **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, yazi over Finder, helix over VS Code). WezTerm replaces both terminal emulator and multiplexer — use its pane/tab API in scripts rather than adding tmux or zellij.
@@ -75,6 +76,7 @@ Key configs tracked in chezmoi:
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`
+- Navi cheats: `.local/share/navi/cheats/personal.cheat`
 - Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`, `.config/zellij/`
 
 ## What to NEVER add
