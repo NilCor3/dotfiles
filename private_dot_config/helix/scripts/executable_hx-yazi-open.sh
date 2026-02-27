@@ -35,3 +35,4 @@ fi
 
 rm -f "$chooser_file"
 wezterm cli activate-pane --pane-id "$hx_pane"
+wezterm cli close-pane --pane-id "$WEZTERM_PANE"
