@@ -193,6 +193,20 @@ ng() {
   [[ -n "$file" ]] && hx "$file"
 }
 
+# Live interactive content search — type to filter, opens hx at matching line
+ngs() {
+  local result
+  result=$(
+    rg --color=always --line-number --no-heading . "$NOTES_DIR" 2>/dev/null |
+    fzf --disabled --ansi \
+        --bind "change:reload:rg --color=always --line-number --no-heading {q} $NOTES_DIR 2>/dev/null || true" \
+        --delimiter : \
+        --preview 'bat --color=always --highlight-line {2} {1}' \
+        --preview-window 'right:60%:+{2}-5'
+  )
+  [[ -n "$result" ]] && hx "${result%%:*}:$(echo "$result" | cut -d: -f2)"
+}
+
 nj() {
   local file="$NOTES_DIR/journal/$(date +%Y-%m-%d).md"
   if [[ ! -f "$file" ]]; then
