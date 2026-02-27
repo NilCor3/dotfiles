@@ -239,6 +239,22 @@ Config at `~/.config/wezterm/wezterm.lua`.
 Built from source, binary at `~/hx/builds/current/bin/hx`.
 Config: `~/.config/helix/`
 
+**After a fresh machine restore, rebuild Helix:**
+
+```sh
+# Clone and build (requires Rust via mise)
+git clone https://github.com/helix-editor/helix ~/hx/helix
+cd ~/hx/helix
+cargo build --release --locked
+
+# Wire up the build as "current"
+mkdir -p ~/hx/builds
+cp -r target/release ~/hx/builds/$(date +%Y-%m-%d)
+ln -sfn ~/hx/builds/$(date +%Y-%m-%d) ~/hx/builds/current
+```
+
+`mise` config already adds `~/hx/builds/current/bin` to PATH and sets `HELIX_RUNTIME` — no further setup needed after the build.
+
 LSP setup:
 
 - **Java** — jdtls (Homebrew) + Lombok + Fortnox code style
