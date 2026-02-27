@@ -591,6 +591,15 @@ ntag <tag>     # filter by frontmatter tag (rg + fzf)
 - **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references across the vault. Also **markdown-oxide** and **rumdl** linter are configured.
 - **[glow](https://github.com/charmbracelet/glow)** (mise) — charmbracelet TUI markdown browser. `ng` opens the whole vault; `glow file.md` renders a single file beautifully.
 
+### Git sync
+
+Auto-push on every commit via post-commit hook. Run `nsync` to commit all changes and push.
+
+**Pre-commit validation** (`.hooks/pre-commit`) — blocks commits if:
+- `type:` field missing from frontmatter
+- `date:` field missing from frontmatter
+- rumdl warnings are shown (non-blocking)
+
 ### Workflow
 
 - Capture fast: `ns` → type → save. Sort to proper folder later.
