@@ -22,6 +22,11 @@ the best tools are ones you can configure, compose, and own.
 - 📂 **[eza](https://eza.rocks)** — modern `ls` with icons, git status, and tree view
 - 🐘 **[pgcli](https://www.pgcli.com)** — postgres CLI with autocomplete, syntax highlighting and named queries
 - 🎭 **[prism](https://stoplight.io/open-source/prism)** + **[json-server](https://github.com/typicode/json-server)** — mock REST APIs from OpenAPI spec or plain JSON
+- 🔄 **[air](https://github.com/air-verse/air)** — live reload for Go servers on file save
+- 🗄️ **[sqlc](https://sqlc.dev)** — generate type-safe Go from SQL queries
+- 🧪 **[gotestsum](https://github.com/gotestyourself/gotestsum)** — prettier Go test output with watch mode
+- 🐛 **[dlv](https://github.com/go-delve/delve)** — Go debugger with DAP support for editor integration
+- 📐 **[oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)** — generate Go types and server stubs from OpenAPI specs
 - 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
@@ -532,6 +537,66 @@ json-server --port 3001 db.json
 - **Prism validates** requests and responses against the spec — good for catching drift early
 - **json-server routes file**: map clean URLs with a `routes.json` → `{ "/api/*": "/$1" }`
 - **prism + blink**: point at the existing OpenAPI spec for frontend/integration testing without a running backend
+
+---
+
+## Go Tools — air, sqlc, gotestsum, dlv, oapi-codegen
+
+All installed via mise.
+
+### air — live reload
+
+**[air](https://github.com/air-verse/air)** watches your project and rebuilds/restarts on file save.
+
+```sh
+air init    # scaffold .air.toml in project root
+air         # start live reload (runs in a dedicated WezTerm pane)
+```
+
+### sqlc — type-safe SQL
+
+**[sqlc](https://sqlc.dev)** generates type-safe Go from raw SQL. Write `schema.sql` + `queries.sql`, run generate, get Go code. No ORM needed.
+
+```sh
+sqlc init      # create sqlc.yaml
+sqlcg          # alias: sqlc generate — regenerate from schema + queries
+sqlcv          # alias: sqlc vet — lint queries against schema
+```
+
+### gotestsum — prettier tests
+
+**[gotestsum](https://github.com/gotestyourself/gotestsum)** is a drop-in for `go test` with better output and watch mode.
+
+```sh
+gw             # alias: gotestsum — run all tests with pretty output
+gwa            # alias: gotestsum --watch — rerun on file save
+gwf            # alias: gotestsum --format testname — show individual test names
+```
+
+### dlv — Go debugger
+
+**[dlv](https://github.com/go-delve/delve)** is the standard Go debugger, with DAP support for editor integration.
+
+```sh
+dlv debug                    # debug current package
+dlv attach <pid>             # attach to running process
+dlv dap --listen=:2345       # start DAP server for Helix/editor integration
+```
+
+### oapi-codegen — OpenAPI → Go
+
+**[oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)** generates Go types and server/client stubs from an OpenAPI spec. Pairs with prism (same spec drives both mock server and generated code).
+
+```sh
+oapi-codegen -generate types,server -package api openapi.yaml > api/api.gen.go
+oapi-codegen -generate types -package api openapi.yaml > api/types.gen.go
+```
+
+### Workflow
+
+- Run `air` in one WezTerm pane, `gwa` in another — instant feedback loop
+- `oapi-codegen` + `prism`: spec-first workflow — generate Go stubs and mock server from the same OpenAPI file
+- `dlv dap --listen=:2345` then connect from Helix for breakpoint debugging
 
 ---
 

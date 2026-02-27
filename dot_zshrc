@@ -151,6 +151,11 @@ alias gom='go mod tidy'
 alias gog='go generate ./...'
 alias gol='golangci-lint run'
 alias gocc='go clean -testcache'
+alias gw='gotestsum'
+alias gwa='gotestsum --watch'
+alias gwf='gotestsum --format testname'
+alias sqlcg='sqlc generate'
+alias sqlcv='sqlc vet'
 
 # Run all tests
 gota() { go test -v "${1:-./...}" }

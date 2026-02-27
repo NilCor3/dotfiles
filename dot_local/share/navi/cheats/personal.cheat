@@ -483,3 +483,44 @@ json-server --port <port> <db.json>
 
 # json-server with custom routes file
 json-server --routes <routes.json> <db.json>
+
+% go, tools, air, sqlc, gotestsum, dlv, oapi-codegen
+
+# Run gotestsum (pretty test output)
+gotestsum
+
+# Watch mode - rerun tests on save
+gotestsum --watch
+
+# Show individual test names
+gotestsum --format testname ./...
+
+# Initialize air config in project
+air init
+
+# Start air live reload server
+air
+
+# Generate SQL code from schema + queries
+sqlc generate
+
+# Vet SQL queries for errors
+sqlc vet
+
+# Init new sqlc project
+sqlc init
+
+# Start delve debugger on current package
+dlv debug
+
+# Attach delve to running process
+dlv attach <pid>
+
+# Start delve DAP server (for editor integration)
+dlv dap --listen=:2345
+
+# Generate Go server/client from OpenAPI spec
+oapi-codegen -generate types,server -package api openapi.yaml > api/api.gen.go
+
+# Generate only types
+oapi-codegen -generate types -package api openapi.yaml > api/types.gen.go
