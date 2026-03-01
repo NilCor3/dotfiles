@@ -14,8 +14,8 @@ import os
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 MODEL = "qwen2.5-coder:7b"
 TIMEOUT = 30  # seconds — first request loads model into GPU; subsequent requests are fast
-MAX_PREFIX = 4000  # chars
-MAX_SUFFIX = 1000  # chars
+MAX_PREFIX = 8000  # chars — larger context = better completions
+MAX_SUFFIX = 2000  # chars
 
 log = logging.getLogger("ollama-ls")
 logging.basicConfig(
@@ -63,25 +63,35 @@ def send_error(req_id, code, message):
 
 # ── Ollama ────────────────────────────────────────────────────────────────────
 
-def complete_fim(prefix: str, suffix: str) -> str | None:
-    prompt = f"<|fim_prefix|>{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
+def complete_fim(prefix: str, suffix: str, filename: str = "") -> str | None:
+    # Include filename as a comment hint so model knows the language
+    file_hint = f"// file: {filename}\n" if filename else ""
+    prompt = f"<|fim_prefix|>{file_hint}{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
     payload = json.dumps({
         "model": MODEL,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": 0.1, "stop": ["<|fim_pad|>", "<|repo_name|>", "<|file_sep|>", "\n\n"]},
+        "options": {
+            "temperature": 0.1,
+            "stop": [
+                "<|fim_pad|>", "<|repo_name|>", "<|file_sep|>",
+                "\n\n\n",   # stop on excessive blank lines
+                "```",      # prevent code fence pollution
+            ],
+        },
     }).encode()
     try:
         req = urllib.request.Request(OLLAMA_URL, data=payload, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
             resp = json.loads(r.read())
             text = resp.get("response", "")
-            # Strip markdown code fences if model wraps output
-            if text.startswith("```"):
-                lines = text.splitlines()
-                # drop first line (``` or ```lang) and last ``` line
-                inner = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
+            # Strip leading code fence if model wrapped output
+            if text.lstrip().startswith("```"):
+                lines = text.lstrip().splitlines()
+                inner = lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:]
                 text = "\n".join(inner)
+            # Strip any stray backtick runs (shouldn't appear now with stop token)
+            text = text.replace("```", "")
             return text
     except Exception as e:
         log.warning("ollama request failed: %s", e)
@@ -131,11 +141,14 @@ def handle_inline_completion(req_id, params):
     prefix = prefix[-MAX_PREFIX:]
     suffix = suffix[:MAX_SUFFIX]
 
+    # Extract just the filename for the language hint (e.g. "main.rs")
+    filename = uri.split("/")[-1]
+
     log.debug("inline_completion at %d:%d prefix_len=%d suffix_len=%d", line_no, char_no, len(prefix), len(suffix))
 
     import time
     t0 = time.monotonic()
-    completion = complete_fim(prefix, suffix)
+    completion = complete_fim(prefix, suffix, filename)
     elapsed = time.monotonic() - t0
     log.debug("ollama response in %.1fs: %r", elapsed, (completion or "")[:60])
     if not completion:
