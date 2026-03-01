@@ -738,3 +738,12 @@ cd ~/hx/source && cargo build --release && cd ~/hx && bash setup_build.sh
 # Authenticate Copilot in Helix (first time or after token expiry)
 python3 ~/hx/copilot_auth.py
 
+
+# Toggle inline AI provider between Copilot and ollama (Space , a in Helix)
+bash ~/.config/helix/scripts/hx-toggle-ai.sh
+
+# Check current AI provider
+cat ~/.config/helix/.ai-provider
+
+# View ollama-ls debug log
+tail -f /tmp/ollama-ls.log

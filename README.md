@@ -318,7 +318,20 @@ LSP setup:
 - **Java** — jdtls (Homebrew) + Lombok + Fortnox code style
 - **Go** — gopls with staticcheck, gofumpt, full inlay hints
 - **Rust** — rust-analyzer with Clippy on save, proc macros, inlay hints
-- **All languages** — Copilot LSP
+- **All languages** — Copilot LSP (default) or ollama-ls (toggle with `Space , a`)
+
+### Inline completion
+
+The fork exposes `textDocument/inlineCompletion`. Two providers available:
+
+| Provider | Source | Trigger |
+|----------|--------|---------|
+| `copilot` | GitHub Copilot cloud | `A-i` |
+| `ollama-ls` | Local qwen2.5-coder:7b via ollama | `A-i` |
+
+Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.ai-provider`.
+
+`ollama-ls` is a ~150-line Python bridge (`~/.config/helix/scripts/ollama-ls.py`) — no daemon, no auth, connects directly to `localhost:11434`. Logs to `/tmp/ollama-ls.log`.
 
 ### Helix WezTerm Integration
 
@@ -335,6 +348,7 @@ Scripts at `~/.config/helix/scripts/`.
 | `Space , t` | Run Go test under cursor | `hx-gotest.sh` |
 | `Space , T` | Run whole Go test func | `hx-gotest.sh` |
 | `Space , F` | Run all Go tests in file | `hx-gotest.sh` |
+| `Space , a` | Toggle AI provider (Copilot ↔ ollama) | `hx-toggle-ai.sh` |
 
 Each script reuses or creates a WezTerm pane, runs the tool, then returns focus to Helix.
 `wezterm-find-hx.sh` is a helper that finds the Helix pane by title when focus needs to return.
