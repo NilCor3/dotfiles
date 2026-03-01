@@ -13,7 +13,7 @@ import os
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 MODEL = "qwen2.5-coder:7b"
-TIMEOUT = 5  # seconds — fast on Apple Silicon
+TIMEOUT = 30  # seconds — first request loads model into GPU; subsequent requests are fast
 MAX_PREFIX = 4000  # chars
 MAX_SUFFIX = 1000  # chars
 
@@ -133,7 +133,11 @@ def handle_inline_completion(req_id, params):
 
     log.debug("inline_completion at %d:%d prefix_len=%d suffix_len=%d", line_no, char_no, len(prefix), len(suffix))
 
+    import time
+    t0 = time.monotonic()
     completion = complete_fim(prefix, suffix)
+    elapsed = time.monotonic() - t0
+    log.debug("ollama response in %.1fs: %r", elapsed, (completion or "")[:60])
     if not completion:
         send_response(req_id, {"items": []})
         return
