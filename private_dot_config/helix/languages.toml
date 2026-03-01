@@ -6,6 +6,12 @@ args = ["--stdio"]
 editorInfo = { name = "Helix", version = "25.01" }
 editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
 
+# Local AI inline completion via ollama (qwen2.5-coder:7b)
+# Toggle between copilot and ollama-ls with Space , a
+[language-server.ollama-ls]
+command = "python3"
+args = ["/Users/joakim.karlsson/.config/helix/scripts/ollama-ls.py"]
+
 [language-server.jdtls]
 command = "jdtls"
 args = [
