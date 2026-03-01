@@ -69,7 +69,14 @@ def complete_fim(prefix: str, suffix: str) -> str | None:
         req = urllib.request.Request(OLLAMA_URL, data=payload, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
             resp = json.loads(r.read())
-            return resp.get("response", "")
+            text = resp.get("response", "")
+            # Strip markdown code fences if model wraps output
+            if text.startswith("```"):
+                lines = text.splitlines()
+                # drop first line (``` or ```lang) and last ``` line
+                inner = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
+                text = "\n".join(inner)
+            return text
     except Exception as e:
         log.warning("ollama request failed: %s", e)
         return None
