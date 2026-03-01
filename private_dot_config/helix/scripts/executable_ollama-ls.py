@@ -64,9 +64,9 @@ def send_error(req_id, code, message):
 # ── Ollama ────────────────────────────────────────────────────────────────────
 
 def complete_fim(prefix: str, suffix: str, filename: str = "") -> str | None:
-    # Include filename as a comment hint so model knows the language
-    file_hint = f"// file: {filename}\n" if filename else ""
-    prompt = f"<|fim_prefix|>{file_hint}{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
+    # Use qwen2.5-coder's repo-level FIM format for better language context
+    file_header = f"<|file_sep|>{filename}\n" if filename else ""
+    prompt = f"<|fim_prefix|>{file_header}{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
     payload = json.dumps({
         "model": MODEL,
         "prompt": prompt,
@@ -75,8 +75,7 @@ def complete_fim(prefix: str, suffix: str, filename: str = "") -> str | None:
             "temperature": 0.1,
             "stop": [
                 "<|fim_pad|>", "<|repo_name|>", "<|file_sep|>",
-                "\n\n\n",   # stop on excessive blank lines
-                "```",      # prevent code fence pollution
+                "\n\n",   # stop on blank line — keeps completions focused
             ],
         },
     }).encode()
@@ -85,13 +84,16 @@ def complete_fim(prefix: str, suffix: str, filename: str = "") -> str | None:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
             resp = json.loads(r.read())
             text = resp.get("response", "")
-            # Strip leading code fence if model wrapped output
-            if text.lstrip().startswith("```"):
-                lines = text.lstrip().splitlines()
-                inner = lines[1:-1] if lines and lines[-1].strip() == "```" else lines[1:]
-                text = "\n".join(inner)
-            # Strip any stray backtick runs (shouldn't appear now with stop token)
-            text = text.replace("```", "")
+            # Strip code fence wrapper if model produces markdown output
+            if "```" in text:
+                # If it starts with a fence, extract the inner content
+                if text.lstrip().startswith("```"):
+                    lines = text.lstrip().splitlines()
+                    end = next((i for i, l in enumerate(lines[1:], 1) if l.strip() == "```"), len(lines))
+                    text = "\n".join(lines[1:end])
+                else:
+                    # Fence appears mid-output — truncate before it
+                    text = text[:text.index("```")]
             return text
     except Exception as e:
         log.warning("ollama request failed: %s", e)
