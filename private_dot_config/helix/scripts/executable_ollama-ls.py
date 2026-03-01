@@ -26,25 +26,26 @@ logging.basicConfig(filename="/tmp/ollama-ls.log", level=logging.DEBUG)
 def read_message():
     headers = {}
     while True:
-        line = sys.stdin.readline()
+        line = sys.stdin.buffer.readline()
         if not line:
             return None
-        line = line.rstrip("\r\n")
+        line = line.rstrip(b"\r\n").decode("utf-8")
         if line == "":
             break
         if ":" in line:
             k, v = line.split(":", 1)
             headers[k.strip().lower()] = v.strip()
     length = int(headers.get("content-length", 0))
-    body = sys.stdin.read(length)
+    body = sys.stdin.buffer.read(length).decode("utf-8")
     return json.loads(body)
 
 
 def send_message(msg):
     body = json.dumps(msg)
-    header = f"Content-Length: {len(body)}\r\n\r\n"
-    sys.stdout.write(header + body)
-    sys.stdout.flush()
+    encoded = body.encode("utf-8")
+    header = f"Content-Length: {len(encoded)}\r\n\r\n".encode("utf-8")
+    sys.stdout.buffer.write(header + encoded)
+    sys.stdout.buffer.flush()
 
 
 def send_response(req_id, result):
