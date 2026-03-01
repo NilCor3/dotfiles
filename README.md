@@ -80,7 +80,7 @@ the best tools are ones you can configure, compose, and own.
 - ⚡ **[tsx](https://github.com/privatenumber/tsx)** — run TypeScript files directly without compiling
 - 🔍 **[knip](https://knip.dev)** — finds unused exports, dependencies, and files in TypeScript projects
 - 📽️ **[slides](https://github.com/maaslalani/slides)** — render markdown as a terminal slideshow
-- 🤖 **GitHub Copilot CLI** — AI assistant wired into the terminal with AGENTS.md context at every level
+- 🤖 **[GitHub Copilot CLI](https://github.com/github/gh-copilot)** — AI assistant wired into the terminal with AGENTS.md context at every level
 
 ---
 
@@ -141,7 +141,7 @@ mise install
 
 ## GitHub Copilot CLI
 
-The terminal AI assistant used in this setup. Runs in WezTerm, reads `~/AGENTS.md` and folder-level `AGENTS.md` files for context.
+The terminal AI assistant used in this setup. Runs in WezTerm, reads `~/AGENTS.md` and folder-level `AGENTS.md` files for context. See the [GitHub Copilot CLI docs](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-in-the-command-line) and the [gh-copilot extension](https://github.com/github/gh-copilot).
 
 ### Setup
 
