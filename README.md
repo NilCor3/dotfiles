@@ -7,6 +7,45 @@ This repo contains my personal dotfiles and machine setup — managed with [chez
 secrets encrypted with [age](https://age-encryption.org), and built around the philosophy that
 the best tools are ones you can configure, compose, and own.
 
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Philosophy](#philosophy)
+- [Quick Start](#quick-start)
+- [GitHub Copilot CLI](#github-copilot-cli)
+- [Secrets](#secrets)
+- [Brew Formulas](#brew-formulas)
+- [Brew Casks](#brew-casks)
+- [Mise — Runtime Version Manager](#mise--runtime-version-manager)
+- [Shell — Zsh + Zinit](#shell--zsh--zinit)
+- [Terminal — WezTerm](#terminal--wezterm)
+- [Editors](#editors)
+  - [Helix](#helix)
+  - [Helix WezTerm Integration](#helix-wezterm-integration)
+  - [hx-gotest](#hx-gotest)
+- [macOS Utilities](#macos-utilities)
+- [Manual Backup & Restore](#manual-backup--restore)
+- [Updating macOS Defaults](#updating-macos-defaults)
+- [Database tools](#database-tools)
+- [Postgres CLI — pgcli](#postgres-cli--pgcli)
+- [Git — Merge Conflicts](#git--merge-conflicts)
+- [File Listing — eza](#file-listing--eza)
+- [HTTP Client — xh](#http-client--xh)
+- [Mock REST — prism + json-server](#mock-rest--prism--json-server)
+- [Local AI — ollama + mods](#local-ai--ollama--mods)
+- [Notes — marksman + glow](#notes--marksman--glow)
+- [JSON — jq, jnv, fx](#json--jq-jnv-fx)
+- [Rust Tools](#rust-tools--bacon-cargo-nextest-cargo-audit-cargo-expand)
+- [Go Tools](#go-tools--air-sqlc-gotestsum-dlv-oapi-codegen)
+- [TypeScript Tools — biome, tsx, knip](#typescript-tools--biome-tsx-knip)
+- [Slides — terminal presentations](#slides--terminal-presentations)
+- [SSH](#ssh)
+
+---
+
+
 ## Features
 
 - 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal with Lua config
