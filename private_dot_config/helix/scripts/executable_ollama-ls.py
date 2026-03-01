@@ -64,19 +64,15 @@ def send_error(req_id, code, message):
 # ── Ollama ────────────────────────────────────────────────────────────────────
 
 def complete_fim(prefix: str, suffix: str, filename: str = "") -> str | None:
-    # Use qwen2.5-coder's repo-level FIM format for better language context
-    file_header = f"<|file_sep|>{filename}\n" if filename else ""
-    prompt = f"<|fim_prefix|>{file_header}{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
+    # Basic single-file FIM — qwen2.5-coder infers language from code context
+    prompt = f"<|fim_prefix|>{prefix}<|fim_suffix|>{suffix}<|fim_middle|>"
     payload = json.dumps({
         "model": MODEL,
         "prompt": prompt,
         "stream": False,
         "options": {
             "temperature": 0.1,
-            "stop": [
-                "<|fim_pad|>", "<|repo_name|>", "<|file_sep|>",
-                "\n\n",   # stop on blank line — keeps completions focused
-            ],
+            "stop": ["<|fim_pad|>", "<|repo_name|>", "<|file_sep|>", "\n\n"],
         },
     }).encode()
     try:
