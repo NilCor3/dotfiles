@@ -236,24 +236,43 @@ Config at `~/.config/wezterm/wezterm.lua`.
 
 ### Helix
 
-Built from source, binary at `~/hx/builds/current/bin/hx`.
+Built from source (custom fork with inline completion support), binary at `~/hx/builds/current/bin/hx`.
 Config: `~/.config/helix/`
 
-**After a fresh machine restore, rebuild Helix:**
+**Fork:** `github.com/NilCor3/helix` on branch `feature/inline-completion` — rebased onto upstream master, with [devmanuelli's inline completion PR](https://github.com/devmanuelli/helix) merged in for Copilot inline suggestions.
+
+**After a fresh machine restore:**
 
 ```sh
-# Clone and build (requires Rust via mise)
-git clone https://github.com/helix-editor/helix ~/hx/helix
-cd ~/hx/helix
-cargo build --release --locked
+# Clone fork and set up remotes
+git clone git@github.com:NilCor3/helix.git ~/hx/source
+cd ~/hx/source
+git remote add upstream https://github.com/helix-editor/helix
+git remote add devmanuelli https://github.com/devmanuelli/helix.git
+git checkout feature/inline-completion
 
-# Wire up the build as "current"
-mkdir -p ~/hx/builds
-cp -r target/release ~/hx/builds/$(date +%Y-%m-%d)
-ln -sfn ~/hx/builds/$(date +%Y-%m-%d) ~/hx/builds/current
+# Build (requires Rust via mise)
+cargo build --release
+
+# Deploy — creates numbered build, copies binary + runtime, updates 'current' symlink
+cd ~/hx && bash setup_build.sh
+
+# Authenticate Copilot (first time only — device flow)
+python3 ~/hx/copilot_auth.py
 ```
 
-`mise` config already adds `~/hx/builds/current/bin` to PATH and sets `HELIX_RUNTIME` — no further setup needed after the build.
+`mise` config adds `~/hx/builds/current/bin` to PATH and sets `HELIX_RUNTIME` automatically.
+
+**Keeping Helix up to date:**
+
+```sh
+cd ~/hx/source
+git fetch upstream
+git rebase upstream/master        # rebase inline-completion onto latest upstream
+# resolve any conflicts, then:
+cargo build --release
+cd ~/hx && bash setup_build.sh
+```
 
 LSP setup:
 

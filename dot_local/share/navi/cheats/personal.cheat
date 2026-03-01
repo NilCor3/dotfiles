@@ -726,3 +726,15 @@ knip
 # Start a slideshow from markdown
 slides <presentation.md>
 
+
+% helix, build
+
+# Update Helix to latest upstream (fetch, rebase, build, deploy)
+cd ~/hx/source && git fetch upstream && git rebase upstream/master && cargo build --release && cd ~/hx && bash setup_build.sh
+
+# Build and deploy Helix (after code change)
+cd ~/hx/source && cargo build --release && cd ~/hx && bash setup_build.sh
+
+# Authenticate Copilot in Helix (first time or after token expiry)
+python3 ~/hx/copilot_auth.py
+
