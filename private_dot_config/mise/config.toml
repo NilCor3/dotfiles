@@ -1,6 +1,7 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
 experimental = true
+env_shell_expand = false
 
 [tools]
 java = 'latest'
@@ -60,5 +61,5 @@ ollama = "latest"
 
 
 [env]
-_.path = ["$HOME/.local/share/mise/shims", "~/hx/builds/current/bin"]
+_.path = ["~/hx/builds/current/bin"]
 HELIX_RUNTIME="~/hx/builds/current/runtime"
