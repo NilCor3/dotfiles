@@ -9,8 +9,7 @@ editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
 # Local AI inline completion via ollama (qwen2.5-coder:7b)
 # Toggle between copilot and ollama-ls with Space , a
 [language-server.ollama-ls]
-command = "/Users/joakim.karlsson/.local/share/mise/installs/python/3.14.2/bin/python3"
-args = ["/Users/joakim.karlsson/.config/helix/scripts/ollama-ls.py"]
+command = "ollama-ls"
 
 [language-server.jdtls]
 command = "jdtls"
@@ -57,7 +56,7 @@ useBlocks = true
 [[language]]
 name = "java"
 roots = ["pom.xml", "build.gradle", "mvnw", "gradlew", ".git"]
-language-servers = ["jdtls", "copilot"]
+language-servers = ["jdtls", "ollama-ls"]
 auto-format = true
 
 [language-server.rust-analyzer.config]
@@ -86,7 +85,7 @@ inlayHints.lifetimeElisionHints.enable = "skip_trivial"
 [[language]]
 name = "rust"
 roots = ["Cargo.toml", "Cargo.lock"]
-language-servers = ["rust-analyzer", "copilot"]
+language-servers = ["rust-analyzer", "ollama-ls"]
 # Format with rustfmt using the 2024 edition ruleset on save
 formatter = { command = "rustfmt", args = ["--edition", "2024"] }
 auto-format = true
@@ -127,7 +126,7 @@ staticcheck = true
 [[language]]
 name = "go"
 roots = ["go.work", "go.mod"]
-language-servers = ["gopls", "copilot"]
+language-servers = ["gopls", "ollama-ls"]
 # Format and auto-manage import blocks on save
 formatter = { command = "goimports" }
 auto-format = true
