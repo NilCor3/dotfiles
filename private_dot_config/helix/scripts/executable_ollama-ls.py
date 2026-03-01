@@ -18,7 +18,12 @@ MAX_PREFIX = 4000  # chars
 MAX_SUFFIX = 1000  # chars
 
 log = logging.getLogger("ollama-ls")
-logging.basicConfig(filename="/tmp/ollama-ls.log", level=logging.DEBUG)
+logging.basicConfig(
+    filename="/tmp/ollama-ls.log",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 
 
 # ── LSP I/O ──────────────────────────────────────────────────────────────────
