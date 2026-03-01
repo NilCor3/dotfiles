@@ -10,6 +10,7 @@ editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
 # Toggle between copilot and ollama-ls with Space , a
 [language-server.ollama-ls]
 command = "/Users/joakim.karlsson/.local/bin/ollama-ls"
+environment = { "RUST_LOG" = "debug" }
 
 [language-server.jdtls]
 command = "jdtls"
@@ -56,7 +57,7 @@ useBlocks = true
 [[language]]
 name = "java"
 roots = ["pom.xml", "build.gradle", "mvnw", "gradlew", ".git"]
-language-servers = ["jdtls", "ollama-ls"]
+language-servers = ["jdtls", { name = "ollama-ls", only-features = ["inline-completion"] }]
 auto-format = true
 
 [language-server.rust-analyzer.config]
@@ -85,7 +86,10 @@ inlayHints.lifetimeElisionHints.enable = "skip_trivial"
 [[language]]
 name = "rust"
 roots = ["Cargo.toml", "Cargo.lock"]
-language-servers = ["rust-analyzer", "ollama-ls"]
+language-servers = [
+  "rust-analyzer",
+  { name = "ollama-ls", only-features = ["inline-completion"] },
+]
 # Format with rustfmt using the 2024 edition ruleset on save
 formatter = { command = "rustfmt", args = ["--edition", "2024"] }
 auto-format = true
@@ -126,7 +130,7 @@ staticcheck = true
 [[language]]
 name = "go"
 roots = ["go.work", "go.mod"]
-language-servers = ["gopls", "ollama-ls"]
+language-servers = ["gopls", { name = "ollama-ls", only-features = ["inline-completion"] }]
 # Format and auto-manage import blocks on save
 formatter = { command = "goimports" }
 auto-format = true
