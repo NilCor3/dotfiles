@@ -144,12 +144,23 @@ local keys = {
 
 	-- Helix-like passive scroll (no mode needed): mirrors C-e/C-y/C-d/C-u in Helix normal mode.
 	-- WezTerm intercepts CTRL+SHIFT+letter before the terminal app sees it.
-	{ key = "e", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
-	{ key = "y", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
+	{ key = "j", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
+	{ key = "k", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
 	{ key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
 	{ key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
+	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+
+	-- Pane resize: ALT+h/j/k/l
+	{ key = "h", mods = "ALT", action = act.AdjustPaneSize({ "Left", 3 }) },
+	{ key = "j", mods = "ALT", action = act.AdjustPaneSize({ "Down", 3 }) },
+	{ key = "k", mods = "ALT", action = act.AdjustPaneSize({ "Up", 3 }) },
+	{ key = "l", mods = "ALT", action = act.AdjustPaneSize({ "Right", 3 }) },
+
 	{
-		key = "n",
 		mods = "LEADER",
 		action = wezterm.action_callback(function(win, pane)
 			local tab, window = pane:move_to_new_tab()
