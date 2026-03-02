@@ -151,7 +151,7 @@ local keys = {
 	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
 	{ key = "h", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[pane:pane_id()] then
+		if ac and ac[tostring(pane:pane_id())] then
 			local tab = win:active_tab()
 			local id = pane:pane_id()
 			for _, info in ipairs(tab:panes_with_info()) do
@@ -167,7 +167,7 @@ local keys = {
 	end) },
 	{ key = "j", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[pane:pane_id()] then
+		if ac and ac[tostring(pane:pane_id())] then
 			local tab = win:active_tab()
 			local id = pane:pane_id()
 			for _, info in ipairs(tab:panes_with_info()) do
@@ -183,7 +183,7 @@ local keys = {
 	end) },
 	{ key = "k", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[pane:pane_id()] then
+		if ac and ac[tostring(pane:pane_id())] then
 			local tab = win:active_tab()
 			local id = pane:pane_id()
 			for _, info in ipairs(tab:panes_with_info()) do
@@ -199,7 +199,7 @@ local keys = {
 	end) },
 	{ key = "l", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[pane:pane_id()] then
+		if ac and ac[tostring(pane:pane_id())] then
 			local tab = win:active_tab()
 			local id = pane:pane_id()
 			for _, info in ipairs(tab:panes_with_info()) do
@@ -217,13 +217,13 @@ local keys = {
 	-- Toggle auto-collapse on current pane (shrinks to 1 line on nav away, restores on nav back)
 	{ key = "Z", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		wezterm.GLOBAL.ac_panes = wezterm.GLOBAL.ac_panes or {}
-		local id = pane:pane_id()
+		local id = tostring(pane:pane_id())
 		if wezterm.GLOBAL.ac_panes[id] then
 			wezterm.GLOBAL.ac_panes[id] = nil
-			wezterm.log_info("Auto-collapse OFF for pane " .. tostring(id))
+			wezterm.log_info("Auto-collapse OFF for pane " .. id)
 		else
 			wezterm.GLOBAL.ac_panes[id] = true
-			wezterm.log_info("Auto-collapse ON for pane " .. tostring(id))
+			wezterm.log_info("Auto-collapse ON for pane " .. id)
 		end
 	end) },
 
