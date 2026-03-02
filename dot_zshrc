@@ -159,9 +159,9 @@ alias sqlcg='sqlc generate'
 alias sqlcv='sqlc vet'
 
 # Run all tests
-gota() { go test -v "${1:-./...}" }
+gota() { richgo test -v "${1:-./...}" }
 # Run tests matching a partial or full name: got myFunc, got TestMyFunc, got myFunc ./pkg/...
-got() { go test -v -run ".*${1}.*" "${2:-./...}" }
+got() { richgo test -v -run ".*${1}.*" "${2:-./...}" }
 
 # --- Rust ---
 alias cb='cargo build'
