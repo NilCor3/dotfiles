@@ -64,6 +64,7 @@ the best tools are ones you can configure, compose, and own.
 - 🔄 **[air](https://github.com/air-verse/air)** — live reload for Go servers on file save
 - 🗄️ **[sqlc](https://sqlc.dev)** — generate type-safe Go from SQL queries
 - 🧪 **[gotestsum](https://github.com/gotestyourself/gotestsum)** — prettier Go test output with watch mode
+- 🌈 **[richgo](https://github.com/kyoh86/richgo)** — colored `go test` output; used by Helix test runner and `got`/`gota` aliases
 - 🐛 **[dlv](https://github.com/go-delve/delve)** — Go debugger with DAP support for editor integration
 - 📐 **[oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)** — generate Go types and server stubs from OpenAPI specs
 - 🥓 **[bacon](https://dystroy.org/bacon/)** — background Rust checker/tester that reruns on save
@@ -375,6 +376,15 @@ Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.
 
 `ollama-ls` is a ~150-line Python bridge (`~/.config/helix/scripts/ollama-ls.py`) — no daemon, no auth, connects directly to `localhost:11434`. Logs to `/tmp/ollama-ls.log`.
 
+### Helix Keybindings
+
+| Key | Action |
+|-----|--------|
+| `C-s` | Save current buffer (normal + insert mode) |
+| `C-S-s` | Save all buffers (normal + insert mode) |
+| `C-g` | Open lazygit in a new buffer (exits on quit) |
+| `esc` | Collapse selection, keep primary |
+
 ### Helix WezTerm Integration
 
 All keybindings live under `Space , ` (Space comma) in normal mode.
@@ -397,8 +407,8 @@ Each script reuses or creates a WezTerm pane, runs the tool, then returns focus 
 
 ### hx-gotest
 
-Source: `~/source/hx-gotest/` — a small Go CLI using `go/ast` to determine the exact
-`go test -run` pattern for the cursor position.
+Source: `~/dev/hx-gotest/` — a small Go CLI using `go/ast` to determine the exact
+`go test -run` pattern for the cursor position. Test output is piped through **richgo** for colored output.
 
 ```sh
 hx-gotest <file> <line> [cursor|func|file]
@@ -421,7 +431,7 @@ hx-gotest <file> <line> [cursor|func|file]
 
 To rebuild after changes:
 ```sh
-cd ~/source/hx-gotest && go build -o ~/.local/bin/hx-gotest .
+cd ~/dev/hx-gotest && go build -o ~/.local/bin/hx-gotest .
 ```
 
 ---
@@ -934,6 +944,16 @@ sqlcv          # alias: sqlc vet — lint queries against schema
 gw             # alias: gotestsum — run all tests with pretty output
 gwa            # alias: gotestsum --watch — rerun on file save
 gwf            # alias: gotestsum --format testname — show individual test names
+```
+
+### richgo — colored go test output
+
+**[richgo](https://github.com/kyoh86/richgo)** is a drop-in for `go test` that adds color-coded pass/fail output. Used by `hx-gotest.sh` (Helix test runner) and the `got`/`gota` shell aliases.
+
+```sh
+got            # alias: richgo test ./... — run all tests with color
+gota           # alias: richgo test ./... -v — verbose with color
+richgo test -run ^TestFoo$ ./pkg/...
 ```
 
 ### dlv — Go debugger
