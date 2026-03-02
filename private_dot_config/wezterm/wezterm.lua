@@ -55,6 +55,22 @@ config.keys = require("keybinds")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 modal.apply_to_config(config)
 
+-- Patch copy_mode key_table after modal sets it up.
+-- Fixes a bug in modal.wezterm defaults where both `t` and `T` are JumpBackward.
+-- Also adds Helix-style `x` for line selection.
+local function patch_copy_mode(key_tables)
+	local copy_mode = key_tables.copy_mode
+	for i, binding in ipairs(copy_mode) do
+		-- Fix: `t` should be JumpForward (till char forward), not JumpBackward
+		if binding.key == "t" and (binding.mods == nil or binding.mods == "NONE") then
+			copy_mode[i] = { key = "t", action = wezterm.action.CopyMode({ JumpForward = { prev_char = true } }) }
+		end
+	end
+	-- Add `x` → select current line (Helix: x selects line, like vim's V)
+	table.insert(copy_mode, { key = "x", action = wezterm.action.CopyMode({ SetSelectionMode = "Line" }) })
+end
+patch_copy_mode(config.key_tables)
+
 wezterm.on("modal.enter", function(name, window, pane)
 	modal.set_right_status(window, name)
 	modal.set_window_title(pane, name)

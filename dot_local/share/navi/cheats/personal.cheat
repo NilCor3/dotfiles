@@ -747,3 +747,24 @@ cat ~/.config/helix/.ai-provider
 
 # View ollama-ls debug log
 tail -f /tmp/ollama-ls.log
+
+
+% wezterm, scroll, keybindings
+
+# Scroll view down 1 line (Helix C-e) — works without entering scroll mode
+# Keybind: CTRL+SHIFT+e
+
+# Scroll view up 1 line (Helix C-y) — works without entering scroll mode
+# Keybind: CTRL+SHIFT+y
+
+# Scroll half page down (Helix C-d) — works without entering scroll mode
+# Keybind: CTRL+SHIFT+d
+
+# Scroll half page up (Helix C-u) — works without entering scroll mode
+# Keybind: CTRL+SHIFT+u
+
+# Enter scroll mode (j/k lines, d/u half-page, g/G top/bottom, v → copy, / → search)
+# Keybind: LEADER y  (CTRL+SHIFT+Space, then y)
+
+# Enter copy mode (hjkl, w/e/b words, v visual, V line, x select-line, y yank, / search)
+# Keybind: LEADER c  (CTRL+SHIFT+Space, then c)

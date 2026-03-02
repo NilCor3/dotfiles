@@ -141,6 +141,13 @@ local keys = {
 
 	{ key = "UpArrow", mods = "SHIFT", action = act.ScrollToPrompt(-1) },
 	{ key = "DownArrow", mods = "SHIFT", action = act.ScrollToPrompt(1) },
+
+	-- Helix-like passive scroll (no mode needed): mirrors C-e/C-y/C-d/C-u in Helix normal mode.
+	-- WezTerm intercepts CTRL+SHIFT+letter before the terminal app sees it.
+	{ key = "e", mods = "CTRL|SHIFT", action = act.ScrollByLine(1) },
+	{ key = "y", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
+	{ key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
+	{ key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
 	{
 		key = "n",
 		mods = "LEADER",
