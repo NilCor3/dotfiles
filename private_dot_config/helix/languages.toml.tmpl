@@ -9,19 +9,19 @@ editorPluginInfo = { name = "helix-copilot", version = "0.1.0" }
 # Local AI inline completion via ollama (qwen2.5-coder:7b)
 # Toggle between copilot and ollama-ls with Space , a
 [language-server.ollama-ls]
-command = "/Users/joakim.karlsson/.local/bin/ollama-ls"
+command = "{{ .chezmoi.homeDir }}/.local/bin/ollama-ls"
 environment = { "RUST_LOG" = "debug" }
 
 [language-server.jdtls]
 command = "jdtls"
 args = [
-  "--jvm-arg=-javaagent:/Users/joakim.karlsson/.config/helix/lang_servers/lombok.jar",
-  "-data", "/Users/joakim.karlsson/code/workspace/helix-jdtls"
+  "--jvm-arg=-javaagent:{{ .chezmoi.homeDir }}/.config/helix/lang_servers/lombok.jar",
+  "-data", "{{ .chezmoi.homeDir }}/code/workspace/helix-jdtls"
 ]
 
 [language-server.jdtls.config.settings.java]
 format.enabled = true
-format.settings.url = "/Users/joakim.karlsson/.config/helix/lang_servers/java-code-style.xml"
+format.settings.url = "{{ .chezmoi.homeDir }}/.config/helix/lang_servers/java-code-style.xml"
 format.settings.profile = "fortnoxStyle"
 eclipse.downloadSource = true
 maven.downloadSources = true
