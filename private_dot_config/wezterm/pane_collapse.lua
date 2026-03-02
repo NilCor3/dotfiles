@@ -68,12 +68,18 @@ end
 -- Restoration of the target pane happens via update-status (async-safe).
 function M.nav(direction)
 	return wezterm.action_callback(function(win, pane)
-		local old_id = pane:pane_id()
-		-- Collapse the pane we are leaving if it has auto-collapse on.
-		if wezterm.GLOBAL.ac_panes and wezterm.GLOBAL.ac_panes[old_id] then
-			collapse(win, old_id)
+		-- Wrap collapse logic in pcall so a failure never blocks navigation.
+		local ok, err = pcall(function()
+			local old_id = pane:pane_id()
+			local ac = wezterm.GLOBAL.ac_panes
+			if ac and ac[old_id] then
+				collapse(win, old_id)
+			end
+		end)
+		if not ok then
+			wezterm.log_error("pane_collapse nav: " .. tostring(err))
 		end
-		-- Navigate to the next pane.
+		-- Navigation always runs, even if collapse logic errored.
 		win:perform_action(act.ActivatePaneDirection(direction), pane)
 	end)
 end
@@ -81,28 +87,33 @@ end
 --- Toggle auto-collapse on the current pane, show a toast.
 function M.toggle()
 	return wezterm.action_callback(function(win, pane)
-		M.init()
-		local id = pane:pane_id()
-		if wezterm.GLOBAL.ac_panes[id] then
-			wezterm.GLOBAL.ac_panes[id] = nil
-			-- If it's currently collapsed, restore it now.
-			local key = tostring(id)
-			local stored = wezterm.GLOBAL.ac_heights[key]
-			if stored then
-				local tab = win:active_tab()
-				local current = pane_cell_height(tab, id)
-				if current then
-					local delta = stored - current
-					if delta > 0 then
-						win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+		local ok, err = pcall(function()
+			M.init()
+			local id = pane:pane_id()
+			if wezterm.GLOBAL.ac_panes[id] then
+				wezterm.GLOBAL.ac_panes[id] = nil
+				-- If it's currently collapsed, restore it now.
+				local key = tostring(id)
+				local stored = wezterm.GLOBAL.ac_heights[key]
+				if stored then
+					local tab = win:active_tab()
+					local current = pane_cell_height(tab, id)
+					if current then
+						local delta = stored - current
+						if delta > 0 then
+							win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+						end
 					end
+					wezterm.GLOBAL.ac_heights[key] = nil
 				end
-				wezterm.GLOBAL.ac_heights[key] = nil
+				win:toast_notification("WezTerm", "Auto-collapse OFF", nil, 2000)
+			else
+				wezterm.GLOBAL.ac_panes[id] = true
+				win:toast_notification("WezTerm", "Auto-collapse ON", nil, 2000)
 			end
-			win:toast_notification("WezTerm", "Auto-collapse OFF", nil, 2000)
-		else
-			wezterm.GLOBAL.ac_panes[id] = true
-			win:toast_notification("WezTerm", "Auto-collapse ON", nil, 2000)
+		end)
+		if not ok then
+			wezterm.log_error("pane_collapse toggle: " .. tostring(err))
 		end
 	end)
 end
