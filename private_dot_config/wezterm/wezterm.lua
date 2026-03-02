@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
-wezterm.log_info("The config was reloaded for this window!")
+wezterm.log_info("Config reloaded - v2")
 
 local function mergeTables(t1, t2)
 	for key, value in pairs(t2) do
