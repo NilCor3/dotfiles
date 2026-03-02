@@ -794,3 +794,10 @@ tail -f /tmp/ollama-ls.log
 
 # Resize pane right
 # Keybind: ALT+l
+
+# Zoom pane (toggle fullscreen for current pane)
+# Keybind: LEADER z  (CTRL+SHIFT+Space, then z)
+
+# Collapse/uncollapse current pane to 1 row
+# Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
+

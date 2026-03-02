@@ -5,34 +5,6 @@ local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 
--- Collapse pane from_id by growing its neighbor toward it.
--- Saves height + restore direction into ac_heights for later restore.
--- nav_dir: the direction the user is navigating ("Down", "Up", "Left", "Right")
--- NOTE: AdjustPaneSize always acts on the ACTIVE pane, so we can't resize a non-active
--- pane here. Instead we store a "pending collapse" signal in GLOBAL and let update-status
--- execute the resize once the new (neighbor) pane becomes active.
-local function schedule_collapse(tab, from_id, nav_dir)
-	local panes = tab:panes_with_info()
-	local src = nil
-	for _, info in ipairs(panes) do
-		if info.pane:pane_id() == from_id then src = info; break end
-	end
-	if not src or src.height <= 1 then return end
-
-	-- Save height so restore_if_needed can expand it back when we return.
-	-- Use top-level GLOBAL keys (ach_ID / acr_ID) — sub-table writes may not persist.
-	wezterm.GLOBAL["ach_" .. tostring(from_id)] = src.height
-	wezterm.GLOBAL["acr_" .. tostring(from_id)] = nav_dir
-
-	-- grow_dirs: the direction the NEW active pane should grow to eat the old pane's space
-	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
-	-- Signal update-status to perform the actual resize once nav completes
-	wezterm.GLOBAL.ac_collapse_pending_id  = tostring(from_id)
-	wezterm.GLOBAL.ac_collapse_pending_h   = src.height
-	wezterm.GLOBAL.ac_collapse_pending_dir = grow_dirs[nav_dir]
-	wezterm.log_info("schedule_collapse: pane=" .. tostring(from_id) .. " h=" .. src.height .. " grow=" .. grow_dirs[nav_dir])
-end
-
 local keys = {
 	{key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize},
 	{key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize},
@@ -177,49 +149,35 @@ local keys = {
 	{ key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
 	{ key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
 	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
-	{ key = "h", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
-		local ac = wezterm.GLOBAL.ac_panes
-		local id = pane:pane_id()
-		if ac and ac[tostring(id)] then
-			schedule_collapse(win:active_tab(), id, "Left")
-		end
-		win:perform_action(act.ActivatePaneDirection("Left"), pane)
-	end) },
-	{ key = "j", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
-		local ac = wezterm.GLOBAL.ac_panes
-		local id = pane:pane_id()
-		if ac and ac[tostring(id)] then
-			schedule_collapse(win:active_tab(), id, "Down")
-		end
-		win:perform_action(act.ActivatePaneDirection("Down"), pane)
-	end) },
-	{ key = "k", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
-		local ac = wezterm.GLOBAL.ac_panes
-		local id = pane:pane_id()
-		if ac and ac[tostring(id)] then
-			schedule_collapse(win:active_tab(), id, "Up")
-		end
-		win:perform_action(act.ActivatePaneDirection("Up"), pane)
-	end) },
-	{ key = "l", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
-		local ac = wezterm.GLOBAL.ac_panes
-		local id = pane:pane_id()
-		if ac and ac[tostring(id)] then
-			schedule_collapse(win:active_tab(), id, "Right")
-		end
-		win:perform_action(act.ActivatePaneDirection("Right"), pane)
-	end) },
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-	-- Toggle auto-collapse on current pane (shrinks to 1 line on nav away, restores on nav back)
-	{ key = "Z", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
-		wezterm.GLOBAL.ac_panes = wezterm.GLOBAL.ac_panes or {}
+	-- Collapse/uncollapse current pane to 1 row (manual toggle)
+	{ key = "a", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local id = tostring(pane:pane_id())
-		if wezterm.GLOBAL.ac_panes[id] then
-			wezterm.GLOBAL.ac_panes[id] = nil
-			wezterm.log_info("Auto-collapse OFF for pane " .. id)
+		local stored_h = wezterm.GLOBAL["ach_" .. id]
+		local tab = win:active_tab()
+		local current_h = nil
+		for _, info in ipairs(tab:panes_with_info()) do
+			if info.pane:pane_id() == pane:pane_id() then
+				current_h = info.height
+				break
+			end
+		end
+		if not current_h then return end
+		if stored_h and stored_h > 0 then
+			-- Restore: expand back to original height
+			local delta = stored_h - current_h
+			if delta > 0 then
+				win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+			end
+			wezterm.GLOBAL["ach_" .. id] = 0
 		else
-			wezterm.GLOBAL.ac_panes[id] = true
-			wezterm.log_info("Auto-collapse ON for pane " .. id)
+			-- Collapse: store height and shrink
+			wezterm.GLOBAL["ach_" .. id] = current_h
+			win:perform_action(act.AdjustPaneSize({ "Down", -(current_h - 1) }), pane)
 		end
 	end) },
 
