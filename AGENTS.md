@@ -127,7 +127,7 @@ When modifying the LSP server:
 
 ## WezTerm keybinding conventions
 
-LEADER key is `CTRL+Space` (timeout 1s). All pane/window management goes through LEADER.
+LEADER key is `CTRL+SHIFT+Space` (timeout 1s). All pane/window management goes through LEADER.
 
 Key patterns to know when modifying WezTerm config:
 - **Pane zoom**: `LEADER z` → `TogglePaneZoomState` (current pane)

@@ -764,24 +764,24 @@ tail -f /tmp/ollama-ls.log
 # Keybind: CTRL+SHIFT+u
 
 # Enter scroll mode (j/k lines, d/u half-page, g/G top/bottom, v → copy, / → search)
-# Keybind: LEADER y  (CTRL+Space, then y)
+# Keybind: LEADER y  (CTRL+SHIFT+Space, then y)
 
 # Enter copy mode (hjkl, w/e/b words, v visual, V line, x select-line, y yank, / search)
-# Keybind: LEADER c  (CTRL+Space, then c)
+# Keybind: LEADER c  (CTRL+SHIFT+Space, then c)
 
 % wezterm, pane, keybindings
 
 # Navigate pane left (mirrors Helix CTRL+w h)
-# Keybind: LEADER h  (CTRL+Space, then h)
+# Keybind: LEADER h  (CTRL+SHIFT+Space, then h)
 
 # Navigate pane down (mirrors Helix CTRL+w j)
-# Keybind: LEADER j  (CTRL+Space, then j)
+# Keybind: LEADER j  (CTRL+SHIFT+Space, then j)
 
 # Navigate pane up (mirrors Helix CTRL+w k)
-# Keybind: LEADER k  (CTRL+Space, then k)
+# Keybind: LEADER k  (CTRL+SHIFT+Space, then k)
 
 # Navigate pane right (mirrors Helix CTRL+w l)
-# Keybind: LEADER l  (CTRL+Space, then l)
+# Keybind: LEADER l  (CTRL+SHIFT+Space, then l)
 
 # Resize pane left
 # Keybind: ALT+h
