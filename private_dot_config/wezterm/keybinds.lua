@@ -19,11 +19,10 @@ local function schedule_collapse(tab, from_id, nav_dir)
 	end
 	if not src or src.height <= 1 then return end
 
-	-- Save height so restore_if_needed can expand it back when we return
-	wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-	wezterm.GLOBAL.ac_heights[tostring(from_id)] = src.height
-	wezterm.GLOBAL.ac_restore_dirs = wezterm.GLOBAL.ac_restore_dirs or {}
-	wezterm.GLOBAL.ac_restore_dirs[tostring(from_id)] = nav_dir
+	-- Save height so restore_if_needed can expand it back when we return.
+	-- Use top-level GLOBAL keys (ach_ID / acr_ID) — sub-table writes may not persist.
+	wezterm.GLOBAL["ach_" .. tostring(from_id)] = src.height
+	wezterm.GLOBAL["acr_" .. tostring(from_id)] = nav_dir
 
 	-- grow_dirs: the direction the NEW active pane should grow to eat the old pane's space
 	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }

@@ -19,12 +19,6 @@ function M.init()
 	if not wezterm.GLOBAL.ac_panes then
 		wezterm.GLOBAL.ac_panes = {}
 	end
-	if not wezterm.GLOBAL.ac_heights then
-		wezterm.GLOBAL.ac_heights = {}
-	end
-	if not wezterm.GLOBAL.ac_restore_dirs then
-		wezterm.GLOBAL.ac_restore_dirs = {}
-	end
 end
 
 --- Return the cell height of a pane from panes_with_info, or nil if not found.
@@ -54,22 +48,21 @@ end
 function M.restore_if_needed(win, pane)
 	local id = pane:pane_id()
 	local key = tostring(id)
-	if not wezterm.GLOBAL.ac_heights then return end
-	local target_h = wezterm.GLOBAL.ac_heights[key]
-	if not target_h then return end
-	local restore_dir = (wezterm.GLOBAL.ac_restore_dirs or {})[key] or "Down"
+	local target_h   = wezterm.GLOBAL["ach_" .. key]
+	local restore_dir = wezterm.GLOBAL["acr_" .. key] or "Down"
+	wezterm.log_info("restore_check pane " .. key .. ": target=" .. tostring(target_h) .. " dir=" .. restore_dir)
+	if not target_h or target_h == 0 then return end
 	local tab = win:active_tab()
 	local current = pane_cell_height(tab, id)
 	if not current then return end
-	wezterm.log_info("restore pane " .. key .. ": current=" .. current .. " target=" .. target_h .. " dir=" .. restore_dir)
 	local delta = target_h - current
+	wezterm.log_info("restore pane " .. key .. ": current=" .. current .. " target=" .. target_h .. " delta=" .. delta)
 	if delta > 0 then
 		win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
 	end
-	wezterm.GLOBAL.ac_heights[key] = nil
-	if wezterm.GLOBAL.ac_restore_dirs then
-		wezterm.GLOBAL.ac_restore_dirs[key] = nil
-	end
+	-- Clear regardless so we don't re-fire
+	wezterm.GLOBAL["ach_" .. key] = 0
+	wezterm.GLOBAL["acr_" .. key] = ""
 end
 
 --- Execute a pending collapse on the now-active pane.
@@ -122,9 +115,9 @@ function M.toggle()
 				wezterm.GLOBAL.ac_panes[id] = nil
 				-- If it's currently collapsed, restore it now.
 				local key = tostring(id)
-				local target_h = (wezterm.GLOBAL.ac_heights or {})[key]
-				if target_h then
-					local restore_dir = (wezterm.GLOBAL.ac_restore_dirs or {})[key] or "Down"
+				local target_h = wezterm.GLOBAL["ach_" .. key]
+				if target_h and target_h > 0 then
+					local restore_dir = wezterm.GLOBAL["acr_" .. key] or "Down"
 					local tab = win:active_tab()
 					local current = pane_cell_height(tab, id)
 					if current then
@@ -133,10 +126,8 @@ function M.toggle()
 							win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
 						end
 					end
-					wezterm.GLOBAL.ac_heights[key] = nil
-					if wezterm.GLOBAL.ac_restore_dirs then
-						wezterm.GLOBAL.ac_restore_dirs[key] = nil
-					end
+					wezterm.GLOBAL["ach_" .. key] = 0
+					wezterm.GLOBAL["acr_" .. key] = ""
 				end
 				win:toast_notification("WezTerm", "Auto-collapse OFF", nil, 2000)
 			else
