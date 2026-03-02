@@ -97,3 +97,28 @@ Key configs tracked in chezmoi:
 - `~/dev/` — personal projects (git uses `jocke82karlsson@gmail.com`)
 - `~/source/` — work projects (git uses `joakim.karlsson@fortnox.se`)
 - `~/.local/bin/` — personal compiled binaries (e.g. `hx-gotest`, built from `~/dev/hx-gotest/`)
+
+---
+
+## Helix AI inline completion (`ollama-lsp`)
+
+The inline completion (ghost text) feature in Helix is handled by a custom Rust
+LSP server at `~/dev/ollama-lsp/`. Key facts:
+
+- Binary: `~/.local/bin/ollama-ls` (build with `make install` in the project dir)
+- Config: `~/.config/helix/languages.toml` — uses **absolute path** for `command`
+  because Helix does not inherit the shell's PATH
+- The server uses `raw: true` in the ollama API call to bypass the chat template
+  and pass FIM tokens directly to the model
+- `only-features = ["inline-completion"]` is required in each language's
+  `language-servers` list so Helix sends `didOpen`/`didChange` to the server
+- **Toggle** between ollama and Copilot via navi ("Toggle inline AI") — requires
+  a full `hx` restart (`:lsp-restart` alone is not enough)
+- Logs go to stderr; Helix captures them in `~/.cache/helix/helix.log`
+- Model: `qwen2.5-coder:7b` (default, override with `OLLAMA_MODEL` env var)
+
+When modifying the LSP server:
+1. Edit `~/dev/ollama-lsp/src/`
+2. Run `cargo test` — 60+ unit and integration tests
+3. `make install` to deploy
+4. Restart `hx` to pick up the new binary
