@@ -57,9 +57,18 @@ function M.restore_if_needed(win, pane)
 	local tab = win:active_tab()
 	local current = pane_cell_height(tab, id)
 	if not current then return end
-	local delta = stored - current
+	-- stored is either { h = N, dir = "Down" } (new format) or a plain number (legacy)
+	local target_h, restore_dir
+	if type(stored) == "table" then
+		target_h = stored.h
+		restore_dir = stored.dir or "Down"
+	else
+		target_h = stored
+		restore_dir = "Down"
+	end
+	local delta = target_h - current
 	if delta > 0 then
-		win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+		win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
 	end
 	wezterm.GLOBAL.ac_heights[key] = nil
 end
@@ -99,9 +108,11 @@ function M.toggle()
 					local tab = win:active_tab()
 					local current = pane_cell_height(tab, id)
 					if current then
-						local delta = stored - current
+						local target_h = type(stored) == "table" and stored.h or stored
+						local restore_dir = (type(stored) == "table" and stored.dir) or "Down"
+						local delta = target_h - current
 						if delta > 0 then
-							win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+							win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
 						end
 					end
 					wezterm.GLOBAL.ac_heights[key] = nil

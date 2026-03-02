@@ -5,6 +5,68 @@ local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 
+-- Find the pane adjacent to from_id in the given direction.
+-- Returns a PaneInformation table or nil.
+local function find_neighbor(tab, from_id, direction)
+	local panes = tab:panes_with_info()
+	local src = nil
+	for _, info in ipairs(panes) do
+		if info.pane:pane_id() == from_id then src = info; break end
+	end
+	if not src then return nil end
+	local best = nil
+	for _, info in ipairs(panes) do
+		if info.pane:pane_id() ~= from_id then
+			local ok = false
+			if direction == "Down" then
+				ok = info.top > src.top + src.height - 1
+					and info.left < src.left + src.width
+					and info.left + info.width > src.left
+				if ok and (not best or info.top < best.top) then best = info end
+			elseif direction == "Up" then
+				ok = info.top + info.height - 1 < src.top
+					and info.left < src.left + src.width
+					and info.left + info.width > src.left
+				if ok and (not best or info.top + info.height > best.top + best.height) then best = info end
+			elseif direction == "Right" then
+				ok = info.left > src.left + src.width - 1
+					and info.top < src.top + src.height
+					and info.top + info.height > src.top
+				if ok and (not best or info.left < best.left) then best = info end
+			elseif direction == "Left" then
+				ok = info.left + info.width - 1 < src.left
+					and info.top < src.top + src.height
+					and info.top + info.height > src.top
+				if ok and (not best or info.left + info.width > best.left + best.width) then best = info end
+			end
+		end
+	end
+	return best
+end
+
+-- Collapse pane from_id by growing its neighbor toward it.
+-- Saves height + restore direction into ac_heights for later restore.
+-- nav_dir: the direction the user is navigating ("Down", "Up", "Left", "Right")
+local function collapse_pane(win, tab, from_id, nav_dir)
+	local panes = tab:panes_with_info()
+	local src = nil
+	for _, info in ipairs(panes) do
+		if info.pane:pane_id() == from_id then src = info; break end
+	end
+	if not src or src.height <= 1 then return end
+
+	-- Save height and direction needed to restore (opposite of how we collapse)
+	wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
+	wezterm.GLOBAL.ac_heights[tostring(from_id)] = { h = src.height, dir = nav_dir }
+
+	-- Grow the neighbor in the opposite direction to eat the collapsing pane's space
+	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
+	local neighbor = find_neighbor(tab, from_id, nav_dir)
+	if neighbor then
+		win:perform_action(act.AdjustPaneSize({ grow_dirs[nav_dir], src.height - 1 }), neighbor.pane)
+	end
+end
+
 local keys = {
 	{key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize},
 	{key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize},
@@ -151,65 +213,33 @@ local keys = {
 	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
 	{ key = "h", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[tostring(pane:pane_id())] then
-			local tab = win:active_tab()
-			local id = pane:pane_id()
-			for _, info in ipairs(tab:panes_with_info()) do
-				if info.pane:pane_id() == id and info.height > 1 then
-					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
-					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
-					break
-				end
-			end
+		local id = pane:pane_id()
+		if ac and ac[tostring(id)] then
+			collapse_pane(win, win:active_tab(), id, "Left")
 		end
 		win:perform_action(act.ActivatePaneDirection("Left"), pane)
 	end) },
 	{ key = "j", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[tostring(pane:pane_id())] then
-			local tab = win:active_tab()
-			local id = pane:pane_id()
-			for _, info in ipairs(tab:panes_with_info()) do
-				if info.pane:pane_id() == id and info.height > 1 then
-					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
-					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
-					break
-				end
-			end
+		local id = pane:pane_id()
+		if ac and ac[tostring(id)] then
+			collapse_pane(win, win:active_tab(), id, "Down")
 		end
 		win:perform_action(act.ActivatePaneDirection("Down"), pane)
 	end) },
 	{ key = "k", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[tostring(pane:pane_id())] then
-			local tab = win:active_tab()
-			local id = pane:pane_id()
-			for _, info in ipairs(tab:panes_with_info()) do
-				if info.pane:pane_id() == id and info.height > 1 then
-					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
-					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
-					break
-				end
-			end
+		local id = pane:pane_id()
+		if ac and ac[tostring(id)] then
+			collapse_pane(win, win:active_tab(), id, "Up")
 		end
 		win:perform_action(act.ActivatePaneDirection("Up"), pane)
 	end) },
 	{ key = "l", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local ac = wezterm.GLOBAL.ac_panes
-		if ac and ac[tostring(pane:pane_id())] then
-			local tab = win:active_tab()
-			local id = pane:pane_id()
-			for _, info in ipairs(tab:panes_with_info()) do
-				if info.pane:pane_id() == id and info.height > 1 then
-					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
-					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
-					break
-				end
-			end
+		local id = pane:pane_id()
+		if ac and ac[tostring(id)] then
+			collapse_pane(win, win:active_tab(), id, "Right")
 		end
 		win:perform_action(act.ActivatePaneDirection("Right"), pane)
 	end) },
