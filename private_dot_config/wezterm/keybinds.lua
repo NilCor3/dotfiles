@@ -4,7 +4,6 @@ local act = wezterm.action
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
-local pc = require("pane_collapse")
 
 local keys = {
 	{key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize},
@@ -150,14 +149,83 @@ local keys = {
 	{ key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
 	{ key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
 	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
-	-- Uses pane_collapse module to handle auto-collapse on panes marked with LEADER Z.
-	{ key = "h", mods = "LEADER", action = pc.nav("Left") },
-	{ key = "j", mods = "LEADER", action = pc.nav("Down") },
-	{ key = "k", mods = "LEADER", action = pc.nav("Up") },
-	{ key = "l", mods = "LEADER", action = pc.nav("Right") },
+	{ key = "h", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
+		local ac = wezterm.GLOBAL.ac_panes
+		if ac and ac[pane:pane_id()] then
+			local tab = win:active_tab()
+			local id = pane:pane_id()
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == id and info.height > 1 then
+					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
+					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
+					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
+					break
+				end
+			end
+		end
+		win:perform_action(act.ActivatePaneDirection("Left"), pane)
+	end) },
+	{ key = "j", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
+		local ac = wezterm.GLOBAL.ac_panes
+		if ac and ac[pane:pane_id()] then
+			local tab = win:active_tab()
+			local id = pane:pane_id()
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == id and info.height > 1 then
+					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
+					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
+					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
+					break
+				end
+			end
+		end
+		win:perform_action(act.ActivatePaneDirection("Down"), pane)
+	end) },
+	{ key = "k", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
+		local ac = wezterm.GLOBAL.ac_panes
+		if ac and ac[pane:pane_id()] then
+			local tab = win:active_tab()
+			local id = pane:pane_id()
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == id and info.height > 1 then
+					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
+					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
+					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
+					break
+				end
+			end
+		end
+		win:perform_action(act.ActivatePaneDirection("Up"), pane)
+	end) },
+	{ key = "l", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
+		local ac = wezterm.GLOBAL.ac_panes
+		if ac and ac[pane:pane_id()] then
+			local tab = win:active_tab()
+			local id = pane:pane_id()
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == id and info.height > 1 then
+					wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
+					wezterm.GLOBAL.ac_heights[tostring(id)] = info.height
+					win:perform_action(act.AdjustPaneSize({ "Up", info.height - 1 }), pane)
+					break
+				end
+			end
+		end
+		win:perform_action(act.ActivatePaneDirection("Right"), pane)
+	end) },
 
 	-- Toggle auto-collapse on current pane (shrinks to 1 line on nav away, restores on nav back)
-	{ key = "Z", mods = "LEADER", action = pc.toggle() },
+	{ key = "Z", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
+		wezterm.GLOBAL.ac_panes = wezterm.GLOBAL.ac_panes or {}
+		local id = pane:pane_id()
+		if wezterm.GLOBAL.ac_panes[id] then
+			wezterm.GLOBAL.ac_panes[id] = nil
+			wezterm.log_info("Auto-collapse OFF for pane " .. tostring(id))
+		else
+			wezterm.GLOBAL.ac_panes[id] = true
+			wezterm.log_info("Auto-collapse ON for pane " .. tostring(id))
+		end
+	end) },
 
 	-- Pane resize: ALT+h/j/k/l
 	{ key = "h", mods = "ALT", action = act.AdjustPaneSize({ "Left", 3 }) },
