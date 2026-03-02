@@ -53,6 +53,9 @@ local function collapse_pane(win, tab, from_id, nav_dir)
 	for _, info in ipairs(panes) do
 		if info.pane:pane_id() == from_id then src = info; break end
 	end
+	wezterm.log_info("collapse_pane: from=" .. tostring(from_id) .. " dir=" .. nav_dir
+		.. " src_found=" .. tostring(src ~= nil)
+		.. (src and (" h=" .. src.height) or ""))
 	if not src or src.height <= 1 then return end
 
 	-- Save height and direction needed to restore (opposite of how we collapse)
@@ -64,6 +67,9 @@ local function collapse_pane(win, tab, from_id, nav_dir)
 	-- Grow the neighbor in the opposite direction to eat the collapsing pane's space
 	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
 	local neighbor = find_neighbor(tab, from_id, nav_dir)
+	wezterm.log_info("collapse_pane: neighbor_found=" .. tostring(neighbor ~= nil)
+		.. " grow_dir=" .. (grow_dirs[nav_dir] or "?")
+		.. " amount=" .. tostring(src.height - 1))
 	if neighbor then
 		win:perform_action(act.AdjustPaneSize({ grow_dirs[nav_dir], src.height - 1 }), neighbor.pane)
 	end
