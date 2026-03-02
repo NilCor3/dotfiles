@@ -5,74 +5,33 @@ local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 
--- Find the pane adjacent to from_id in the given direction.
--- Returns a PaneInformation table or nil.
-local function find_neighbor(tab, from_id, direction)
-	local panes = tab:panes_with_info()
-	local src = nil
-	for _, info in ipairs(panes) do
-		if info.pane:pane_id() == from_id then src = info; break end
-	end
-	if not src then return nil end
-	local best = nil
-	for _, info in ipairs(panes) do
-		if info.pane:pane_id() ~= from_id then
-			local ok = false
-			if direction == "Down" then
-				ok = info.top > src.top + src.height - 1
-					and info.left < src.left + src.width
-					and info.left + info.width > src.left
-				if ok and (not best or info.top < best.top) then best = info end
-			elseif direction == "Up" then
-				ok = info.top + info.height - 1 < src.top
-					and info.left < src.left + src.width
-					and info.left + info.width > src.left
-				if ok and (not best or info.top + info.height > best.top + best.height) then best = info end
-			elseif direction == "Right" then
-				ok = info.left > src.left + src.width - 1
-					and info.top < src.top + src.height
-					and info.top + info.height > src.top
-				if ok and (not best or info.left < best.left) then best = info end
-			elseif direction == "Left" then
-				ok = info.left + info.width - 1 < src.left
-					and info.top < src.top + src.height
-					and info.top + info.height > src.top
-				if ok and (not best or info.left + info.width > best.left + best.width) then best = info end
-			end
-		end
-	end
-	return best
-end
-
 -- Collapse pane from_id by growing its neighbor toward it.
 -- Saves height + restore direction into ac_heights for later restore.
 -- nav_dir: the direction the user is navigating ("Down", "Up", "Left", "Right")
-local function collapse_pane(win, tab, from_id, nav_dir)
+-- NOTE: AdjustPaneSize always acts on the ACTIVE pane, so we can't resize a non-active
+-- pane here. Instead we store a "pending collapse" signal in GLOBAL and let update-status
+-- execute the resize once the new (neighbor) pane becomes active.
+local function schedule_collapse(tab, from_id, nav_dir)
 	local panes = tab:panes_with_info()
 	local src = nil
 	for _, info in ipairs(panes) do
 		if info.pane:pane_id() == from_id then src = info; break end
 	end
-	wezterm.log_info("collapse_pane: from=" .. tostring(from_id) .. " dir=" .. nav_dir
-		.. " src_found=" .. tostring(src ~= nil)
-		.. (src and (" h=" .. src.height) or ""))
 	if not src or src.height <= 1 then return end
 
-	-- Save height and direction needed to restore (opposite of how we collapse)
+	-- Save height so restore_if_needed can expand it back when we return
 	wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
 	wezterm.GLOBAL.ac_heights[tostring(from_id)] = src.height
 	wezterm.GLOBAL.ac_restore_dirs = wezterm.GLOBAL.ac_restore_dirs or {}
 	wezterm.GLOBAL.ac_restore_dirs[tostring(from_id)] = nav_dir
 
-	-- Grow the neighbor in the opposite direction to eat the collapsing pane's space
+	-- grow_dirs: the direction the NEW active pane should grow to eat the old pane's space
 	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
-	local neighbor = find_neighbor(tab, from_id, nav_dir)
-	wezterm.log_info("collapse_pane: neighbor_found=" .. tostring(neighbor ~= nil)
-		.. " grow_dir=" .. (grow_dirs[nav_dir] or "?")
-		.. " amount=" .. tostring(src.height - 1))
-	if neighbor then
-		win:perform_action(act.AdjustPaneSize({ grow_dirs[nav_dir], src.height - 1 }), neighbor.pane)
-	end
+	-- Signal update-status to perform the actual resize once nav completes
+	wezterm.GLOBAL.ac_collapse_pending_id  = tostring(from_id)
+	wezterm.GLOBAL.ac_collapse_pending_h   = src.height
+	wezterm.GLOBAL.ac_collapse_pending_dir = grow_dirs[nav_dir]
+	wezterm.log_info("schedule_collapse: pane=" .. tostring(from_id) .. " h=" .. src.height .. " grow=" .. grow_dirs[nav_dir])
 end
 
 local keys = {
@@ -223,7 +182,7 @@ local keys = {
 		local ac = wezterm.GLOBAL.ac_panes
 		local id = pane:pane_id()
 		if ac and ac[tostring(id)] then
-			collapse_pane(win, win:active_tab(), id, "Left")
+			schedule_collapse(win:active_tab(), id, "Left")
 		end
 		win:perform_action(act.ActivatePaneDirection("Left"), pane)
 	end) },
@@ -231,7 +190,7 @@ local keys = {
 		local ac = wezterm.GLOBAL.ac_panes
 		local id = pane:pane_id()
 		if ac and ac[tostring(id)] then
-			collapse_pane(win, win:active_tab(), id, "Down")
+			schedule_collapse(win:active_tab(), id, "Down")
 		end
 		win:perform_action(act.ActivatePaneDirection("Down"), pane)
 	end) },
@@ -239,7 +198,7 @@ local keys = {
 		local ac = wezterm.GLOBAL.ac_panes
 		local id = pane:pane_id()
 		if ac and ac[tostring(id)] then
-			collapse_pane(win, win:active_tab(), id, "Up")
+			schedule_collapse(win:active_tab(), id, "Up")
 		end
 		win:perform_action(act.ActivatePaneDirection("Up"), pane)
 	end) },
@@ -247,7 +206,7 @@ local keys = {
 		local ac = wezterm.GLOBAL.ac_panes
 		local id = pane:pane_id()
 		if ac and ac[tostring(id)] then
-			collapse_pane(win, win:active_tab(), id, "Right")
+			schedule_collapse(win:active_tab(), id, "Right")
 		end
 		win:perform_action(act.ActivatePaneDirection("Right"), pane)
 	end) },
