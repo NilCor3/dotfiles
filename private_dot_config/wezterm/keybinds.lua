@@ -4,6 +4,7 @@ local act = wezterm.action
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
+local pc = require("pane_collapse")
 
 local keys = {
 	{key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize},
@@ -149,10 +150,14 @@ local keys = {
 	{ key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
 	{ key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
 	-- Pane navigation: LEADER+h/j/k/l (mirrors Helix CTRL+w h/j/k/l window nav)
-	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+	-- Uses pane_collapse module to handle auto-collapse on panes marked with LEADER Z.
+	{ key = "h", mods = "LEADER", action = pc.nav("Left") },
+	{ key = "j", mods = "LEADER", action = pc.nav("Down") },
+	{ key = "k", mods = "LEADER", action = pc.nav("Up") },
+	{ key = "l", mods = "LEADER", action = pc.nav("Right") },
+
+	-- Toggle auto-collapse on current pane (shrinks to 1 line on nav away, restores on nav back)
+	{ key = "Z", mods = "LEADER", action = pc.toggle() },
 
 	-- Pane resize: ALT+h/j/k/l
 	{ key = "h", mods = "ALT", action = act.AdjustPaneSize({ "Left", 3 }) },
