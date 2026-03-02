@@ -277,7 +277,7 @@ xh api.example.com | bat -l json   # pipe with language hint
 
 Config at `~/.config/wezterm/wezterm.lua`. Handles both terminal emulation and multiplexing (no tmux/zellij).
 
-**LEADER key**: `CTRL+Space` (timeout 1s)
+**LEADER key**: `CTRL+SHIFT+Space` (timeout 1s)
 
 ### Keybindings
 
