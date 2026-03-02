@@ -18,7 +18,6 @@ kafka = 'latest'
 python = "latest"
 bat = 'latest'
 glow = "latest"
-gum = 'latest'
 hurl = 'latest'
 lazygit = 'latest'
 "go:github.com/jorgerojas26/lazysql" = { version = 'latest' }
@@ -36,7 +35,7 @@ golangci-lint-langserver = "latest"
 golangci-lint = "latest"
 rumdl = "latest"
 yq = "latest"
-yazi = "latest"
+rust = "stable"
 eza = "latest"
 xh = "latest"
 uv = "latest"
