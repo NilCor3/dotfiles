@@ -154,30 +154,64 @@ local keys = {
 	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
 	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-	-- Collapse/uncollapse current pane to 1 row (manual toggle)
+	-- Collapse/uncollapse current pane to 1 row (manual toggle).
+	-- Collapse: use act.Multiple to navigate to a neighbor, grow it into this pane, navigate back.
+	-- Restore: grow the now-active collapsed pane back in the same direction.
 	{ key = "a", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local id = tostring(pane:pane_id())
 		local stored_h = wezterm.GLOBAL["ach_" .. id]
 		local tab = win:active_tab()
-		local current_h = nil
-		for _, info in ipairs(tab:panes_with_info()) do
-			if info.pane:pane_id() == pane:pane_id() then
-				current_h = info.height
-				break
-			end
+
+		-- Find current pane info and all panes
+		local panes = tab:panes_with_info()
+		local src = nil
+		for _, info in ipairs(panes) do
+			if info.pane:pane_id() == pane:pane_id() then src = info; break end
 		end
-		if not current_h then return end
+		if not src then return end
+
 		if stored_h and stored_h > 0 then
-			-- Restore: expand back to original height
-			local delta = stored_h - current_h
+			-- Restore: active pane is the collapsed one; grow it back
+			local restore_dir = wezterm.GLOBAL["acr_" .. id] or "Down"
+			local delta = stored_h - src.height
 			if delta > 0 then
-				win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+				win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
 			end
 			wezterm.GLOBAL["ach_" .. id] = 0
+			wezterm.GLOBAL["acr_" .. id] = ""
 		else
-			-- Collapse: store height and shrink
-			wezterm.GLOBAL["ach_" .. id] = current_h
-			win:perform_action(act.AdjustPaneSize({ "Down", -(current_h - 1) }), pane)
+			-- Collapse: find a neighbor and use Multiple to grow it into this pane.
+			-- Priority: Down > Up > Right > Left (horizontal splits most common).
+			local back = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
+			local candidates = {
+				{ nav = "Down", grow = "Up",   amount = src.height - 1 },
+				{ nav = "Up",   grow = "Down", amount = src.height - 1 },
+				{ nav = "Right",grow = "Left", amount = src.width  - 1 },
+				{ nav = "Left", grow = "Right",amount = src.width  - 1 },
+			}
+			for _, c in ipairs(candidates) do
+				-- Check a neighbor exists in this direction
+				local found = false
+				for _, info in ipairs(panes) do
+					if info.pane:pane_id() ~= src.pane:pane_id() then
+						if c.nav == "Down"  and info.top  > src.top  + src.height - 2 then found = true end
+						if c.nav == "Up"    and info.top  < src.top                   then found = true end
+						if c.nav == "Right" and info.left > src.left + src.width  - 2 then found = true end
+						if c.nav == "Left"  and info.left < src.left                  then found = true end
+					end
+					if found then break end
+				end
+				if found and c.amount > 0 then
+					wezterm.GLOBAL["ach_" .. id] = src.height
+					wezterm.GLOBAL["acr_" .. id] = c.nav  -- restore = grow in nav direction
+					win:perform_action(act.Multiple({
+						act.ActivatePaneDirection(c.nav),
+						act.AdjustPaneSize({ c.grow, c.amount }),
+						act.ActivatePaneDirection(back[c.nav]),
+					}), pane)
+					return
+				end
+			end
 		end
 	end) },
 
