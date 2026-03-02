@@ -154,64 +154,51 @@ local keys = {
 	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
 	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-	-- Collapse/uncollapse current pane to 1 row (manual toggle).
-	-- Collapse: use act.Multiple to navigate to a neighbor, grow it into this pane, navigate back.
-	-- Restore: grow the now-active collapsed pane back in the same direction.
+	-- Collapse/uncollapse current pane (manual toggle). LEADER-a.
+	-- Collapse: nav to a neighbor, grow it to eat this pane's space. Focus moves to neighbor.
+	-- Restore: when on the collapsed pane, grow it back. Navigate to it with LEADER-h/j/k/l.
 	{ key = "a", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local id = tostring(pane:pane_id())
 		local stored_h = wezterm.GLOBAL["ach_" .. id]
-		local tab = win:active_tab()
-
-		-- Find current pane info and all panes
-		local panes = tab:panes_with_info()
-		local src = nil
-		for _, info in ipairs(panes) do
-			if info.pane:pane_id() == pane:pane_id() then src = info; break end
-		end
-		if not src then return end
-
 		if stored_h and stored_h > 0 then
-			-- Restore: active pane is the collapsed one; grow it back
-			local restore_dir = wezterm.GLOBAL["acr_" .. id] or "Down"
-			local delta = stored_h - src.height
-			if delta > 0 then
-				win:perform_action(act.AdjustPaneSize({ restore_dir, delta }), pane)
+			-- Restore: grow current (collapsed) pane back down
+			local tab = win:active_tab()
+			local current_h = nil
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == pane:pane_id() then current_h = info.height; break end
+			end
+			if current_h then
+				local delta = stored_h - current_h
+				if delta > 0 then
+					win:perform_action(act.AdjustPaneSize({ "Down", delta }), pane)
+				end
 			end
 			wezterm.GLOBAL["ach_" .. id] = 0
-			wezterm.GLOBAL["acr_" .. id] = ""
 		else
-			-- Collapse: find a neighbor and use Multiple to grow it into this pane.
-			-- Priority: Down > Up > Right > Left (horizontal splits most common).
-			local back = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
-			local candidates = {
-				{ nav = "Down", grow = "Up",   amount = src.height - 1 },
-				{ nav = "Up",   grow = "Down", amount = src.height - 1 },
-				{ nav = "Right",grow = "Left", amount = src.width  - 1 },
-				{ nav = "Left", grow = "Right",amount = src.width  - 1 },
-			}
-			for _, c in ipairs(candidates) do
-				-- Check a neighbor exists in this direction
-				local found = false
-				for _, info in ipairs(panes) do
-					if info.pane:pane_id() ~= src.pane:pane_id() then
-						if c.nav == "Down"  and info.top  > src.top  + src.height - 2 then found = true end
-						if c.nav == "Up"    and info.top  < src.top                   then found = true end
-						if c.nav == "Right" and info.left > src.left + src.width  - 2 then found = true end
-						if c.nav == "Left"  and info.left < src.left                  then found = true end
+			-- Collapse: nav to neighbor below (or above), grow it, leave focus there.
+			local tab = win:active_tab()
+			local src = nil
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() == pane:pane_id() then src = info; break end
+			end
+			if not src or src.height <= 1 then return end
+			-- Find a vertical neighbor (prefer below, then above)
+			local nav_dir, grow_dir
+			for _, info in ipairs(tab:panes_with_info()) do
+				if info.pane:pane_id() ~= pane:pane_id() then
+					if not nav_dir and info.top >= src.top + src.height - 1 then
+						nav_dir = "Down"; grow_dir = "Up"
+					elseif not nav_dir and info.top + info.height <= src.top + 1 then
+						nav_dir = "Up"; grow_dir = "Down"
 					end
-					if found then break end
-				end
-				if found and c.amount > 0 then
-					wezterm.GLOBAL["ach_" .. id] = src.height
-					wezterm.GLOBAL["acr_" .. id] = c.nav  -- restore = grow in nav direction
-					win:perform_action(act.Multiple({
-						act.ActivatePaneDirection(c.nav),
-						act.AdjustPaneSize({ c.grow, c.amount }),
-						act.ActivatePaneDirection(back[c.nav]),
-					}), pane)
-					return
 				end
 			end
+			if not nav_dir then return end
+			wezterm.GLOBAL["ach_" .. id] = src.height
+			win:perform_action(act.Multiple({
+				act.ActivatePaneDirection(nav_dir),
+				act.AdjustPaneSize({ grow_dir, src.height - 1 }),
+			}), pane)
 		end
 	end) },
 
