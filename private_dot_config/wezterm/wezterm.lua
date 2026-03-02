@@ -48,7 +48,7 @@ local config = {
 local colors = require("colors")
 mergeTables(config, colors)
 
-config.leader = { key = "Space", mods = "CTRL|SHIFT", timeout_milliseconds = 1000 }
+config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = require("keybinds")
 -- config.mouse_bindings = require("mousebinds")
 
@@ -59,6 +59,7 @@ modal.apply_to_config(config)
 local pc = require("pane_collapse")
 pc.init()
 wezterm.on("update-status", function(win, pane)
+	pc.collapse_pending_if_needed(win, pane)
 	pc.restore_if_needed(win, pane)
 end)
 

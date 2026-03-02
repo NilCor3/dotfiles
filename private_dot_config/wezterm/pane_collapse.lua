@@ -72,7 +72,27 @@ function M.restore_if_needed(win, pane)
 	end
 end
 
---- Build a nav action for one direction; collapses the current pane if marked.
+--- Execute a pending collapse on the now-active pane.
+-- Called from update-status. Fires AdjustPaneSize on the new active pane to eat
+-- the space of the pane we just left (which was marked for collapse).
+function M.collapse_pending_if_needed(win, pane)
+	local pending_id = wezterm.GLOBAL.ac_collapse_pending_id
+	if not pending_id or pending_id == "" then return end
+	-- Wait until navigation is complete (active pane must differ from the collapsing pane)
+	if tostring(pane:pane_id()) == pending_id then return end
+	local h   = wezterm.GLOBAL.ac_collapse_pending_h
+	local dir = wezterm.GLOBAL.ac_collapse_pending_dir
+	-- Clear pending before acting to avoid double-fire
+	wezterm.GLOBAL.ac_collapse_pending_id  = ""
+	wezterm.GLOBAL.ac_collapse_pending_h   = 0
+	wezterm.GLOBAL.ac_collapse_pending_dir = ""
+	if h and h > 1 and dir and dir ~= "" then
+		wezterm.log_info("collapse_pending: active=" .. tostring(pane:pane_id()) .. " grow=" .. dir .. " amount=" .. tostring(h - 1))
+		win:perform_action(act.AdjustPaneSize({ dir, h - 1 }), pane)
+	end
+end
+
+
 -- Restoration of the target pane happens via update-status (async-safe).
 function M.nav(direction)
 	return wezterm.action_callback(function(win, pane)
