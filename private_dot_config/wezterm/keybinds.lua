@@ -160,6 +160,7 @@ local keys = {
 	{ key = "a", mods = "LEADER", action = wezterm.action_callback(function(win, pane)
 		local id = tostring(pane:pane_id())
 		local stored_h = wezterm.GLOBAL["ach_" .. id]
+		wezterm.log_info("LEADER-a: pane=" .. id .. " stored_h=" .. tostring(stored_h))
 		if stored_h and stored_h > 0 then
 			-- Restore: grow current (collapsed) pane back down
 			local tab = win:active_tab()
@@ -167,6 +168,7 @@ local keys = {
 			for _, info in ipairs(tab:panes_with_info()) do
 				if info.pane:pane_id() == pane:pane_id() then current_h = info.height; break end
 			end
+			wezterm.log_info("restore: current_h=" .. tostring(current_h) .. " delta=" .. tostring(current_h and (stored_h - current_h) or "nil"))
 			if current_h then
 				local delta = stored_h - current_h
 				if delta > 0 then
