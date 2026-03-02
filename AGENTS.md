@@ -131,7 +131,7 @@ LEADER key is `CTRL+SHIFT+Space` (timeout 1s). All pane/window management goes t
 
 Key patterns to know when modifying WezTerm config:
 - **Pane zoom**: `LEADER z` → `TogglePaneZoomState` (current pane)
-- **Auto-collapse toggle**: `LEADER Z` → marks current pane; collapses to 1 line on `LEADER h/j/k/l` away, restores on nav back. State in `wezterm.GLOBAL.ac_panes`. Logic in `pane_collapse.lua`.
+- **Pane collapse**: `LEADER a` → collapses pane to 1 row/col by growing a neighbor; navigate back and press again to restore. State stored in `wezterm.GLOBAL["ach_<id>"]` / `wezterm.GLOBAL["acr_<id>"]`. Logic inline in `keybinds.lua`.
 - **Pane resize**: `ALT + h/j/k/l` → `AdjustPaneSize`
 - **Passive scroll** (no mode): `CTRL+SHIFT+j/k` (line), `CTRL+SHIFT+d/u` (half-page)
 - **Copy mode**: `LEADER c` — modal.wezterm provides vim-like copy with `x` for line select, `t` fixed to jump-forward

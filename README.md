@@ -288,7 +288,7 @@ Config at `~/.config/wezterm/wezterm.lua`. Handles both terminal emulation and m
 | `LEADER h/j/k/l` | Navigate panes (mirrors Helix `CTRL+w h/j/k/l`) |
 | `ALT + h/j/k/l` | Resize pane |
 | `LEADER z` | Zoom/unzoom current pane (toggle focus) |
-| `LEADER Z` | Toggle auto-collapse on current pane (collapses to 1 line on nav away, restores on nav back) |
+| `LEADER a` | Collapse/restore current pane (toggles to 1 row/col; nav back then press again to restore) |
 | `LEADER w` | Close current pane |
 | `LEADER p` | Pick pane (visual selector) |
 | `LEADER P` | Swap pane with active |
