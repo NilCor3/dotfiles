@@ -275,9 +275,42 @@ xh api.example.com | bat -l json   # pipe with language hint
 
 ## Terminal — WezTerm
 
-Config at `~/.config/wezterm/wezterm.lua`.
+Config at `~/.config/wezterm/wezterm.lua`. Handles both terminal emulation and multiplexing (no tmux/zellij).
 
----
+**LEADER key**: `CTRL+Space` (timeout 1s)
+
+### Keybindings
+
+| Key | Action |
+|-----|--------|
+| `LEADER s` | Split pane horizontal (30%) |
+| `LEADER v` | Split pane vertical (40%) |
+| `LEADER h/j/k/l` | Navigate panes (mirrors Helix `CTRL+w h/j/k/l`) |
+| `ALT + h/j/k/l` | Resize pane |
+| `LEADER z` | Zoom/unzoom pane (toggle focus) |
+| `LEADER w` | Close current pane |
+| `LEADER p` | Pick pane (visual selector) |
+| `LEADER P` | Swap pane with active |
+| `LEADER n` | Move pane to new tab |
+| `LEADER N` | Move pane to new window |
+| `LEADER t` | New tab |
+| `LEADER o` | Last tab |
+| `LEADER g` | Open lazygit in new tab |
+| `LEADER c` | Enter copy mode (hjkl, v/V/x, w/e/b, f/t, y, /) |
+| `LEADER y` | Enter scroll mode (j/k, d/u, g/G, v, /) |
+| `CTRL+SHIFT+j/k` | Scroll view down/up 1 line (no mode needed) |
+| `CTRL+SHIFT+d/u` | Scroll view down/up half page (no mode needed) |
+| `ALT+1-9` | Switch to tab N |
+| `LEADER Enter` | Toggle fullscreen |
+| `LEADER r` | Restore session (fuzzy loader) |
+| `LEADER b` | Restore session in current window |
+
+**Plugins** (auto-updated on start):
+- `modal.wezterm` — vim-like copy and scroll modes
+- `resurrect.wezterm` — session save/restore (auto-saves every 15 min)
+- `smart_workspace_switcher.wezterm` — fuzzy workspace switcher
+
+
 
 ## Editors
 

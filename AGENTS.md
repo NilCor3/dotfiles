@@ -122,3 +122,22 @@ When modifying the LSP server:
 2. Run `cargo test` — 60+ unit and integration tests
 3. `make install` to deploy
 4. Restart `hx` to pick up the new binary
+
+---
+
+## WezTerm keybinding conventions
+
+LEADER key is `CTRL+Space` (timeout 1s). All pane/window management goes through LEADER.
+
+Key patterns to know when modifying WezTerm config:
+- **Pane navigation**: `LEADER + h/j/k/l` → `ActivatePaneDirection` (mirrors Helix `CTRL+w h/j/k/l`)
+- **Pane resize**: `ALT + h/j/k/l` → `AdjustPaneSize`
+- **Passive scroll** (no mode): `CTRL+SHIFT+j/k` (line), `CTRL+SHIFT+d/u` (half-page)
+- **Copy mode**: `LEADER c` — modal.wezterm provides vim-like copy with `x` for line select, `t` fixed to jump-forward
+- **Scroll mode**: `LEADER y`
+
+Config files:
+- `~/.config/wezterm/wezterm.lua` — main config, plugin setup, `patch_copy_mode()` fix
+- `~/.config/wezterm/keybinds.lua` — all keybindings (returned as table, loaded by wezterm.lua)
+
+`CTRL+h/j/k/l` are intentionally **not** bound in WezTerm — they pass through to Helix/shell (e.g. `CTRL+h` = backspace in Helix insert mode).
