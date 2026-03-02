@@ -55,6 +55,13 @@ config.keys = require("keybinds")
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 modal.apply_to_config(config)
 
+-- Pane auto-collapse: initialise state and register the restore-on-focus handler.
+local pc = require("pane_collapse")
+pc.init()
+wezterm.on("update-status", function(win, pane)
+	pc.restore_if_needed(win, pane)
+end)
+
 -- Patch copy_mode key_table after modal sets it up.
 -- Fixes a bug in modal.wezterm defaults where both `t` and `T` are JumpBackward.
 -- Also adds Helix-style `x` for line selection.
