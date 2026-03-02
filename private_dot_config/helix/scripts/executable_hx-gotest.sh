@@ -22,7 +22,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-pkg_dir=$(dirname "$file")
+pkg_dir=$(cd "$(dirname "$file")" && pwd)
 
 # Find or create the dedicated output pane
 output_pane=""
