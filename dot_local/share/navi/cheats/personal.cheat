@@ -798,6 +798,9 @@ tail -f /tmp/ollama-ls.log
 # Zoom pane (toggle fullscreen for current pane)
 # Keybind: LEADER z  (CTRL+SHIFT+Space, then z)
 
-# Collapse/uncollapse current pane to 1 row
+# Collapse current pane to 1 row/col (focus moves to neighbor)
+# Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
+
+# Restore collapsed pane (navigate back to it first, then press)
 # Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
 
