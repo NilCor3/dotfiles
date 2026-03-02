@@ -263,6 +263,14 @@ Global config: `~/.config/mise/config.toml`
 
 Plugin manager: [Zinit](https://github.com/zdharma-continuum/zinit)
 
+**[bat](https://github.com/sharkdp/bat)** (mise) — `cat` with syntax highlighting and line numbers. Used automatically in all fzf previews (`nf`, `nft`, `fhx`, etc.).
+
+```sh
+bat file.rs                    # syntax-highlighted file view
+bat -l json file.json          # explicit language
+xh api.example.com | bat -l json   # pipe with language hint
+```
+
 ---
 
 ## Terminal — WezTerm
@@ -384,12 +392,14 @@ cd ~/source/hx-gotest && go build -o ~/.local/bin/hx-gotest .
 
 ---
 
+## Git — Configuration
 
-
-- **Pager**: [delta](https://dandavison.github.io/delta/) with `gruvmax-fang` theme
+- **Pager**: [delta](https://dandavison.github.io/delta/) with `gruvmax-fang` theme — syntax-highlighted diffs in terminal. Installed via mise.
 - **Merge style**: `zdiff3` (shows base in conflicts)
 - **Pull**: rebase by default
 - **SSH agent**: Bitwarden SSH agent (`com.bitwarden.desktop`)
+
+Config: `~/.gitconfig`
 
 ---
 
@@ -480,7 +490,7 @@ auto-commit without applying.
 ## Database tools
 
 - **DBeaver Community** — GUI client
-- **lazysql** — TUI SQL client (via mise)
+- **[lazysql](https://github.com/jorgerojas26/lazysql)** — TUI SQL client; connects to Postgres, MySQL, SQLite. Launch: `lazysql` (no alias — name is already short).
 - **pgcli** — postgres CLI with autocomplete and named queries (brew)
 
 ---
@@ -968,3 +978,61 @@ slides presentation.md   # sl alias: start slideshow
 Navigate with arrow keys, `q` to quit.
 
 ---
+
+## File Manager — yazi
+
+**[yazi](https://yazi-rs.github.io/)** (mise) — blazing-fast terminal file manager with image preview, bulk rename, and Helix integration. Shell wrapper `y` changes the working directory on exit.
+
+```sh
+y                    # open yazi; cd to selected dir on exit
+```
+
+Key bindings: `hjkl` to navigate, `Enter` to open, `Space` to select, `y` to yank, `p` paste, `d` cut, `q` quit.
+
+Integrated into Helix via `Space , e` (`hx-explorer.sh`).
+
+---
+
+## HTTP Testing — hurl
+
+**[hurl](https://hurl.dev)** (mise) — run HTTP requests defined in plain text `.hurl` files. Great for API integration tests you can commit alongside code.
+
+```sh
+hurl request.hurl                  # run a request file
+hurl --test *.hurl                 # run all as tests, report pass/fail
+hurl --variable host=localhost:8080 api.hurl
+```
+
+Example `.hurl` file:
+```
+GET http://localhost:8080/api/users
+HTTP 200
+[Asserts]
+jsonpath "$.count" > 0
+```
+
+---
+
+## System Monitor — bottom
+
+**[bottom](https://clementtsang.github.io/bottom/)** (`btm`, mise) — cross-platform TUI process/system monitor. Better than `top`/`htop`.
+
+```sh
+btm        # open TUI monitor
+btm -b     # basic mode (no graphs)
+```
+
+Key bindings: `dd` kill process, `/` filter, `Tab` switch widget, `q` quit.
+
+---
+
+## YAML Processor — yq
+
+**[yq](https://mikefarah.gitbook.io/yq/)** (mise) — jq-like processor for YAML, JSON, TOML, XML. Same query syntax, reads/writes YAML natively.
+
+```sh
+yq '.key.nested' file.yaml         # extract a value
+yq -i '.version = "2.0"' file.yaml # edit in-place
+cat file.yaml | yq -o json          # convert YAML → JSON
+yq e 'select(.kind == "Service")' k8s.yaml   # filter k8s manifests
+```
