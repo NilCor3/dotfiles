@@ -57,7 +57,9 @@ local function collapse_pane(win, tab, from_id, nav_dir)
 
 	-- Save height and direction needed to restore (opposite of how we collapse)
 	wezterm.GLOBAL.ac_heights = wezterm.GLOBAL.ac_heights or {}
-	wezterm.GLOBAL.ac_heights[tostring(from_id)] = { h = src.height, dir = nav_dir }
+	wezterm.GLOBAL.ac_heights[tostring(from_id)] = src.height
+	wezterm.GLOBAL.ac_restore_dirs = wezterm.GLOBAL.ac_restore_dirs or {}
+	wezterm.GLOBAL.ac_restore_dirs[tostring(from_id)] = nav_dir
 
 	-- Grow the neighbor in the opposite direction to eat the collapsing pane's space
 	local grow_dirs = { Down = "Up", Up = "Down", Right = "Left", Left = "Right" }
