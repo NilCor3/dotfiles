@@ -1,5 +1,5 @@
 [include]
-	path = /Users/joakim.karlsson/.config/delta/themes.gitconfig
+	path = ~/.config/delta/themes.gitconfig
 [user]
 	name = Joakim Karlsson
 	email = joakim.karlsson@fortnox.se

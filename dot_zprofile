@@ -1,8 +1,12 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [ -d /opt/homebrew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -d /usr/local/Homebrew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 
 # Added by Toolbox App
-export PATH="$PATH:/Users/joakim.karlsson/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 if [ -z "$SSH_AUTH_SOCK" ]; then
    # Check for a currently running instance of the agent
