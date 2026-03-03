@@ -52,6 +52,9 @@ else
 	tb.inactive_tab_edge = scheme.selection_bg
 end
 
+-- Make the pane split line clearly visible using the scheme's bright yellow/accent
+scheme.split = scheme.brights[4]
+
 return {
 	window_frame = {
 		inactive_titlebar_bg = scheme.background,

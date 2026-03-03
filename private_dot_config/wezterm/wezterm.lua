@@ -28,7 +28,7 @@ local config = {
 	hide_tab_bar_if_only_one_tab = false,
 	hide_mouse_cursor_when_typing = true,
 	inactive_pane_hsb = {
-		brightness = 0.7,
+		brightness = 0.5,
 	},
 	scrollback_lines = 10000,
 	audible_bell = "Disabled",
@@ -54,10 +54,6 @@ config.keys = require("keybinds")
 
 local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
 modal.apply_to_config(config)
-
--- Pane auto-collapse: initialise state and register the restore-on-focus handler.
-local pc = require("pane_collapse")
-pc.init()
 
 -- Patch copy_mode key_table after modal sets it up.
 -- Fixes a bug in modal.wezterm defaults where both `t` and `T` are JumpBackward.
