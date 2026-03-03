@@ -15,7 +15,7 @@ log_file = default
 highlight_matching_bracket = True
 
 # Syntax style (monokai, manni, etc.)
-syntax_style = monokai
+syntax_style = gruvbox-dark
 
 # Show timing of each query
 timing = True
