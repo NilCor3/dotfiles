@@ -816,3 +816,47 @@ tail -f /tmp/ollama-ls.log
 # Restore collapsed pane (navigate back to it first, then press)
 # Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
 
+
+% zellij, multiplexer
+
+# Start Zellij (runs inside WezTerm)
+zellij
+
+# Attach to existing session
+zellij attach <session>
+
+# List sessions
+zellij list-sessions
+
+# Detach from session
+# Keybind: Ctrl+\ then g, then d
+
+# Navigate panes (mirrors Helix Ctrl+w h/j/k/l)
+# Keybind: Ctrl+\ then h/j/k/l
+
+# New vertical split / horizontal split
+# Keybind: Ctrl+\ then v (vsplit) or s (hsplit)
+
+# Close focused pane
+# Keybind: Ctrl+\ then q
+
+# Zoom pane (fullscreen toggle)
+# Keybind: Ctrl+\ then z
+
+# Toggle floating panes (show/hide)
+# Keybind: Ctrl+\ then f
+
+# New floating pane
+# Keybind: Ctrl+\ then F
+
+# New tab / close tab
+# Keybind: Ctrl+\ then n / x
+
+# Go to tab by number
+# Keybind: Ctrl+\ then 1-9
+
+# Enter resize mode (h/j/k/l to resize, Esc to exit)
+# Keybind: Ctrl+\ then R
+
+# Session picker
+# Keybind: Ctrl+\ then g
