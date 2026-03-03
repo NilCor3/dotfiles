@@ -20,11 +20,11 @@ tmux select-pane -t "$SESSION:dev.1" -T "helix"
 
 # Split bottom 30% for first shell
 tmux split-window -t "$SESSION:dev.1" -v -p 30 -c "$CWD"
-tmux select-pane -t "$SESSION:dev.2" -T "shell-1"
+tmux select-pane -t "$SESSION:dev.2" -T "shell"
 
 # Split right for second shell
 tmux split-window -t "$SESSION:dev.2" -h -c "$CWD"
-tmux select-pane -t "$SESSION:dev.3" -T "shell-2"
+tmux select-pane -t "$SESSION:dev.3" -T "tests"
 
 # Focus back on helix pane
 tmux select-pane -t "$SESSION:dev.1"
