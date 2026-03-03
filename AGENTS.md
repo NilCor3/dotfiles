@@ -28,7 +28,7 @@ When helping with this setup, apply the same principles:
 - **When you teach the user a useful command**, add it as a navi cheat to `~/.local/share/navi/cheats/personal.cheat` and `chezmoi re-add` it. Cheats are grouped by `% topic, subtopic` headers; each entry is a `# Description` comment followed by the command on the next line. Use `<placeholder>` for variable parts.
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
-- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix over VS Code). WezTerm is the GPU terminal emulator; Zellij handles all pane/tab management — use `zellij action` in scripts rather than WezTerm Lua APIs.
+- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix over VS Code). WezTerm is the GPU terminal emulator; tmux handles all pane/window/session management — use `tmux display-popup` or `tmux split-window` in scripts rather than WezTerm Lua APIs.
 - **Merge conflicts** — mergiraf fires automatically as a git merge driver for Go, Rust, Java, TypeScript, JSON, YAML etc. Do not suggest separate merge tools. For remaining conflicts: lazygit (`e` on conflicted file).
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
@@ -72,7 +72,7 @@ Key configs tracked in chezmoi:
 - Shell: `.zshrc`, `.zshenv`, `.zprofile`, `.zsh_plugins.txt`, `.p10k.zsh`
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editor: `.config/helix/` (config, languages, scripts)
-- Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/zellij/` (panes, tabs, sessions)
+- Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
@@ -80,7 +80,7 @@ Key configs tracked in chezmoi:
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`
 - Navi cheats: `.local/share/navi/cheats/personal.cheat`
 - GitHub Copilot CLI: `.copilot/config.json`, `.copilot/mcp-config.json`, `.copilot/agents/`
-- Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`
+- Legacy (not actively used): `.config/ghostty/`, `.config/zellij/`
 
 ## What to NEVER add
 
@@ -125,29 +125,36 @@ When modifying the LSP server:
 
 ---
 
-## Zellij keybinding conventions
+## tmux keybinding conventions
 
-Leader key is `Ctrl+Space` (in `default_mode "locked"` — everything passes through to apps).
+Leader key is `Ctrl+Space`. All bindings require the prefix first.
 
-Key patterns to know when modifying Zellij config:
-- **Enter command mode**: `Ctrl+Space` — one-shot, returns to locked after each action
-- **Pane nav**: `h/j/k/l` → MoveFocus direction
+Key patterns to know when modifying tmux config:
+- **Pane nav**: `h/j/k/l` → select-pane direction
 - **Splits**: `v` (right), `s` (down), `q` (close)
-- **Move pane**: `H/J/K/L`
-- **Zoom**: `z` → ToggleFocusFullscreen
-- **Float**: `f` → toggle all floats, `F` → new 80%×80% float, `E` → embed/float toggle, `p` → pin float
-- **Tabs**: `n` (new), `x` (close), `[`/`]` (prev/next), `1-9` (direct), `b` (break pane → new tab)
-- **Resize mode** (sticky): `r` → h/j/k/l resize, Esc to exit
-- **Scroll mode** (sticky): `e` → j/k scroll, d/u half-page, `/` search, `c` copy selection
-- **Session mode**: `g` → `w` session manager, `d` detach
-- **Rename tab**: `R`
+- **Move/resize**: `H/J/K/L` in resize mode (entered with `r`, exit with Esc)
+- **Zoom**: `z` → resize-pane -Z
+- **Float**: `F` → display-popup 80%×80%
+- **Windows**: `n` (new), `x` (close), `[`/`]` (prev/next), `1-9` (direct), `b` (break pane)
+- **Resize mode** (sticky): `r` → h/j/k/l fine, H/J/K/L coarse, Esc to exit
+- **Copy mode**: `e` → vi copy (v select, C-v block, y yank)
+- **Session/picker**: `g` → fzf picker (layout → workspace → repo → create/attach `workspace-repo`)
+- **Rename**: `R` window, `P` pane (shown in pane border top)
+- **Detach**: `d`
+- **Help**: `?` → popup with all bindings
 
-Config file:
-- `~/.config/zellij/config.kdl` — all keybindings and settings
+In Helix integration scripts, detect `$TMUX` (set by tmux) for the tmux branch:
+- Floats: `tmux display-popup -E -w 80% -h 80% -b rounded -s "fg=#d79921" <cmd>`
+- Persistent split: `tmux split-window -v -p 35` with `select-pane -T <name>` for reuse
+
+Config files:
+- `~/.config/tmux/tmux.conf` — all keybindings and settings
+- `~/.config/tmux/layouts/dev.sh` — helix 70% top, 2 named shells 30% bottom
+- `~/.config/tmux/scripts/picker.sh` — fzf session/project picker
+- `~/.config/tmux/scripts/help.sh` — keybind help popup content
 
 WezTerm is now terminal-only (GPU/fonts/window). Its keybinds:
 - `Ctrl+-/+` font size, `CMD+c/v` clipboard, `Shift+Up/Down` scroll-to-prompt
-- `Ctrl+Shift+j/k/d/u` outer scrollback (WezTerm viewport, outside Zellij)
 
 Config files:
 - `~/.config/wezterm/wezterm.lua` — main config (no plugins, no leader)
