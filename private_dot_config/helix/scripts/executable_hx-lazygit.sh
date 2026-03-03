@@ -12,6 +12,9 @@ helper="$HOME/.config/helix/scripts/hx-lazygit-run.sh"
 if [ -n "$ZELLIJ" ]; then
   # Zellij: floating pane, closes when lazygit exits
   zellij action new-pane --floating --close-on-exit --name "lazygit" -- lazygit
+elif [ -n "$TMUX" ]; then
+  # tmux: 80%x80% popup
+  tmux display-popup -E -w 80% -h 80% -b rounded -s "fg=#d79921" lazygit
 else
   # WezTerm: bottom pane zoomed for overlay effect
   pane_id=$(wezterm cli split-pane --bottom --percent 40)

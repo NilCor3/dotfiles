@@ -83,53 +83,47 @@ export EDITOR='hx'
 export PATH="$HOME/.local/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 export SSH_AUTH_SOCK=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
-# Auto-start Zellij when inside WezTerm — fzf session/layout picker
-if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
-  _zellij_pick() {
-    local layouts_dir="$HOME/.config/zellij/layouts"
-    local items=()
-
-    # Running sessions
-    while IFS= read -r s; do
-      [[ -n "$s" ]] && items+=("session: $s")
-    done < <(zellij list-sessions -s 2>/dev/null)
-
-    # Available layouts
-    if [[ -d "$layouts_dir" ]]; then
-      for f in "$layouts_dir"/*.kdl; do
-        [[ -f "$f" ]] && items+=("layout:  $(basename "$f" .kdl)")
-      done
-    fi
-
-    # Always offer a plain new session
-    items+=("new session")
-
-    local choice
-    choice=$(printf '%s\n' "${items[@]}" | fzf \
-      --prompt="Zellij › " \
-      --height=40% \
-      --reverse \
-      --no-info \
-      --border=rounded) || { exec zellij attach --create; return; }
-
-    if [[ "$choice" == session:* ]]; then
-      exec zellij attach "${choice#session: }"
-    elif [[ "$choice" == layout:* ]]; then
-      local layout="${choice#layout:  }"
-      # Pick project dir from ~/dev and ~/source
-      local dir
-      dir=$(find ~/dev ~/source -mindepth 1 -maxdepth 1 -type d 2>/dev/null \
-        | sed "s|$HOME/||" \
-        | fzf --prompt="Project › " --height=40% --reverse --no-info --border=rounded) \
-        || dir=""
-      [[ -n "$dir" ]] && cd "$HOME/$dir"
-      exec zellij --layout "$layout"
-    else
-      exec zellij
-    fi
-  }
-  _zellij_pick
+# Auto-start tmux when inside WezTerm (uses ~/.config/tmux/scripts/picker.sh)
+# To switch back to Zellij, swap this block with the one below.
+if [[ -z "$TMUX" ]] && [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
+  exec ~/.config/tmux/scripts/picker.sh
 fi
+
+# --- Zellij auto-start (kept for rollback) ---
+# if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
+#   _zellij_pick() {
+#     local layouts_dir="$HOME/.config/zellij/layouts"
+#     local items=()
+#     while IFS= read -r s; do
+#       [[ -n "$s" ]] && items+=("session: $s")
+#     done < <(zellij list-sessions -s 2>/dev/null)
+#     if [[ -d "$layouts_dir" ]]; then
+#       for f in "$layouts_dir"/*.kdl; do
+#         [[ -f "$f" ]] && items+=("layout:  $(basename "$f" .kdl)")
+#       done
+#     fi
+#     items+=("new session")
+#     local choice
+#     choice=$(printf '%s\n' "${items[@]}" | fzf \
+#       --prompt="Zellij › " --height=40% --reverse --no-info --border=rounded) \
+#       || { exec zellij attach --create; return; }
+#     if [[ "$choice" == session:* ]]; then
+#       exec zellij attach "${choice#session: }"
+#     elif [[ "$choice" == layout:* ]]; then
+#       local layout="${choice#layout:  }"
+#       local dir
+#       dir=$(find ~/dev ~/source -mindepth 1 -maxdepth 1 -type d 2>/dev/null \
+#         | sed "s|$HOME/||" \
+#         | fzf --prompt="Project › " --height=40% --reverse --no-info --border=rounded) \
+#         || dir=""
+#       [[ -n "$dir" ]] && cd "$HOME/$dir"
+#       exec zellij --layout "$layout"
+#     else
+#       exec zellij
+#     fi
+#   }
+#   _zellij_pick
+# fi
 
 # --- Navigation ---
 alias ..='cd ..'

@@ -41,6 +41,16 @@ if [ -n "$ZELLIJ" ]; then
   # Zellij: floating pane (no pane-id targeting available)
   zellij action new-pane --floating --name "gotest" --cwd "$pkg_dir" \
     -- zsh -c "$run_cmd"
+elif [ -n "$TMUX" ]; then
+  # tmux: reuse named pane "gotest" in current window, or create new split
+  existing=$(tmux list-panes -F "#{pane_id} #{pane_title}" 2>/dev/null | awk '/gotest/{print $1}' | head -1)
+  if [ -n "$existing" ]; then
+    tmux send-keys -t "$existing" "clear; $run_cmd" Enter
+    tmux select-pane -t "$existing"
+  else
+    tmux split-window -v -p 35 -c "$pkg_dir" "zsh -c $(printf '%q' "$run_cmd")"
+    tmux select-pane -T "gotest"
+  fi
 elif [ -z "$output_pane" ]; then
   # WezTerm: new pane
   output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35 \
