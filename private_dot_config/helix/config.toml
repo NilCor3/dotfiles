@@ -33,9 +33,6 @@ C-s = ":write"
 
 [keys.normal.space.","]
 b = ":sh ~/.config/helix/scripts/hx-blame.sh %{buffer_name} %{cursor_line}"
-e = ":sh ~/.config/helix/scripts/hx-explorer.sh open"
-v = ":sh ~/.config/helix/scripts/hx-explorer.sh vsplit"
-s = ":sh ~/.config/helix/scripts/hx-explorer.sh hsplit"
 g = ":sh ~/.config/helix/scripts/hx-lazygit.sh"
 t = ":sh ~/.config/helix/scripts/hx-gotest.sh %{buffer_name} %{cursor_line} cursor"
 T = ":sh ~/.config/helix/scripts/hx-gotest.sh %{buffer_name} %{cursor_line} func"
