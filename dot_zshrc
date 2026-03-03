@@ -85,7 +85,7 @@ export SSH_AUTH_SOCK=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwar
 
 # Auto-start Zellij when inside WezTerm (replaces shell with Zellij session)
 if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
-  exec zellij -c
+  exec zellij attach --create
 fi
 
 # --- Navigation ---
