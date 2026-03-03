@@ -40,6 +40,7 @@ g = ":sh ~/.config/helix/scripts/hx-lazygit.sh"
 t = ":sh ~/.config/helix/scripts/hx-gotest.sh %{buffer_name} %{cursor_line} cursor"
 T = ":sh ~/.config/helix/scripts/hx-gotest.sh %{buffer_name} %{cursor_line} func"
 F = ":sh ~/.config/helix/scripts/hx-gotest.sh %{buffer_name} %{cursor_line} file"
+m = ":sh ~/.config/helix/scripts/hx-markdown.sh %{buffer_name}"
 
 [keys.insert]
 "A-;" = "collapse_selection"
