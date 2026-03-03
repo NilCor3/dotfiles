@@ -21,9 +21,11 @@ the best tools are ones you can configure, compose, and own.
 - [Mise — Runtime Version Manager](#mise--runtime-version-manager)
 - [Shell — Zsh + Zinit](#shell--zsh--zinit)
 - [Terminal — WezTerm](#terminal--wezterm)
+- [Zellij — Multiplexer (inside WezTerm)](#zellij--multiplexer-inside-wezterm)
 - [Editors](#editors)
   - [Helix](#helix)
   - [Helix WezTerm Integration](#helix-wezterm-integration)
+  - [Helix Zellij Integration](#helix-zellij-integration)
   - [hx-gotest](#hx-gotest)
 - [macOS Utilities](#macos-utilities)
 - [Manual Backup & Restore](#manual-backup--restore)
@@ -51,6 +53,7 @@ the best tools are ones you can configure, compose, and own.
 - 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal with Lua config
 - ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
 - 🔍 **[Helix × WezTerm integration](##helix-wezterm-integration)** — blame, explorer, lazygit, and test runner via pane scripts
+- 🗂️ **[Zellij](#zellij--multiplexer-inside-wezterm)** — multiplexer inside WezTerm with floating panes, sessions, and Helix-mirrored keybinds (`Ctrl+\` leader)
 - 🧪 **[hx-gotest](#hx-gotest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
 - 🔐 **Age-encrypted secrets** in dotfiles — key stored at `~/.config/age/chezmoi-key.txt`
 - 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
@@ -315,6 +318,49 @@ Config at `~/.config/wezterm/wezterm.lua`. Handles both terminal emulation and m
 
 
 
+## Zellij — Multiplexer (inside WezTerm)
+
+Zellij runs **inside** WezTerm (WezTerm handles GPU rendering, fonts, outer window; Zellij handles panes, tabs, sessions). Start with `zellij` in any WezTerm pane. The current WezTerm-only setup continues to work when not in a Zellij session.
+
+Config: `~/.config/zellij/config.kdl`
+
+### Design: zero conflicts with Helix
+
+`default_mode "locked"` — all keys pass through to Helix/shell by default.
+**Leader: `Ctrl+\`** — momentarily enters command mode for one action, then returns to locked.
+
+Sub-keys **mirror Helix's `Ctrl+w` window mode** exactly:
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+\ h/j/k/l` | Navigate panes (= Helix `Ctrl+w h/j/k/l`) |
+| `Ctrl+\ w` | Focus next pane (= Helix `Ctrl+w w`) |
+| `Ctrl+\ v` | New pane right / vsplit (= Helix `Ctrl+w v`) |
+| `Ctrl+\ s` | New pane down / hsplit (= Helix `Ctrl+w s`) |
+| `Ctrl+\ q` | Close pane (= Helix `Ctrl+w q`) |
+| `Ctrl+\ H/J/K/L` | Swap pane direction (= Helix `Ctrl+w H/J/K/L`) |
+| `Ctrl+\ z` | Zoom / fullscreen toggle |
+| `Ctrl+\ f` | Toggle floating panes (show/hide all) |
+| `Ctrl+\ F` | New floating pane |
+| `Ctrl+\ n / x` | New tab / close tab |
+| `Ctrl+\ 1-9` | Go to tab N |
+| `Ctrl+\ g` | Session picker |
+| `Ctrl+\ R` | Sticky resize mode (h/j/k/l to resize, Esc to exit) |
+
+### Helix Zellij Integration
+
+All `Space , ` scripts detect `$ZELLIJ` at runtime and use floating panes instead of WezTerm pane splits.
+
+| Feature | Zellij behavior |
+|---------|-----------------|
+| `Space , g` | lazygit in floating pane (closes on exit) |
+| `Space , t/T/F` | Go test runner in floating pane (stays open with output) |
+| `Space , m` | Markdown preview with `glow` in floating pane |
+| `dlvg` function | gdlv in right pane alongside dlv CLI |
+| `Ctrl+g` in Helix | lazygit in Helix buffer (no multiplexer, unchanged) |
+
+
+
 ## Editors
 
 ### Helix
@@ -401,10 +447,10 @@ Scripts at `~/.config/helix/scripts/`.
 | `Space , t` | Run Go test under cursor | `hx-gotest.sh` |
 | `Space , T` | Run whole Go test func | `hx-gotest.sh` |
 | `Space , F` | Run all Go tests in file | `hx-gotest.sh` |
+| `Space , m` | Markdown preview (glow) | `hx-markdown.sh` |
 | `Space , a` | Toggle AI provider (Copilot ↔ ollama) | `hx-toggle-ai.sh` |
 
-Each script reuses or creates a WezTerm pane, runs the tool, then returns focus to Helix.
-`wezterm-find-hx.sh` is a helper that finds the Helix pane by title when focus needs to return.
+Each script detects `$ZELLIJ` or `$WEZTERM_PANE` and picks the right multiplexer automatically.
 
 ### hx-gotest
 
