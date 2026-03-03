@@ -78,7 +78,6 @@ keybinds clear-defaults=true {
         bind "g" { SwitchToMode "session"; }
 
         bind "Esc" "Ctrl Space" { SwitchToMode "locked"; }
-        bind "Alt c" { Copy; SwitchToMode "locked"; }
     }
 
     // Sticky resize mode: hjkl adjust size, Esc returns to locked
