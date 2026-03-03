@@ -9,13 +9,14 @@
 hx_pane="$WEZTERM_PANE"
 helper="$HOME/.config/helix/scripts/hx-lazygit-run.sh"
 
-# Spawn a new bottom pane at 40% height
-pane_id=$(wezterm cli split-pane --bottom --percent 40)
-
-# Zoom it to fill the tab (overlay effect)
-wezterm cli zoom-pane --pane-id "$pane_id"
-
-# Activate it and run the helper inside
-wezterm cli activate-pane --pane-id "$pane_id"
-printf "%s %s\r" "$helper" "$hx_pane" \
-  | wezterm cli send-text --pane-id "$pane_id" --no-paste
+if [ -n "$ZELLIJ" ]; then
+  # Zellij: floating pane, closes when lazygit exits
+  zellij action new-pane --floating --close-on-exit --name "lazygit" -- lazygit
+else
+  # WezTerm: bottom pane zoomed for overlay effect
+  pane_id=$(wezterm cli split-pane --bottom --percent 40)
+  wezterm cli zoom-pane --pane-id "$pane_id"
+  wezterm cli activate-pane --pane-id "$pane_id"
+  printf "%s %s\r" "$helper" "$hx_pane" \
+    | wezterm cli send-text --pane-id "$pane_id" --no-paste
+fi
