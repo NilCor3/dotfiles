@@ -16,6 +16,8 @@ local keys = {
 { key = "k", mods = "CTRL|SHIFT", action = act.ScrollByLine(-1) },
 { key = "d", mods = "CTRL|SHIFT", action = act.ScrollByPage(0.5) },
 { key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
+-- Fix Delete key (macOS sends BS/^H; remap to proper ESC[3~ sequence)
+{ key = "Delete", mods = "", action = act.SendString("\x1b[3~") },
 }
 
 return keys
