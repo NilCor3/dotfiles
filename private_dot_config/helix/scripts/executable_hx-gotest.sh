@@ -35,15 +35,20 @@ if [ -f "$pane_id_file" ]; then
   fi
 fi
 
-if [ -z "$output_pane" ]; then
-  # New pane: run command directly at spawn time — no send-text timing issues
-  run_cmd="echo '» richgo test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && richgo test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'; exec zsh"
+run_cmd="echo '» richgo test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && richgo test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'; exec zsh"
+
+if [ -n "$ZELLIJ" ]; then
+  # Zellij: floating pane (no pane-id targeting available)
+  zellij action new-pane --floating --name "gotest" --cwd "$pkg_dir" \
+    -- zsh -c "$run_cmd"
+elif [ -z "$output_pane" ]; then
+  # WezTerm: new pane
   output_pane=$(wezterm cli split-pane --pane-id "$WEZTERM_PANE" --bottom --percent 35 \
     -- zsh -c "$run_cmd")
   echo "$output_pane" > "$pane_id_file"
   wezterm cli activate-pane --pane-id "$output_pane"
 else
-  # Existing pane: clear then run
+  # WezTerm: existing pane — clear then run
   cmd="clear; echo '» richgo test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && richgo test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'"
   printf "%s\r" "$cmd" | wezterm cli send-text --pane-id "$output_pane" --no-paste
   wezterm cli activate-pane --pane-id "$output_pane"
