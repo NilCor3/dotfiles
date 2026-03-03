@@ -1,6 +1,6 @@
 #!/bin/sh
 # help.sh — show tmux keybinds (prefix: Ctrl+Space)
-cat << 'EOF'
+cat << 'EOF' | less -r
  ╭─────────────────────────────────────────────────────╮
  │           tmux keybinds  (prefix: Ctrl+Space)       │
  ╰─────────────────────────────────────────────────────╯
@@ -36,7 +36,7 @@ cat << 'EOF'
                         v = select  │  C-v = block  │  y = yank
 
  OTHER
-   ?                  this help
+   ?                  this help  (q to close)
    Alt+r              reload config
 
 EOF
