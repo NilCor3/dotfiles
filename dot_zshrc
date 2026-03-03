@@ -310,3 +310,28 @@ fh()    { print -z $(fc -l 1 | fzf --tac | sed 's/^ *[0-9]* *//') }
 fhx()   { hx $(fzf --preview 'bat --color=always {}') }
 
 eval "$(mise activate zsh)"
+
+# --- dlv + gdlv companion debugger ---
+# Usage: dlvg [./pkg or ./...] [-- args]
+# Starts a headless dlv server, opens gdlv GUI, connects dlv CLI in current pane
+dlvg() {
+  local port=2345
+  local subcommand="${1:-debug}"
+  shift
+
+  dlv "$subcommand" --headless --listen=":$port" --accept-multiclient "$@" &
+  local dlv_pid=$!
+
+  # Wait for server to be ready
+  sleep 0.8
+
+  # Open gdlv GUI in background (native macOS window)
+  gdlv connect ":$port" &
+
+  # Connect dlv CLI in current pane (blocks until session ends)
+  dlv connect ":$port"
+
+  # Cleanup
+  kill "$dlv_pid" 2>/dev/null
+  wait "$dlv_pid" 2>/dev/null
+}

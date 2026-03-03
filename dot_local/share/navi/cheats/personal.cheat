@@ -519,6 +519,18 @@ dlv attach <pid>
 # Start delve DAP server (for editor integration)
 dlv dap --listen=:2345
 
+# Debug with gdlv GUI + dlv CLI companion (both connected to same session)
+dlvg <subcommand> <package>
+
+# Start headless dlv server for multi-client (CLI + gdlv)
+dlv <subcommand> --headless --listen=:2345 --accept-multiclient <package>
+
+# Connect gdlv GUI to headless dlv server
+gdlv connect :2345
+
+# Connect dlv CLI to headless dlv server
+dlv connect :2345
+
 # Generate Go server/client from OpenAPI spec
 oapi-codegen -generate types,server -package api openapi.yaml > api/api.gen.go
 
