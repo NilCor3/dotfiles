@@ -21,11 +21,10 @@ the best tools are ones you can configure, compose, and own.
 - [Mise — Runtime Version Manager](#mise--runtime-version-manager)
 - [Shell — Zsh + Zinit](#shell--zsh--zinit)
 - [Terminal — WezTerm](#terminal--wezterm)
-- [Zellij — Multiplexer (inside WezTerm)](#zellij--multiplexer-inside-wezterm)
+- [Zellij — Multiplexer](#zellij--multiplexer)
 - [Editors](#editors)
   - [Helix](#helix)
-  - [Helix WezTerm Integration](#helix-wezterm-integration)
-  - [Helix Zellij Integration](#helix-zellij-integration)
+  - [Helix Integration](#helix-integration)
   - [hx-gotest](#hx-gotest)
 - [macOS Utilities](#macos-utilities)
 - [Manual Backup & Restore](#manual-backup--restore)
@@ -50,10 +49,10 @@ the best tools are ones you can configure, compose, and own.
 
 ## Features
 
-- 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal with Lua config
+- 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal (fonts, window, clipboard)
 - ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
-- 🔍 **[Helix × WezTerm integration](##helix-wezterm-integration)** — blame, explorer, lazygit, and test runner via pane scripts
-- 🗂️ **[Zellij](#zellij--multiplexer-inside-wezterm)** — multiplexer inside WezTerm with floating panes, sessions, and Helix-mirrored keybinds (`Ctrl+\` leader)
+- 🗂️ **[Zellij](#zellij--multiplexer)** — multiplexer with floating panes, sessions, and Helix-mirrored keybinds (`Ctrl+Space` leader)
+- 🔍 **[Helix integration](#helix-integration)** — blame, lazygit, markdown preview, and test runner via Zellij pane scripts
 - 🧪 **[hx-gotest](#hx-gotest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
 - 🔐 **Age-encrypted secrets** in dotfiles — key stored at `~/.config/age/chezmoi-key.txt`
 - 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
@@ -183,7 +182,8 @@ Repo: `git@github.com:jokaro/dotfiles.git`
 | `~/.gitignore` | Global gitignore |
 | `~/.mise.toml` | Project-level env vars and shell aliases |
 | `~/.config/mise/config.toml` | Global mise tools and environment |
-| `~/.config/wezterm/wezterm.lua` | WezTerm terminal config |
+| `~/.config/wezterm/wezterm.lua` | WezTerm terminal config (GPU/fonts/window only) |
+| `~/.config/zellij/config.kdl` | Zellij multiplexer config |
 | `~/.config/helix/` | Helix editor config and LSP setup |
 
 ### Updating dotfiles
@@ -280,84 +280,56 @@ xh api.example.com | bat -l json   # pipe with language hint
 
 ## Terminal — WezTerm
 
-Config at `~/.config/wezterm/wezterm.lua`. Handles both terminal emulation and multiplexing (no tmux/zellij).
-
-**LEADER key**: `CTRL+SHIFT+Space` (timeout 1s)
+Config at `~/.config/wezterm/wezterm.lua`. GPU-accelerated terminal emulator only — fonts, window, clipboard. Pane/tab management handled by Zellij.
 
 ### Keybindings
 
 | Key | Action |
 |-----|--------|
-| `LEADER s` | Split pane horizontal (30%) |
-| `LEADER v` | Split pane vertical (40%) |
-| `LEADER h/j/k/l` | Navigate panes (mirrors Helix `CTRL+w h/j/k/l`) |
-| `ALT + h/j/k/l` | Resize pane |
-| `LEADER z` | Zoom/unzoom current pane (toggle focus) |
-| `LEADER a` | Collapse/restore current pane (toggles to 1 row/col; nav back then press again to restore) |
-| `LEADER w` | Close current pane |
-| `LEADER p` | Pick pane (visual selector) |
-| `LEADER P` | Swap pane with active |
-| `LEADER n` | Move pane to new tab |
-| `LEADER N` | Move pane to new window |
-| `LEADER t` | New tab |
-| `LEADER o` | Last tab |
-| `LEADER g` | Open lazygit in new tab |
-| `LEADER c` | Enter copy mode (hjkl, v/V/x, w/e/b, f/t, y, /) |
-| `LEADER y` | Enter scroll mode (j/k, d/u, g/G, v, /) |
-| `CTRL+SHIFT+j/k` | Scroll view down/up 1 line (no mode needed) |
-| `CTRL+SHIFT+d/u` | Scroll view down/up half page (no mode needed) |
-| `ALT+1-9` | Switch to tab N |
-| `LEADER Enter` | Toggle fullscreen |
-| `LEADER r` | Restore session (fuzzy loader) |
-| `LEADER b` | Restore session in current window |
+| `Ctrl+-` / `Ctrl++` | Decrease / increase font size |
+| `CMD+c` / `CMD+v` | Copy / paste |
+| `Shift+Up/Down` | Scroll to previous / next shell prompt |
+| `Ctrl+Shift+j/k` | Scroll WezTerm viewport down/up 1 line |
+| `Ctrl+Shift+d/u` | Scroll WezTerm viewport down/up half page |
 
-**Plugins** (auto-updated on start):
-- `modal.wezterm` — vim-like copy and scroll modes
-- `resurrect.wezterm` — session save/restore (auto-saves every 15 min)
-- `smart_workspace_switcher.wezterm` — fuzzy workspace switcher
+No plugins, no leader key, no pane management — that's all Zellij.
 
 
 
-## Zellij — Multiplexer (inside WezTerm)
+## Zellij — Multiplexer
 
-Zellij runs **inside** WezTerm (WezTerm handles GPU rendering, fonts, outer window; Zellij handles panes, tabs, sessions). Start with `zellij` in any WezTerm pane. The current WezTerm-only setup continues to work when not in a Zellij session.
+Zellij runs **inside** WezTerm (auto-started from `.zshrc` when inside a WezTerm pane). Handles all panes, tabs, sessions.
 
 Config: `~/.config/zellij/config.kdl`
 
 ### Design: zero conflicts with Helix
 
 `default_mode "locked"` — all keys pass through to Helix/shell by default.
-**Leader: `Ctrl+\`** — momentarily enters command mode for one action, then returns to locked.
+**Leader: `Ctrl+Space`** — momentarily enters command mode for one action, then returns to locked.
 
 Sub-keys **mirror Helix's `Ctrl+w` window mode** exactly:
 
 | Key | Action |
 |-----|--------|
-| `Ctrl+\ h/j/k/l` | Navigate panes (= Helix `Ctrl+w h/j/k/l`) |
-| `Ctrl+\ w` | Focus next pane (= Helix `Ctrl+w w`) |
-| `Ctrl+\ v` | New pane right / vsplit (= Helix `Ctrl+w v`) |
-| `Ctrl+\ s` | New pane down / hsplit (= Helix `Ctrl+w s`) |
-| `Ctrl+\ q` | Close pane (= Helix `Ctrl+w q`) |
-| `Ctrl+\ H/J/K/L` | Swap pane direction (= Helix `Ctrl+w H/J/K/L`) |
-| `Ctrl+\ z` | Zoom / fullscreen toggle |
-| `Ctrl+\ f` | Toggle floating panes (show/hide all) |
-| `Ctrl+\ F` | New floating pane |
-| `Ctrl+\ n / x` | New tab / close tab |
-| `Ctrl+\ 1-9` | Go to tab N |
-| `Ctrl+\ g` | Session picker |
-| `Ctrl+\ R` | Sticky resize mode (h/j/k/l to resize, Esc to exit) |
-
-### Helix Zellij Integration
-
-All `Space , ` scripts detect `$ZELLIJ` at runtime and use floating panes instead of WezTerm pane splits.
-
-| Feature | Zellij behavior |
-|---------|-----------------|
-| `Space , g` | lazygit in floating pane (closes on exit) |
-| `Space , t/T/F` | Go test runner in floating pane (stays open with output) |
-| `Space , m` | Markdown preview with `glow` in floating pane |
-| `dlvg` function | gdlv in right pane alongside dlv CLI |
-| `Ctrl+g` in Helix | lazygit in Helix buffer (no multiplexer, unchanged) |
+| `Ctrl+Space h/j/k/l` | Navigate panes (= Helix `Ctrl+w h/j/k/l`) |
+| `Ctrl+Space w` | Focus next pane (= Helix `Ctrl+w w`) |
+| `Ctrl+Space v` | New pane right / vsplit (= Helix `Ctrl+w v`) |
+| `Ctrl+Space s` | New pane down / hsplit (= Helix `Ctrl+w s`) |
+| `Ctrl+Space q` | Close pane (= Helix `Ctrl+w q`) |
+| `Ctrl+Space H/J/K/L` | Swap pane direction (= Helix `Ctrl+w H/J/K/L`) |
+| `Ctrl+Space z` | Zoom / fullscreen toggle |
+| `Ctrl+Space f` | Toggle floating panes (show/hide all) |
+| `Ctrl+Space F` | New 80%×80% floating pane |
+| `Ctrl+Space E` | Embed/float toggle |
+| `Ctrl+Space p` | Pin floating pane (stays visible across tab switches) |
+| `Ctrl+Space n / x` | New tab / close tab |
+| `Ctrl+Space [ / ]` | Previous / next tab |
+| `Ctrl+Space b` | Break pane → new tab |
+| `Ctrl+Space 1-9` | Go to tab N |
+| `Ctrl+Space r` | Sticky resize mode (h/j/k/l to resize, Esc to exit) |
+| `Ctrl+Space R` | Rename current tab |
+| `Ctrl+Space e` | Scroll mode (j/k scroll, d/u half-page, / search, c copy) |
+| `Ctrl+Space g` | Session mode (w = manager, d = detach) |
 
 
 
@@ -432,25 +404,20 @@ Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.
 | `C-g` | Open lazygit in a new buffer (exits on quit) |
 | `esc` | Collapse selection, keep primary |
 
-### Helix WezTerm Integration
+### Helix Integration
 
 All keybindings live under `Space , ` (Space comma) in normal mode.
-Scripts at `~/.config/helix/scripts/`.
+Scripts at `~/.config/helix/scripts/`. All scripts use Zellij floating panes (`$ZELLIJ` detected at runtime).
 
 | Key | Action | Script |
 |-----|--------|--------|
-| `Space , b` | Git blame at cursor line (tig) | `hx-blame.sh` |
-| `Space , e` | File explorer — open in current window (yazi) | `hx-explorer.sh` |
-| `Space , v` | File explorer — open in vertical split | `hx-explorer.sh` |
-| `Space , s` | File explorer — open in horizontal split | `hx-explorer.sh` |
-| `Space , g` | Lazygit in zoomed overlay pane | `hx-lazygit.sh` |
+| `Space , b` | Git blame at cursor line (tig in floating pane) | `hx-blame.sh` |
+| `Space , g` | Lazygit in floating pane | `hx-lazygit.sh` |
 | `Space , t` | Run Go test under cursor | `hx-gotest.sh` |
 | `Space , T` | Run whole Go test func | `hx-gotest.sh` |
 | `Space , F` | Run all Go tests in file | `hx-gotest.sh` |
-| `Space , m` | Markdown preview (glow) | `hx-markdown.sh` |
+| `Space , m` | Markdown preview (glow) in floating pane | `hx-markdown.sh` |
 | `Space , a` | Toggle AI provider (Copilot ↔ ollama) | `hx-toggle-ai.sh` |
-
-Each script detects `$ZELLIJ` or `$WEZTERM_PANE` and picks the right multiplexer automatically.
 
 ### hx-gotest
 

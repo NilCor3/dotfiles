@@ -83,16 +83,11 @@ export EDITOR='hx'
 export PATH="$HOME/.local/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 export SSH_AUTH_SOCK=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
-# yazi wrapper — changes shell dir to yazi's last location on exit
-# and sends chosen file to open in the calling pane (used by hx-explorer)
-ya() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-  yazi "$@" --cwd-file="$tmp"
-  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-    builtin cd -- "$cwd"
-  fi
-  rm -f -- "$tmp"
-}
+# Auto-start Zellij when inside WezTerm (replaces shell with Zellij session)
+if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
+  exec zellij -c
+fi
+
 # --- Navigation ---
 alias ..='cd ..'
 alias ...='cd ../..'

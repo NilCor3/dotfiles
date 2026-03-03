@@ -13,7 +13,7 @@ This setup is built around that principle. Every tool was chosen because it expo
 
 **Configure** — Prefer tools with plain-text, version-controllable config (TOML, Lua, YAML, KDNL) over GUI-only preferences. If a setting can't be expressed as a file in this repo, it's a second-class citizen. macOS system preferences are captured in `run_once_after_macos-defaults.sh` for the same reason.
 
-**Compose** — Tools should work together through scripts, not monolithic plugins. The Helix integration (file explorer, lazygit, test runner) is a set of small shell scripts that wire WezTerm panes together. `hx-gotest` is a small Go binary that understands Go AST — it does one thing and feeds output back through the shell. Each piece is replaceable.
+**Compose** — Tools should work together through scripts, not monolithic plugins. The Helix integration (lazygit, test runner, blame) is a set of small shell scripts that wire Zellij panes together. `hx-gotest` is a small Go binary that understands Go AST — it does one thing and feeds output back through the shell. Each piece is replaceable.
 
 **Own** — No magic. No framework that "manages" things on your behalf in ways you can't inspect. chezmoi is transparent: the source is a plain git repo, templates are readable, encryption keys are yours. If chezmoi disappeared tomorrow you'd still have all your configs.
 
@@ -28,7 +28,7 @@ When helping with this setup, apply the same principles:
 - **When you teach the user a useful command**, add it as a navi cheat to `~/.local/share/navi/cheats/personal.cheat` and `chezmoi re-add` it. Cheats are grouped by `% topic, subtopic` headers; each entry is a `# Description` comment followed by the command on the next line. Use `<placeholder>` for variable parts.
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
-- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, yazi over Finder, helix over VS Code). WezTerm replaces both terminal emulator and multiplexer — use its pane/tab API in scripts rather than adding tmux or zellij.
+- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix over VS Code). WezTerm is the GPU terminal emulator; Zellij handles all pane/tab management — use `zellij action` in scripts rather than WezTerm Lua APIs.
 - **Merge conflicts** — mergiraf fires automatically as a git merge driver for Go, Rust, Java, TypeScript, JSON, YAML etc. Do not suggest separate merge tools. For remaining conflicts: lazygit (`e` on conflicted file).
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
@@ -72,7 +72,7 @@ Key configs tracked in chezmoi:
 - Shell: `.zshrc`, `.zshenv`, `.zprofile`, `.zsh_plugins.txt`, `.p10k.zsh`
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editor: `.config/helix/` (config, languages, scripts)
-- Terminal + multiplexer: `.config/wezterm/` (WezTerm handles both — panes, tabs, splits)
+- Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/zellij/` (panes, tabs, sessions)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
@@ -80,7 +80,7 @@ Key configs tracked in chezmoi:
 - Per-folder agent instructions: `dev/AGENTS.md`, `source/AGENTS.md`
 - Navi cheats: `.local/share/navi/cheats/personal.cheat`
 - GitHub Copilot CLI: `.copilot/config.json`, `.copilot/mcp-config.json`, `.copilot/agents/`
-- Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`, `.config/zellij/`
+- Legacy (not actively used): `.config/ghostty/`, `.tmux.conf`
 
 ## What to NEVER add
 
@@ -125,20 +125,30 @@ When modifying the LSP server:
 
 ---
 
-## WezTerm keybinding conventions
+## Zellij keybinding conventions
 
-LEADER key is `CTRL+SHIFT+Space` (timeout 1s). All pane/window management goes through LEADER.
+Leader key is `Ctrl+Space` (in `default_mode "locked"` — everything passes through to apps).
 
-Key patterns to know when modifying WezTerm config:
-- **Pane zoom**: `LEADER z` → `TogglePaneZoomState` (current pane)
-- **Pane collapse**: `LEADER a` → collapses pane to 1 row/col by growing a neighbor; navigate back and press again to restore. State stored in `wezterm.GLOBAL["ach_<id>"]` / `wezterm.GLOBAL["acr_<id>"]`. Logic inline in `keybinds.lua`.
-- **Pane resize**: `ALT + h/j/k/l` → `AdjustPaneSize`
-- **Passive scroll** (no mode): `CTRL+SHIFT+j/k` (line), `CTRL+SHIFT+d/u` (half-page)
-- **Copy mode**: `LEADER c` — modal.wezterm provides vim-like copy with `x` for line select, `t` fixed to jump-forward
-- **Scroll mode**: `LEADER y`
+Key patterns to know when modifying Zellij config:
+- **Enter command mode**: `Ctrl+Space` — one-shot, returns to locked after each action
+- **Pane nav**: `h/j/k/l` → MoveFocus direction
+- **Splits**: `v` (right), `s` (down), `q` (close)
+- **Move pane**: `H/J/K/L`
+- **Zoom**: `z` → ToggleFocusFullscreen
+- **Float**: `f` → toggle all floats, `F` → new 80%×80% float, `E` → embed/float toggle, `p` → pin float
+- **Tabs**: `n` (new), `x` (close), `[`/`]` (prev/next), `1-9` (direct), `b` (break pane → new tab)
+- **Resize mode** (sticky): `r` → h/j/k/l resize, Esc to exit
+- **Scroll mode** (sticky): `e` → j/k scroll, d/u half-page, `/` search, `c` copy selection
+- **Session mode**: `g` → `w` session manager, `d` detach
+- **Rename tab**: `R`
+
+Config file:
+- `~/.config/zellij/config.kdl` — all keybindings and settings
+
+WezTerm is now terminal-only (GPU/fonts/window). Its keybinds:
+- `Ctrl+-/+` font size, `CMD+c/v` clipboard, `Shift+Up/Down` scroll-to-prompt
+- `Ctrl+Shift+j/k/d/u` outer scrollback (WezTerm viewport, outside Zellij)
 
 Config files:
-- `~/.config/wezterm/wezterm.lua` — main config, plugin setup, `patch_copy_mode()` fix
-- `~/.config/wezterm/keybinds.lua` — all keybindings (returned as table, loaded by wezterm.lua)
-
-`CTRL+h/j/k/l` are intentionally **not** bound in WezTerm — they pass through to Helix/shell (e.g. `CTRL+h` = backspace in Helix insert mode).
+- `~/.config/wezterm/wezterm.lua` — main config (no plugins, no leader)
+- `~/.config/wezterm/keybinds.lua` — 6 bare-minimum bindings
