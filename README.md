@@ -21,7 +21,7 @@ the best tools are ones you can configure, compose, and own.
 - [Mise — Runtime Version Manager](#mise--runtime-version-manager)
 - [Shell — Zsh + Zinit](#shell--zsh--zinit)
 - [Terminal — WezTerm](#terminal--wezterm)
-- [Zellij — Multiplexer](#zellij--multiplexer)
+- [tmux — Multiplexer](#tmux--multiplexer)
 - [Editors](#editors)
   - [Helix](#helix)
   - [Helix Integration](#helix-integration)
@@ -51,8 +51,8 @@ the best tools are ones you can configure, compose, and own.
 
 - 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal (fonts, window, clipboard)
 - ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
-- 🗂️ **[Zellij](#zellij--multiplexer)** — multiplexer with floating panes, sessions, and Helix-mirrored keybinds (`Ctrl+Space` leader)
-- 🔍 **[Helix integration](#helix-integration)** — blame, lazygit, markdown preview, and test runner via Zellij pane scripts
+- 🗂️ **[tmux](#tmux--multiplexer)** — multiplexer with vi copy mode, sessions, and Helix-mirrored keybinds (`Ctrl+Space` leader)
+- 🔍 **[Helix integration](#helix-integration)** — blame, lazygit, markdown preview, and test runner via tmux floating panes and splits
 - 🧪 **[hx-gotest](#hx-gotest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
 - 🔐 **Age-encrypted secrets** in dotfiles — key stored at `~/.config/age/chezmoi-key.txt`
 - 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
@@ -183,7 +183,9 @@ Repo: `git@github.com:jokaro/dotfiles.git`
 | `~/.mise.toml` | Project-level env vars and shell aliases |
 | `~/.config/mise/config.toml` | Global mise tools and environment |
 | `~/.config/wezterm/wezterm.lua` | WezTerm terminal config (GPU/fonts/window only) |
-| `~/.config/zellij/config.kdl` | Zellij multiplexer config |
+| `~/.config/tmux/tmux.conf` | tmux multiplexer config |
+| `~/.config/tmux/layouts/dev.sh` | dev layout (helix + 2 shells) |
+| `~/.config/tmux/scripts/picker.sh` | fzf project/session picker |
 | `~/.config/helix/` | Helix editor config and LSP setup |
 
 ### Updating dotfiles
@@ -292,44 +294,50 @@ Config at `~/.config/wezterm/wezterm.lua`. GPU-accelerated terminal emulator onl
 | `Ctrl+Shift+j/k` | Scroll WezTerm viewport down/up 1 line |
 | `Ctrl+Shift+d/u` | Scroll WezTerm viewport down/up half page |
 
-No plugins, no leader key, no pane management — that's all Zellij.
+No plugins, no leader key, no pane management — that's all tmux.
 
 
 
-## Zellij — Multiplexer
+## tmux — Multiplexer
 
-Zellij runs **inside** WezTerm (auto-started from `.zshrc` when inside a WezTerm pane). Handles all panes, tabs, sessions.
+tmux runs **inside** WezTerm (auto-started from `.zshrc` when inside a WezTerm pane via `~/.config/tmux/scripts/picker.sh`). Handles all panes, windows, sessions.
 
-Config: `~/.config/zellij/config.kdl`
+Config: `~/.config/tmux/tmux.conf`
 
 ### Design: zero conflicts with Helix
 
-`default_mode "locked"` — all keys pass through to Helix/shell by default.
-**Leader: `Ctrl+Space`** — momentarily enters command mode for one action, then returns to locked.
+**Leader: `Ctrl+Space`** — all keybinds are triggered after the prefix, so no conflicts with Helix or shell.
 
 Sub-keys **mirror Helix's `Ctrl+w` window mode** exactly:
 
 | Key | Action |
 |-----|--------|
-| `Ctrl+Space h/j/k/l` | Navigate panes (= Helix `Ctrl+w h/j/k/l`) |
-| `Ctrl+Space w` | Focus next pane (= Helix `Ctrl+w w`) |
-| `Ctrl+Space v` | New pane right / vsplit (= Helix `Ctrl+w v`) |
-| `Ctrl+Space s` | New pane down / hsplit (= Helix `Ctrl+w s`) |
-| `Ctrl+Space q` | Close pane (= Helix `Ctrl+w q`) |
-| `Ctrl+Space H/J/K/L` | Swap pane direction (= Helix `Ctrl+w H/J/K/L`) |
+| `Ctrl+Space h/j/k/l` | Navigate panes |
+| `Ctrl+Space w` | Focus next pane |
+| `Ctrl+Space v` | Vertical split |
+| `Ctrl+Space s` | Horizontal split |
+| `Ctrl+Space q` | Close pane |
 | `Ctrl+Space z` | Zoom / fullscreen toggle |
-| `Ctrl+Space f` | Toggle floating panes (show/hide all) |
-| `Ctrl+Space F` | New 80%×80% floating pane |
-| `Ctrl+Space E` | Embed/float toggle |
-| `Ctrl+Space p` | Pin floating pane (stays visible across tab switches) |
-| `Ctrl+Space n / x` | New tab / close tab |
-| `Ctrl+Space [ / ]` | Previous / next tab |
-| `Ctrl+Space b` | Break pane → new tab |
-| `Ctrl+Space 1-9` | Go to tab N |
-| `Ctrl+Space r` | Sticky resize mode (h/j/k/l to resize, Esc to exit) |
-| `Ctrl+Space R` | Rename current tab |
-| `Ctrl+Space e` | Scroll mode (j/k scroll, d/u half-page, / search, c copy) |
-| `Ctrl+Space g` | Session mode (w = manager, d = detach) |
+| `Ctrl+Space F` | New 80%×80% floating shell (display-popup) |
+| `Ctrl+Space n / x` | New window / close window |
+| `Ctrl+Space [ / ]` | Previous / next window |
+| `Ctrl+Space b` | Break pane → new window |
+| `Ctrl+Space 1-9` | Go to window N |
+| `Ctrl+Space r` | Sticky resize mode (h/j/k/l = fine, H/J/K/L = coarse, Esc to exit) |
+| `Ctrl+Space R` | Rename window |
+| `Ctrl+Space P` | Rename pane (shown in pane border) |
+| `Ctrl+Space e` | vi copy mode (v=select, C-v=block, y=yank) |
+| `Ctrl+Space g` | Project picker (fzf: layout → workspace → repo → session) |
+| `Ctrl+Space d` | Detach |
+| `Ctrl+Space ?` | Show keybind help popup |
+
+### Session naming
+
+Sessions are named `<workspace>-<repo>` — e.g. `dev-hx-gotest`, `fortnox-blink`.
+
+### Layouts
+
+Layouts live in `~/.config/tmux/layouts/`. The `dev` layout opens Helix in the top 70% with two shells side-by-side in the bottom 30%. Panes are auto-named (`helix`, `shell-1`, `shell-2`).
 
 
 
@@ -407,7 +415,7 @@ Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.
 ### Helix Integration
 
 All keybindings live under `Space , ` (Space comma) in normal mode.
-Scripts at `~/.config/helix/scripts/`. All scripts use Zellij floating panes (`$ZELLIJ` detected at runtime).
+Scripts at `~/.config/helix/scripts/`. All scripts detect `$TMUX` / `$ZELLIJ` / `$WEZTERM_PANE` at runtime — tmux uses `display-popup` for floats and `split-window` for test output.
 
 | Key | Action | Script |
 |-----|--------|--------|
