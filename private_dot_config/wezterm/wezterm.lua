@@ -20,7 +20,10 @@ local config = {
 		top = 0,
 		bottom = 0,
 	},
-	hide_tab_bar_if_only_one_tab = false,
+	hide_tab_bar_if_only_one_tab = true,
+	use_fancy_tab_bar = false,
+	tab_bar_at_bottom = false,
+	enable_tab_bar = false,
 	hide_mouse_cursor_when_typing = true,
 	inactive_pane_hsb = {
 		brightness = 0.5,
