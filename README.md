@@ -66,6 +66,7 @@ the best tools are ones you can configure, compose, and own.
 - 🧪 **[gotestsum](https://github.com/gotestyourself/gotestsum)** — prettier Go test output with watch mode
 - 🌈 **[richgo](https://github.com/kyoh86/richgo)** — colored `go test` output; used by Helix test runner and `got`/`gota` aliases
 - 🐛 **[dlv](https://github.com/go-delve/delve)** — Go debugger with DAP support for editor integration
+- 🔭 **[gdlv](https://github.com/aarzilli/gdlv)** — GUI companion for dlv; use `dlvg` to run both together
 - 📐 **[oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)** — generate Go types and server stubs from OpenAPI specs
 - 🥓 **[bacon](https://dystroy.org/bacon/)** — background Rust checker/tester that reruns on save
 - ⚡ **[cargo-nextest](https://nexte.st)** — faster Rust test runner with better output
@@ -965,6 +966,24 @@ dlv debug                    # debug current package
 dlv attach <pid>             # attach to running process
 dlv dap --listen=:2345       # start DAP server for Helix/editor integration
 ```
+
+### gdlv — GUI companion for dlv
+
+**[gdlv](https://github.com/aarzilli/gdlv)** is a native GUI frontend for dlv. Use it alongside `dlv` CLI via `dlv --accept-multiclient`:
+
+```sh
+# Both CLI and GUI connected to the same debug session:
+dlvg debug ./...             # launch headless dlv + gdlv GUI + dlv CLI
+dlvg test ./pkg/...          # debug tests with companion
+dlvg attach <pid>            # attach to running process
+```
+
+`dlvg` is a shell function that:
+1. Starts `dlv debug --headless --listen=:2345 --accept-multiclient`
+2. Opens `gdlv connect :2345` (native macOS GUI window)
+3. Connects `dlv connect :2345` in current terminal pane for CLI control
+
+Use the CLI for breakpoints/stepping; gdlv shows goroutines, variables, and stack frames visually.
 
 ### oapi-codegen — OpenAPI → Go
 
