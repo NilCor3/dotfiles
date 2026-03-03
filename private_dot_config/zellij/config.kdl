@@ -87,6 +87,8 @@ keybinds clear-defaults=true {
         bind "J" { Resize "Decrease Down"; }
         bind "K" { Resize "Decrease Up"; }
         bind "L" { Resize "Decrease Right"; }
+        bind "=" "+" { Resize "Increase"; }
+        bind "-"     { Resize "Decrease"; }
         bind "Esc" "Ctrl \\" { SwitchToMode "locked"; }
     }
 
