@@ -1,0 +1,14 @@
+// Vertical monitor dev layout
+// Helix takes top 70%, two shells side by side below.
+// Launch from project dir: the panes inherit cwd automatically.
+layout {
+    pane split_direction="horizontal" {
+        pane command="hx" size="70%" focus=true {
+            args "."
+        }
+        pane split_direction="vertical" size="30%" {
+            pane name="shell"
+            pane name="tests"
+        }
+    }
+}
