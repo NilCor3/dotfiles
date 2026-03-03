@@ -73,6 +73,7 @@ keybinds clear-defaults=true {
         // Sticky sub-modes
         bind "r" { SwitchToMode "resize"; }
         bind "R" { SwitchToMode "renametab"; }
+        bind "P" { SwitchToMode "renamepane"; }
         bind "e" { SwitchToMode "scroll"; }
         bind "g" { SwitchToMode "session"; }
 
@@ -137,6 +138,13 @@ keybinds clear-defaults=true {
     renametab {
         bind "Enter"     { SwitchToMode "locked"; }
         bind "Esc" "Ctrl c" { UndoRenameTab; SwitchToMode "locked"; }
+    }
+
+
+    // Rename pane mode
+    renamepane {
+        bind "Enter"        { SwitchToMode "locked"; }
+        bind "Esc" "Ctrl c" { UndoRenamePane; SwitchToMode "locked"; }
     }
 
     // Session mode
