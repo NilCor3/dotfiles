@@ -16,12 +16,15 @@ tmux new-session -d -s "$SESSION" -n "dev" -c "$CWD"
 
 # Top pane already exists (pane 1) — start helix
 tmux send-keys -t "$SESSION:dev.1" "hx ." Enter
+tmux select-pane -t "$SESSION:dev.1" -T "helix"
 
 # Split bottom 30% for first shell
 tmux split-window -t "$SESSION:dev.1" -v -p 30 -c "$CWD"
+tmux select-pane -t "$SESSION:dev.2" -T "shell-1"
 
 # Split right for second shell
 tmux split-window -t "$SESSION:dev.2" -h -c "$CWD"
+tmux select-pane -t "$SESSION:dev.3" -T "shell-2"
 
 # Focus back on helix pane
 tmux select-pane -t "$SESSION:dev.1"
