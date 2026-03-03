@@ -325,8 +325,13 @@ dlvg() {
   # Wait for server to be ready
   sleep 0.8
 
-  # Open gdlv GUI in background (native macOS window)
-  gdlv connect ":$port" &
+  # Open gdlv companion (native GUI or Zellij right pane)
+  if [ -n "$ZELLIJ" ]; then
+    zellij action new-pane --direction right -- gdlv connect ":$port" &
+  else
+    # Open gdlv GUI in background (native macOS window)
+    gdlv connect ":$port" &
+  fi
 
   # Connect dlv CLI in current pane (blocks until session ends)
   dlv connect ":$port"
