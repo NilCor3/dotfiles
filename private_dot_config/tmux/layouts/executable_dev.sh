@@ -19,7 +19,7 @@ tmux send-keys -t "$SESSION:dev.1" "hx ." Enter
 tmux select-pane -t "$SESSION:dev.1" -T "helix"
 
 # Split bottom 30% for first shell
-tmux split-window -t "$SESSION:dev.1" -v -p 30 -c "$CWD"
+tmux split-window -t "$SESSION:dev.1" -v -l 30% -c "$CWD"
 tmux select-pane -t "$SESSION:dev.2" -T "shell"
 
 # Split right for second shell
