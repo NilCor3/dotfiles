@@ -11,17 +11,17 @@ ROWS=$(tmux display-message -p '#{client_height}')
 # ── Window 1: todos ───────────────────────────────────────────────────────────
 tmux new-session -d -s "$SESSION" -n "todos" -c "$CWD/todos" -x "$COLS" -y "$ROWS"
 
-# Top 60%: helix editing inbox
+# Top pane: helix editing inbox
 tmux send-keys -t "$SESSION:todos.1" "hx $CWD/todos/inbox.md" Enter
 tmux select-pane -t "$SESSION:todos.1" -T "helix"
 
-# Middle 25%: todo list (interactive, user runs tl)
-tmux split-window -t "$SESSION:todos.1" -v -l 25% -c "$CWD/todos"
-tmux select-pane -t "$SESSION:todos.2" -T "todos"
+# Bottom 15%: shell (split first so helix + todos share remaining 85%)
+tmux split-window -t "$SESSION:todos.1" -v -l 15% -c "$CWD"
+tmux select-pane -t "$SESSION:todos.2" -T "shell"
 
-# Bottom 15%: shell
-tmux split-window -t "$SESSION:todos.2" -v -l 37% -c "$CWD"
-tmux select-pane -t "$SESSION:todos.3" -T "shell"
+# Split helix area (85%) in half → helix ~42.5%, todos ~42.5%
+tmux split-window -t "$SESSION:todos.1" -v -l 50% -c "$CWD/todos"
+tmux select-pane -t "$SESSION:todos.2" -T "todos"
 
 # ── Window 2: notes ───────────────────────────────────────────────────────────
 tmux new-window -t "$SESSION" -n "notes" -c "$CWD"
