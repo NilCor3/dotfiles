@@ -59,6 +59,7 @@ ollama = "latest"
 "npm:@biomejs/biome" = "latest"
 "npm:tsx" = "latest"
 "npm:knip" = "latest"
+tmux = "latest"
 
 
 [env]

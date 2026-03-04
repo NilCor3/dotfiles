@@ -28,6 +28,8 @@
     "https://ainativecompass.substack.com",
     "https://docs.github.com",
     "https://raw.githubusercontent.com",
-    "https://yazi-rs.github.io"
+    "https://yazi-rs.github.io",
+    "http://localhost:11434",
+    "https://zellij.dev"
   ]
 }
