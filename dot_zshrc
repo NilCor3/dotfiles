@@ -315,7 +315,7 @@ ntag() {
 }
 
 # --- Todo ---
-TODOS_DIR="$NOTES_DIR/todos"
+export TODOS_DIR="$NOTES_DIR/todos"
 
 # ta [text] — add to inbox (with text: appends directly; without: opens inbox in hx)
 ta() {
@@ -329,25 +329,30 @@ ta() {
 
 # tl — fzf over all open todos, select to open file at that line in hx
 tl() {
-  # If a helix pane exists in this window, open files there instead of current pane
+  # Detect notes/todos context: if in notes session + todos window, helix is always pane 1
   local helix_pane=""
   if [[ -n "$TMUX" ]]; then
-    helix_pane=$(tmux list-panes -F '#{pane_title} #{pane_id}' | awk '/^helix /{print $2}')
+    local sess win
+    sess=$(tmux display-message -p '#{session_name}')
+    win=$(tmux display-message -p '#{window_name}')
+    [[ "$sess" == "notes" && "$win" == "todos" ]] && helix_pane="notes:todos.1"
   fi
 
   while true; do
     local result
     result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$TODOS_DIR" \
+      | sed "s|${TODOS_DIR}/||" \
       | fzf --prompt="todos > " \
-            --preview="bat --color=always --highlight-line={2} {1}" \
+            --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
             --delimiter=: \
             --preview-window=right:50%)
     [[ -z "$result" ]] && return
     local file line
-    file=$(echo "$result" | cut -d: -f1)
+    file="${TODOS_DIR}/$(echo "$result" | cut -d: -f1)"
     line=$(echo "$result" | cut -d: -f2)
     if [[ -n "$helix_pane" ]]; then
-      tmux send-keys -t "$helix_pane" Escape ":open ${file}:${line}" Enter
+      tmux send-keys -t "$helix_pane" Escape
+      tmux send-keys -t "$helix_pane" ":open ${file}:${line}" Enter
     else
       hx "+$line" "$file"
       return
@@ -359,13 +364,14 @@ tl() {
 td() {
   local result
   result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$TODOS_DIR" \
+    | sed "s|${TODOS_DIR}/||" \
     | fzf --prompt="mark done > " \
-          --preview="bat --color=always --highlight-line={2} {1}" \
+          --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
           --delimiter=: \
           --preview-window=right:50%)
   [[ -z "$result" ]] && return
   local file line
-  file=$(echo "$result" | cut -d: -f1)
+  file="${TODOS_DIR}/$(echo "$result" | cut -d: -f1)"
   line=$(echo "$result" | cut -d: -f2)
   sed -i '' "${line}s/- \[ ?\]/- [x]/" "$file"
   echo "Done: $(sed -n "${line}p" "$file")"
