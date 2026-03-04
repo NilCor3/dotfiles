@@ -22,6 +22,7 @@ tmux select-pane -t "$SESSION:todos.2" -T "shell"
 # Split helix area (85%) in half → helix ~42.5%, todos ~42.5%
 tmux split-window -t "$SESSION:todos.1" -v -l 50% -c "$CWD/todos"
 tmux select-pane -t "$SESSION:todos.2" -T "todos"
+tmux send-keys -t "$SESSION:todos.2" "tl" Enter
 
 # ── Window 2: notes ───────────────────────────────────────────────────────────
 tmux new-window -t "$SESSION" -n "notes" -c "$CWD"
