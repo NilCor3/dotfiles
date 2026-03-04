@@ -1,4 +1,3 @@
 #!/bin/sh
-# lazygit.sh — open lazygit at a given path via mise exec
-# Usage: lazygit.sh <path>
-/opt/homebrew/bin/mise exec -- lazygit -p "${1:-$HOME}"
+# lazygit.sh — open lazygit at session root via mise exec
+/opt/homebrew/bin/mise exec -- lazygit -p "${SESSION_PATH:-$HOME}"
