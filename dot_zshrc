@@ -329,31 +329,24 @@ ta() {
 
 # tl — fzf over all open todos, select to open file at that line in hx
 tl() {
-  # Detect if running in tmux "todos" pane — if so, open files in the helix pane
-  local in_todos_pane=0
+  # If a helix pane exists in this window, open files there instead of current pane
   local helix_pane=""
   if [[ -n "$TMUX" ]]; then
-    local pane_title
-    pane_title=$(tmux display-message -p '#{pane_title}')
-    if [[ "$pane_title" == "todos" ]]; then
-      helix_pane=$(tmux list-panes -F '#{pane_title}:#{pane_id}' | awk -F: '/^helix:/{print $2}')
-      [[ -n "$helix_pane" ]] && in_todos_pane=1
-    fi
+    helix_pane=$(tmux list-panes -F '#{pane_title} #{pane_id}' | awk '/^helix /{print $2}')
   fi
 
   while true; do
     local result
-    result=$(rg --with-filename --line-number -e "- \[ ?\]" "$TODOS_DIR" \
-      | sed 's|'"$TODOS_DIR/"'||' \
+    result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$TODOS_DIR" \
       | fzf --prompt="todos > " \
-            --preview='bat --color=always {}' \
+            --preview="bat --color=always --highlight-line={2} {1}" \
             --delimiter=: \
             --preview-window=right:50%)
     [[ -z "$result" ]] && return
     local file line
-    file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
+    file=$(echo "$result" | cut -d: -f1)
     line=$(echo "$result" | cut -d: -f2)
-    if (( in_todos_pane )); then
+    if [[ -n "$helix_pane" ]]; then
       tmux send-keys -t "$helix_pane" Escape ":open ${file}:${line}" Enter
     else
       hx "+$line" "$file"
@@ -365,16 +358,16 @@ tl() {
 # td — mark a todo as done (fzf picker, edits file in-place)
 td() {
   local result
-  result=$(rg --with-filename --line-number -e "- \[ ?\]" "$TODOS_DIR" \
-    | sed 's|'"$TODOS_DIR/"'||' \
+  result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$TODOS_DIR" \
     | fzf --prompt="mark done > " \
+          --preview="bat --color=always --highlight-line={2} {1}" \
           --delimiter=: \
           --preview-window=right:50%)
   [[ -z "$result" ]] && return
   local file line
-  file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
+  file=$(echo "$result" | cut -d: -f1)
   line=$(echo "$result" | cut -d: -f2)
-  sed -i '' "${line}s/- \[ \]/- [x]/" "$file"
+  sed -i '' "${line}s/- \[ ?\]/- [x]/" "$file"
   echo "Done: $(sed -n "${line}p" "$file")"
 }
 
