@@ -869,6 +869,9 @@ ta <text>
 # Add todo to inbox (open inbox in helix)
 ta
 
+# Insert todo checkbox below cursor in Helix (markdown files only)
+# keybind: Alt+t in normal mode
+
 # List all open todos (fzf, opens in helix)
 tl
 

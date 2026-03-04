@@ -30,6 +30,7 @@ esc = ["collapse_selection","keep_primary_selection"]
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 C-s = ":write"
 "C-S-s" = ":wa"
+"A-t" = [":insert-output ~/.config/helix/scripts/hx-todo-insert.sh '%{buffer_name}'", "goto_line_end", "append_mode"]
 
 [keys.normal.space.","]
 b = ":sh ~/.config/helix/scripts/hx-blame.sh %{buffer_name} %{cursor_line}"
