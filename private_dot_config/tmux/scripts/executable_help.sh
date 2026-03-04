@@ -28,7 +28,8 @@ cat << 'EOF' | less -r
    P                  rename pane (shown in pane border)
 
  SESSIONS
-   g                  project picker (fzf)
+   p                  project picker (fzf → new/switch session)
+   g                  lazygit at project root
    d                  detach
 
  COPY
