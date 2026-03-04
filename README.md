@@ -37,6 +37,7 @@ the best tools are ones you can configure, compose, and own.
 - [Mock REST — prism + json-server](#mock-rest--prism--json-server)
 - [Local AI — ollama + mods](#local-ai--ollama--mods)
 - [Notes — marksman + glow](#notes--marksman--glow)
+- [Todos](#todos)
 - [JSON — jq, jnv, fx](#json--jq-jnv-fx)
 - [Rust Tools](#rust-tools--bacon-cargo-nextest-cargo-audit-cargo-expand)
 - [Go Tools](#go-tools--air-sqlc-gotestsum-dlv-oapi-codegen)
@@ -337,7 +338,14 @@ Sessions are named `<workspace>-<repo>` — e.g. `dev-hx-gotest`, `fortnox-blink
 
 ### Layouts
 
-Layouts live in `~/.config/tmux/layouts/`. The `dev` layout opens Helix in the top 70% with two shells side-by-side in the bottom 30%. Panes are auto-named (`helix`, `shell-1`, `shell-2`).
+Layouts live in `~/.config/tmux/layouts/`. Selected via the `g` picker:
+
+| Layout | Description |
+|--------|-------------|
+| `dev` | Helix 70% top, two shells side-by-side in 30% bottom. Panes: `helix`, `shell-1`, `shell-2` |
+| `shell` | Single named shell session |
+| `ai` | GitHub Copilot CLI session |
+| `notes` | 2-window notes workspace (see [Notes & Todos](#notes--todos)) |
 
 
 
@@ -411,6 +419,7 @@ Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.
 | `C-S-s` | Save all buffers (normal + insert mode) |
 | `C-g` | Open lazygit in a new buffer (exits on quit) |
 | `esc` | Collapse selection, keep primary |
+| `A-t` | Insert `- [ ] ` todo checkbox below cursor (`.md` files only; works in normal + insert mode) |
 
 ### Helix Integration
 
@@ -846,6 +855,46 @@ Auto-push on every commit via post-commit hook. Run `nsync` to commit all change
 - Find anything: `nf blink` (filename), `nft meeting` (by type), `ntag api` (by tag)
 - Search content: `ng <word>` (static), `ngs` (live interactive, opens at exact line), `<space>/` in Helix
 - Read/review: `ngl` for TUI browsing, `glow file.md` to render before sharing
+
+---
+
+## Todos
+
+Plain GFM checkboxes in `~/notes/todos/`. No app — just markdown, ripgrep, fzf, and shell functions.
+
+**Files:**
+```
+~/notes/todos/
+├── inbox.md    # quick capture (default for ta)
+├── work.md
+├── dev.md
+├── personal.md
+└── someday.md
+```
+
+**Format:** standard GFM checkbox — `- [ ] Task text #tag project:name`
+
+### Shell functions
+
+```sh
+ta [text]       # append to inbox.md (no args → open inbox in Helix)
+tl              # list all open todos with fzf preview → open in Helix at exact line
+td              # mark a todo done (fzf picker, comments out the line)
+tp [project]    # open a todo file (fzf or direct)
+tg <tag>        # filter todos by #tag (fzf → open in Helix)
+```
+
+### Helix keybind
+
+`Alt+t` in normal or insert mode — inserts `- [ ] ` on a new line below cursor. Only active in `.md` files (no-op elsewhere). Script: `~/.config/helix/scripts/hx-todo-insert.sh`.
+
+### tmux layout
+
+`notes` layout (picker `g` → notes): 2 windows.
+- **todos** window: Helix (42.5%) + todos list auto-running `tl` (42.5%) + shell (15%)
+- **notes** window: Helix (80%) + shell (20%)
+
+`tl` detects the `notes:todos` session/window and opens selected files directly in the Helix pane.
 
 ---
 

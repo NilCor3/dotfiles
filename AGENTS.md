@@ -34,6 +34,25 @@ When helping with this setup, apply the same principles:
 
 ---
 
+## Todo system
+
+Todos live in `~/notes/todos/` as plain GFM markdown. Files: `inbox.md`, `work.md`, `dev.md`, `personal.md`, `someday.md`.
+
+Format: `- [ ] Task text #tag project:name`
+
+Shell functions (defined in `.zshrc`, use `$TODOS_DIR`):
+- `ta [text]` — append to inbox; no args opens inbox in Helix
+- `tl` — fzf list of open todos → opens in Helix pane (detects `notes:todos` session)
+- `td` — mark done via fzf (comments out the line)
+- `tp [file]` — open a todo file
+- `tg <tag>` — filter by tag
+
+Helix keybind `Alt+t` (normal + insert mode): inserts `- [ ] ` on new line below cursor in `.md` files only. Script: `~/.config/helix/scripts/hx-todo-insert.sh`.
+
+tmux `notes` layout: 2-window session. `todos` window = Helix + tl pane + shell. `tl` sends `:open file:line` to `notes:todos.1` (helix pane).
+
+---
+
 ## How chezmoi works here
 
 - **Auto-commit + auto-push** are enabled — `chezmoi add` and `chezmoi re-add` automatically commit and push to GitHub
