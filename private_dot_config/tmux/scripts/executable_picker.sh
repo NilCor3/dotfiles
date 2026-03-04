@@ -1,69 +1,93 @@
 #!/bin/sh
 # picker.sh — fzf project/session picker for tmux
-# Flow: existing sessions + layouts → layout selected → workspace → repo → create/attach session
+# Each layout has its own post-selection flow.
 
 LAYOUTS_DIR="$HOME/.config/tmux/layouts"
 DEV_DIR="$HOME/dev"
 SOURCE_DIR="$HOME/source"
 
-# Build option list: running sessions prefixed with "session:", layouts with "layout:"
+FZF_OPTS='--height=50% --border=rounded --color=bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921 --no-info'
+
+# ── helpers ───────────────────────────────────────────────────────────────────
+switch_or_attach() {
+  if [ -n "$TMUX" ]; then
+    tmux switch-client -t "$1"
+  else
+    tmux attach-session -t "$1"
+  fi
+}
+
+create_and_switch() {
+  session_name="$1"; cwd="$2"; layout="$3"
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    switch_or_attach "$session_name"
+  else
+    "$LAYOUTS_DIR/${layout}.sh" "$session_name" "$cwd"
+    switch_or_attach "$session_name"
+  fi
+}
+
+# ── build option list ─────────────────────────────────────────────────────────
 options=""
+while IFS= read -r s; do
+  [ -n "$s" ] && options="${options}session: ${s}
+"
+done << EOF
+$(tmux list-sessions -F "#S" 2>/dev/null | sort)
+EOF
 
-# Existing sessions
-if tmux list-sessions -F "#S" 2>/dev/null | while IFS= read -r s; do
-  printf "session: %s\n" "$s"
-done | sort > /tmp/tmux-picker-sessions.txt; then
-  :
-fi
-options="$(cat /tmp/tmux-picker-sessions.txt 2>/dev/null)"
-
-# Layout names from .sh files
 for f in "$LAYOUTS_DIR"/*.sh; do
   [ -f "$f" ] || continue
-  name=$(basename "$f" .sh)
-  options="$options
-layout: $name"
+  lname=$(basename "$f" .sh)
+  options="${options}layout:  ${lname}
+"
 done
 
-# Remove leading newline
-options=$(printf '%s' "$options" | sed '/^$/d')
+options=$(printf '%s' "$options" | grep -v '^$')
+[ -z "$options" ] && options="layout:  dev"
 
-if [ -z "$options" ]; then
-  options="layout: dev"
-fi
-
-# First fzf: choose session or layout
-choice=$(printf '%s\n' "$options" | \
-  fzf --prompt="tmux > " \
-      --height=40% \
-      --border=rounded \
-      --color="bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921" \
-      --no-info \
-      --ansi)
-
+# ── first pick ────────────────────────────────────────────────────────────────
+choice=$(printf '%s\n' "$options" | eval fzf $FZF_OPTS --prompt='"tmux > "')
 [ -z "$choice" ] && exit 0
 
-type=$(printf '%s' "$choice" | cut -d: -f1 | tr -d ' ')
-name=$(printf '%s' "$choice" | cut -d' ' -f2-)
+ctype=$(printf '%s' "$choice" | cut -d: -f1 | tr -d ' ')
+cname=$(printf '%s' "$choice" | sed 's/^[^:]*: *//')
 
-if [ "$type" = "session" ]; then
-  # Attach to existing session
-  if [ -n "$TMUX" ]; then
-    tmux switch-client -t "$name"
-  else
-    tmux attach-session -t "$name"
-  fi
+# ── existing session ──────────────────────────────────────────────────────────
+if [ "$ctype" = "session" ]; then
+  switch_or_attach "$cname"
   exit 0
 fi
 
-# Layout selected → pick workspace
-workspace=$(printf 'dev\nsource' | \
-  fzf --prompt="workspace > " \
-      --height=30% \
-      --border=rounded \
-      --color="bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921" \
-      --no-info)
+layout="$cname"
 
+# ── layout: shell ─────────────────────────────────────────────────────────────
+if [ "$layout" = "shell" ]; then
+  next=1
+  while tmux has-session -t "shell-$next" 2>/dev/null; do next=$((next + 1)); done
+  printf "Session name [shell-%s]: " "$next"
+  read -r input
+  sname="${input:-shell-$next}"
+  create_and_switch "$sname" "$HOME" "shell"
+  exit 0
+fi
+
+# ── layout: ai ───────────────────────────────────────────────────────────────
+if [ "$layout" = "ai" ]; then
+  folder=$(find "$HOME" -mindepth 1 -maxdepth 3 -type d 2>/dev/null \
+    | grep -v '/\.' \
+    | sed "s|$HOME/||" \
+    | sort \
+    | eval fzf $FZF_OPTS --prompt='"folder (ai) > "')
+  [ -z "$folder" ] && exit 0
+  foldername=$(basename "$folder")
+  session_name="ai-$foldername"
+  create_and_switch "$session_name" "$HOME/$folder" "ai"
+  exit 0
+fi
+
+# ── layout: dev (and any other project layout) ────────────────────────────────
+workspace=$(printf 'dev\nsource' | eval fzf $FZF_OPTS --prompt='"workspace > "')
 [ -z "$workspace" ] && exit 0
 
 case "$workspace" in
@@ -72,33 +96,10 @@ case "$workspace" in
   *)      base_dir="$HOME/$workspace" ;;
 esac
 
-# Pick repo from workspace directory
 repo=$(find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null \
   | sort \
   | sed "s|$base_dir/||" \
-  | fzf --prompt="repo ($workspace) > " \
-        --height=50% \
-        --border=rounded \
-        --color="bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921" \
-        --no-info)
-
+  | eval fzf $FZF_OPTS --prompt='"repo ($workspace) > "')
 [ -z "$repo" ] && exit 0
 
-session_name="${workspace}-${repo}"
-cwd="${base_dir}/${repo}"
-
-# Create or attach session
-if tmux has-session -t "$session_name" 2>/dev/null; then
-  if [ -n "$TMUX" ]; then
-    tmux switch-client -t "$session_name"
-  else
-    tmux attach-session -t "$session_name"
-  fi
-else
-  "$LAYOUTS_DIR/${name}.sh" "$session_name" "$cwd"
-  if [ -n "$TMUX" ]; then
-    tmux switch-client -t "$session_name"
-  else
-    tmux attach-session -t "$session_name"
-  fi
-fi
+create_and_switch "${workspace}-${repo}" "${base_dir}/${repo}" "$layout"
