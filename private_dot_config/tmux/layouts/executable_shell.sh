@@ -10,5 +10,7 @@ if [ -z "$SESSION" ]; then
   exit 1
 fi
 
-tmux new-session -d -s "$SESSION" -n "shell" -c "$CWD"
+COLS=$(tmux display-message -p '#{client_width}')
+ROWS=$(tmux display-message -p '#{client_height}')
+tmux new-session -d -s "$SESSION" -n "shell" -c "$CWD" -x "$COLS" -y "$ROWS"
 tmux select-pane -t "$SESSION:shell.1" -T "shell"
