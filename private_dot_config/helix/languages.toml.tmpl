@@ -94,6 +94,23 @@ language-servers = [
 formatter = { command = "rustfmt", args = ["--edition", "2024"] }
 auto-format = true
 
+[language.debugger]
+name = "lldb-dap"
+transport = "stdio"
+command = "/opt/homebrew/opt/llvm/bin/lldb-dap"
+
+[[language.debugger.templates]]
+name = "binary"
+request = "launch"
+completion = [{ name = "binary", completion = "filename" }]
+args = { program = "{0}", initCommands = ["breakpoint set --name main"] }
+
+[[language.debugger.templates]]
+name = "cargo"
+request = "launch"
+completion = [{ name = "target", completion = "directory", default = "." }]
+args = { cargo = { args = ["build"] }, program = "{0}/target/debug/{0}", initCommands = ["breakpoint set --name main"] }
+
 [language-server.gopls]
 command = "gopls"
 
