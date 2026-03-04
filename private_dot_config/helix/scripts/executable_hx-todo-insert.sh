@@ -1,6 +1,6 @@
 #!/bin/sh
-# Emits a new todo checkbox line prefix — only for .md files.
-# Used by Helix :insert-output so it inserts at cursor position.
+# Emits a todo checkbox prefix — only for .md files.
+# Used by Helix :insert-output after open_below creates the new line.
 case "$1" in
-  *.md) printf '\n- [ ] ' ;;
+  *.md) printf '- [ ] ' ;;
 esac
