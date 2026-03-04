@@ -18,6 +18,11 @@ local keys = {
 { key = "u", mods = "CTRL|SHIFT", action = act.ScrollByPage(-0.5) },
 -- Fix Delete key (macOS sends BS/^H; remap to proper ESC[3~ sequence)
 { key = "Delete", mods = "", action = act.SendString("\x1b[3~") },
+-- New window in fullscreen
+{ key = "n", mods = "CMD|SHIFT", action = wezterm.action_callback(function(window, pane)
+  local tab, new_pane, mux_win = wezterm.mux.spawn_window({})
+  mux_win:gui_window():toggle_fullscreen()
+end) },
 }
 
 return keys
