@@ -860,3 +860,26 @@ zellij list-sessions
 
 # Session picker
 # Keybind: Ctrl+\ then g
+
+% todos, notes
+
+# Add todo to inbox
+ta <text>
+
+# Add todo to inbox (open inbox in helix)
+ta
+
+# List all open todos (fzf, opens in helix)
+tl
+
+# Mark a todo as done (fzf picker)
+td
+
+# Open a todo project file (fzf)
+tp
+
+# Open a specific todo project file
+tp <project>
+
+# Filter todos by tag (fzf, opens in helix)
+tg <tag>

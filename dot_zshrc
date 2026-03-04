@@ -314,6 +314,78 @@ ntag() {
   [[ -n "$file" ]] && hx "$file"
 }
 
+# --- Todo ---
+TODOS_DIR="$NOTES_DIR/todos"
+
+# ta [text] — add to inbox (with text: appends directly; without: opens inbox in hx)
+ta() {
+  if [[ -n "$*" ]]; then
+    echo "- [ ] $*" >> "$TODOS_DIR/inbox.md"
+    echo "Added to inbox: $*"
+  else
+    hx "$TODOS_DIR/inbox.md"
+  fi
+}
+
+# tl — fzf over all open todos, select to open file at that line in hx
+tl() {
+  local result
+  result=$(rg --with-filename --line-number "- \[ \]" "$TODOS_DIR" \
+    | sed 's|'"$TODOS_DIR/"'||' \
+    | fzf --prompt="todos > " \
+          --preview='bat --color=always --highlight-line={2} $(echo {1} | cut -d: -f1)' \
+          --delimiter=: \
+          --preview-window=right:50%)
+  [[ -z "$result" ]] && return
+  local file line
+  file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
+  line=$(echo "$result" | cut -d: -f2)
+  hx "+$line" "$file"
+}
+
+# td — mark a todo as done (fzf picker, edits file in-place)
+td() {
+  local result
+  result=$(rg --with-filename --line-number "- \[ \]" "$TODOS_DIR" \
+    | sed 's|'"$TODOS_DIR/"'||' \
+    | fzf --prompt="mark done > " \
+          --delimiter=: \
+          --preview-window=right:50%)
+  [[ -z "$result" ]] && return
+  local file line
+  file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
+  line=$(echo "$result" | cut -d: -f2)
+  sed -i '' "${line}s/- \[ \]/- [x]/" "$file"
+  echo "Done: $(sed -n "${line}p" "$file")"
+}
+
+# tp [file] — open a todo project file (fzf if no arg)
+tp() {
+  if [[ -n "$1" ]]; then
+    hx "$TODOS_DIR/${1%.md}.md"
+  else
+    local file
+    file=$(fd --type f --extension md . "$TODOS_DIR" \
+      | sed "s|$TODOS_DIR/||" \
+      | fzf --prompt="project > " --preview="bat --color=always $TODOS_DIR/{}")
+    [[ -n "$file" ]] && hx "$TODOS_DIR/$file"
+  fi
+}
+
+# tg <tag> — filter todos by tag across all todo files
+tg() {
+  local tag="${1:?usage: tg urgent}"
+  local result
+  result=$(rg --with-filename --line-number "#${tag}" "$TODOS_DIR" \
+    | sed 's|'"$TODOS_DIR/"'||' \
+    | fzf --prompt="#${tag} > " --delimiter=: --preview-window=right:50%)
+  [[ -z "$result" ]] && return
+  local file line
+  file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
+  line=$(echo "$result" | cut -d: -f2)
+  hx "+$line" "$file"
+}
+
 # --- AI ---
 alias ai='mods -a ollama -m gemma3:4b'       # local: fast general
 alias aic='mods -a ollama -m qwen2.5-coder:7b' # local: code

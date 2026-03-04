@@ -61,6 +61,12 @@ fi
 
 layout="$cname"
 
+# ── layout: notes ─────────────────────────────────────────────────────────────
+if [ "$layout" = "notes" ]; then
+  create_and_switch "notes" "$HOME/notes" "notes"
+  exit 0
+fi
+
 # ── layout: shell ─────────────────────────────────────────────────────────────
 if [ "$layout" = "shell" ]; then
   next=1
