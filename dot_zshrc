@@ -330,7 +330,7 @@ ta() {
 # tl — fzf over all open todos, select to open file at that line in hx
 tl() {
   local result
-  result=$(rg --with-filename --line-number -e "- \[ \]" "$TODOS_DIR" \
+  result=$(rg --with-filename --line-number -e "- \[ ?\]" "$TODOS_DIR" \
     | sed 's|'"$TODOS_DIR/"'||' \
     | fzf --prompt="todos > " \
           --preview='bat --color=always --highlight-line={2} $(echo {1} | cut -d: -f1)' \
@@ -346,7 +346,7 @@ tl() {
 # td — mark a todo as done (fzf picker, edits file in-place)
 td() {
   local result
-  result=$(rg --with-filename --line-number -e "- \[ \]" "$TODOS_DIR" \
+  result=$(rg --with-filename --line-number -e "- \[ ?\]" "$TODOS_DIR" \
     | sed 's|'"$TODOS_DIR/"'||' \
     | fzf --prompt="mark done > " \
           --delimiter=: \
