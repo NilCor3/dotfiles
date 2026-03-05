@@ -22,8 +22,8 @@ cat << 'EOF' | less -r
    o              rotate panes            g    lazygit            │    arrow keys       scroll
    Space          cycle layout            G    AI commit          │    q  /  Esc        exit copy mode
    J              move (fzf)              d    detach             │
-                                          ?    this help          │  SESSION TREE  (prefix + W)
-                                        Alt+r  reload config      │  SESSION TREE  (prefix + W)
+   m              mark pane               ?    this help          │  SESSION TREE  (prefix + W)
+   M-j / M-k      join marked full-width↓↑  Alt+r  reload config  │  SESSION TREE  (prefix + W)
                                                                   │  ───────────────────────────────────────────────────────
                                                                   │    Enter            switch to session / window / pane
                                                                   │    x / X            kill selected / kill tagged
