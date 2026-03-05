@@ -2,17 +2,3 @@ git:
   paging:
     colorArg: always
     pager: delta --paging=never
-
-customCommands:
-  - key: '<c-g>'
-    context: 'files'
-    description: 'AI commit: generate message, open in Helix to review/edit'
-    command: 'MSG=$(~/.config/lazygit/scripts/ai-commit.sh) && git commit --edit -m "$MSG"'
-    subprocess: true
-    loadingText: 'Generating commit message...'
-  - key: '<c-a>'
-    context: 'files'
-    description: 'AI commit: generate and commit directly (no editor)'
-    command: '~/.config/lazygit/scripts/ai-commit.sh | git commit -F -'
-    subprocess: true
-    loadingText: 'Generating commit message...'
