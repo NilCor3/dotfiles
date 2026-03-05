@@ -20,8 +20,9 @@ cat << 'EOF' | less -r
    { / }          swap prev/next          p    project picker     │    / or ?           search forward / backward
    C-h/j/k/l      swap in dir             W    session tree       │    n / N            next / prev search match
    o              rotate panes            g    lazygit            │    arrow keys       scroll
-   Space          cycle layout            d    detach             │    q  /  Esc        exit copy mode
-   J              move (fzf)              ?    this help          │
+   Space          cycle layout            G    AI commit          │    q  /  Esc        exit copy mode
+   J              move (fzf)              d    detach             │
+                                          ?    this help          │  SESSION TREE  (prefix + W)
                                         Alt+r  reload config      │  SESSION TREE  (prefix + W)
                                                                   │  ───────────────────────────────────────────────────────
                                                                   │    Enter            switch to session / window / pane
