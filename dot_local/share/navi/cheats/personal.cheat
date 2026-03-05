@@ -69,14 +69,11 @@ gc --soft HEAD~1
 # Create fixup commit for a specific commit  [gc]
 gc --fixup <commit>
 
-# AI commit: generate message from staged diff (via mods)
-~/.config/lazygit/scripts/ai-commit.sh
+# AI commit: generate message from staged diff (via ollama in tmux popup)
+# keybind: Ctrl+Space G  (tmux leader + G)
 
-# AI commit in lazygit: generate + open in Helix to review
-# keybind: A in lazygit files panel
-
-# AI commit in lazygit: generate and commit directly
-# keybind: Ctrl+A in lazygit files panel
+# AI commit: run script directly
+~/.config/tmux/scripts/ai-commit.sh
 
 % git, remote
 
