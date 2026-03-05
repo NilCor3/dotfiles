@@ -4,7 +4,7 @@ git:
     pager: delta --paging=never
 
 customCommands:
-  - key: 'A'
+  - key: '<c-g>'
     context: 'files'
     description: 'AI commit: generate message, open in Helix to review/edit'
     command: 'MSG=$(~/.config/lazygit/scripts/ai-commit.sh) && git commit --edit -m "$MSG"'
