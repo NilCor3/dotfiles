@@ -157,7 +157,8 @@ Key patterns to know when modifying tmux config:
 - **Windows**: `n` (new), `x` (close), `[`/`]` (prev/next), `1-9` (direct), `b` (break pane)
 - **Resize mode** (sticky): `r` → h/j/k/l fine, H/J/K/L coarse, Esc to exit
 - **Copy mode**: `e` → vi copy (v select, C-v block, y yank)
-- **Session/picker**: `g` → fzf picker (layout → workspace → repo → create/attach `workspace-repo`)
+- **Session/picker**: `g` → lazygit popup (project root), `p` → fzf session/layout picker
+- **AI commit**: `G` → tmux popup: generates commit message from staged diff via ollama, offers commit/edit/cancel
 - **Rename**: `R` window, `P` pane (shown in pane border top)
 - **Detach**: `d`
 - **Help**: `?` → popup with all bindings
