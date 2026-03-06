@@ -45,11 +45,9 @@ elif [ -n "$TMUX" ]; then
   # tmux: reuse named pane "tests" in current window, or create new split
   existing=$(tmux list-panes -F "#{pane_id} #{pane_title}" 2>/dev/null | awk '/^[^ ]+ tests$/{print $1}' | head -1)
   if [ -n "$existing" ]; then
-    # Exit copy/scroll mode cleanly, cancel any running process, clear history
-    tmux send-keys -t "$existing" -X cancel 2>/dev/null || true
-    tmux send-keys -t "$existing" "" "C-c"
-    tmux clear-history -t "$existing"
-    tmux send-keys -t "$existing" "$run_cmd" Enter
+    # Kill whatever is running (copy mode, tests, shell) and start fresh
+    tmux respawn-pane -k -c "$pkg_dir" -t "$existing" zsh -c "$(printf '%s' "$run_cmd")"
+    tmux select-pane -t "$existing" -T "tests"
     tmux select-pane -t "$existing"
   else
     tmux split-window -v -p 35 -c "$pkg_dir" "zsh -c $(printf '%q' "$run_cmd")"
