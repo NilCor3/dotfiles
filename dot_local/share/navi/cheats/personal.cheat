@@ -776,6 +776,18 @@ tail -f /tmp/ollama-ls.log
 # keybind: Ctrl+e
 
 
+% helix, testing
+
+# Run test at cursor (Go or Rust)
+# keybind: Space , t
+
+# Run whole test function at cursor (Go or Rust)
+# keybind: Space , T
+
+# Run all tests in current file (Go or Rust)
+# keybind: Space , F
+
+
 % wezterm, scroll, keybindings
 
 # Scroll view down 1 line — works without entering scroll mode
