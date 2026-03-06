@@ -426,23 +426,30 @@ Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.
 All keybindings live under `Space , ` (Space comma) in normal mode.
 Scripts at `~/.config/helix/scripts/`. All scripts detect `$TMUX` / `$ZELLIJ` / `$WEZTERM_PANE` at runtime — tmux uses `display-popup` for floats and `split-window` for test output.
 
-| Key | Action | Script |
+| Key | Action | Action |
 |-----|--------|--------|
+| `C-e` | File explorer at current buffer's directory | built-in |
 | `Space , b` | Git blame at cursor line (tig in floating pane) | `hx-blame.sh` |
 | `Space , g` | Lazygit in floating pane | `hx-lazygit.sh` |
-| `Space , t` | Run Go test under cursor | `hx-gotest.sh` |
-| `Space , T` | Run whole Go test func | `hx-gotest.sh` |
-| `Space , F` | Run all Go tests in file | `hx-gotest.sh` |
+| `Space , t` | Run test under cursor (Go or Rust) | `hx-test.sh` |
+| `Space , T` | Run whole test func (Go or Rust) | `hx-test.sh` |
+| `Space , F` | Run all tests in file (Go or Rust) | `hx-test.sh` |
 | `Space , m` | Markdown preview (glow) in floating pane | `hx-markdown.sh` |
+| `Space , y` | Open yazi at current buffer's dir, send chosen files to Helix | `hx-yazi.sh` |
 | `Space , a` | Toggle AI provider (Copilot ↔ ollama) | `hx-toggle-ai.sh` |
 
-### hx-gotest
+### hx-gotest + hx-rusttest
 
-Source: `~/dev/hx-gotest/` — a small Go CLI using `go/ast` to determine the exact
+**Go:** `~/dev/hx-gotest/` — a small Go CLI using `go/ast` to determine the exact
 `go test -run` pattern for the cursor position. Test output is piped through **richgo** for colored output.
 
+**Rust:** `~/.config/helix/scripts/hx-rusttest.py` — Python parser that finds `#[test]`/`#[tokio::test]` functions at the cursor, including the enclosing `mod` name (e.g. `tests::test_split_at_start`). Runs via `cargo nextest run`.
+
+Both are dispatched by `hx-test.sh` based on file extension.
+
 ```sh
-hx-gotest <file> <line> [cursor|func|file]
+hx-gotest <file> <line> [cursor|func|file]   # Go AST test finder
+hx-rusttest.py <file> <line> [cursor|func|file]  # Rust test finder
 ```
 
 **Modes:**
@@ -978,9 +985,10 @@ expand            # expand entire crate
 
 ### Workflow
 
-- Run `bacon clippy` in a WezTerm split while coding — instant feedback without leaving the editor
+- Run `bacon clippy` in a split while coding — instant feedback without leaving the editor
 - `nt` instead of `cargo test` everywhere — faster, cleaner output, JUnit XML for CI
 - `cargo audit` in pre-push hook or CI to catch vulnerabilities before they ship
+- `rdb` — debug binary; `rdt [filter]` — debug a specific test (both use `rust-lldb`)
 
 ---
 
@@ -1032,7 +1040,8 @@ richgo test -run ^TestFoo$ ./pkg/...
 **[dlv](https://github.com/go-delve/delve)** is the standard Go debugger, with DAP support for editor integration.
 
 ```sh
-dlv debug                    # debug current package
+dlvr                         # alias: dlv debug . (debug current package binary)
+dlvt [TestName]              # alias: dlv test . -- -run TestName
 dlv attach <pid>             # attach to running process
 dlv dap --listen=:2345       # start DAP server for Helix/editor integration
 ```
@@ -1066,9 +1075,10 @@ oapi-codegen -generate types -package api openapi.yaml > api/types.gen.go
 
 ### Workflow
 
-- Run `air` in one WezTerm pane, `gwa` in another — instant feedback loop
+- Run `air` in one pane, `gwa` in another — instant feedback loop
 - `oapi-codegen` + `prism`: spec-first workflow — generate Go stubs and mock server from the same OpenAPI file
-- `dlv dap --listen=:2345` then connect from Helix for breakpoint debugging
+- `dlvr` to debug the binary, `dlvt TestName` to debug a specific test; set breakpoints with `b funcname` then `continue`
+- `dlv dap --listen=:2345` then connect from Helix for breakpoint debugging via DAP
 
 ---
 
