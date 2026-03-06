@@ -767,6 +767,15 @@ cat ~/.config/helix/.ai-provider
 tail -f /tmp/ollama-ls.log
 
 
+% helix, files
+
+# Open yazi file manager in popup at current buffer's dir, open chosen files
+# keybind: Space , y
+
+# Open built-in file explorer sidebar
+# keybind: Ctrl+e
+
+
 % wezterm, scroll, keybindings
 
 # Scroll view down 1 line — works without entering scroll mode

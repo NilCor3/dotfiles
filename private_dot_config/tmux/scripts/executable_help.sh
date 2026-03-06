@@ -10,8 +10,10 @@ cat << 'EOF' | less -r
  PANES                                  WINDOWS                   │    h / j / k / l    resize fine     (3 cells)
    h / j / k / l  navigate                n    new window         │    H / J / K / L    resize coarse  (10 cells)
    w              next pane               x    close window       │    =                even layout
-   v / V          split right / full right [ ]  prev / next       │    Esc  /  r        exit resize mode
-   s / S          split down  / full below  1-9  go to window N   │
+   v              split right             [ ]  prev / next       │    Esc  /  r        exit resize mode
+   V              split full right          1-9  go to window N   │
+   s              split down                                      │
+   S              split full below                                │
    q              close pane              b    break to window    │  COPY MODE  (prefix + e)
    z              zoom toggle             R    rename window      │  ───────────────────────────────────────────────────────
    F              float shell             P    rename pane        │    v                begin selection
