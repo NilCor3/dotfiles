@@ -231,6 +231,12 @@ gog
 # Vet code
 go vet ./...
 
+# Debug binary in current package with Delve  [dlvr]
+dlvr
+
+# Debug a specific test with Delve  [dlvt]
+dlvt <TestName>
+
 % rust, build & run
 
 # Build debug  [cb]
@@ -261,6 +267,12 @@ ctv
 
 # Run specific test with output  [ctv]
 ctv <name> -- --nocapture
+
+# Debug binary with rust-lldb  [rdb]
+rdb
+
+# Debug a specific test with rust-lldb  [rdt]
+rdt <test_filter>
 
 # Run with all features  [ct]
 ct --all-features

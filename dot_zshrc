@@ -212,6 +212,33 @@ alias nta='cargo nextest run --all'
 alias audit='cargo audit'
 alias expand='cargo expand'
 
+# Debug binary with rust-lldb
+rdb() {
+  cargo build || return 1
+  local bin
+  bin=$(cargo metadata --no-deps --format-version 1 2>/dev/null \
+    | python3 -c "import json,sys; p=json.load(sys.stdin); \
+bins=[t['name'] for pkg in p['packages'] for t in pkg['targets'] if 'bin' in t['kind']]; \
+print(bins[0] if bins else '')")
+  [[ -z "$bin" ]] && echo "rdb: no binary target found" && return 1
+  rust-lldb "target/debug/$bin"
+}
+
+# Debug a specific test with rust-lldb
+# Usage: rdt [test_filter]
+rdt() {
+  local exe
+  exe=$(cargo test --no-run --message-format=json 2>/dev/null \
+    | python3 -c "import json,sys
+for line in sys.stdin:
+    o = json.loads(line)
+    if o.get('executable') and o.get('profile', {}).get('test'):
+        print(o['executable'])" \
+    | tail -1)
+  [[ -z "$exe" ]] && echo "rdt: could not build test binary" && return 1
+  rust-lldb "$exe" -- "${1:-}"
+}
+
 # --- Notes ---
 export NOTES_DIR="$HOME/notes"
 
@@ -432,6 +459,19 @@ fh()    { print -z $(fc -l 1 | fzf --tac | sed 's/^ *[0-9]* *//') }
 fhx()   { hx $(fzf --preview 'bat --color=always {}') }
 
 eval "$(mise activate zsh)"
+
+# Debug binary in current Go package
+dlvr() { dlv debug . }
+
+# Debug a specific test in current Go package
+# Usage: dlvt [TestName]
+dlvt() {
+  if [[ -n "$1" ]]; then
+    dlv test . -- -run "$1"
+  else
+    dlv test .
+  fi
+}
 
 # --- dlv + gdlv companion debugger ---
 # Usage: dlvg [./pkg or ./...] [-- args]
