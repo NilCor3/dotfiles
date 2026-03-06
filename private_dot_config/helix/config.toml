@@ -30,7 +30,7 @@ esc = ["collapse_selection","keep_primary_selection"]
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 C-s = ":write"
 "C-S-s" = ":write-all"
-C-e = "file_explorer_in_explorer_pane"
+C-e = "file_explorer_in_current_buffer_directory"
 "A-t" = ["open_below", "normal_mode", ":insert-output ~/.config/helix/scripts/hx-todo-insert.sh '%{buffer_name}'", "goto_line_end", "append_mode"]
 
 [keys.normal.space.","]
