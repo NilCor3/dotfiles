@@ -36,10 +36,12 @@ fi
 
 # Build the cargo nextest command
 if [ "$pattern" = "__ALL__" ]; then
-  run_cmd="echo '» cargo nextest run'; echo; cd $(printf '%q' "$pkg_dir") && cargo nextest run 2>&1; echo; echo '--- done ---'; exec zsh"
+  test_cmd="cargo nextest run"
 else
-  run_cmd="echo '» cargo nextest run ${pattern}'; echo; cd $(printf '%q' "$pkg_dir") && cargo nextest run $(printf '%q' "$pattern") 2>&1; echo; echo '--- done ---'; exec zsh"
+  test_cmd="cargo nextest run $(printf '%q' "$pattern")"
 fi
+hist_entry="cd $(printf '%q' "$pkg_dir") && $test_cmd"
+run_cmd="echo $(printf '%q' "$hist_entry") >> \${HISTFILE:-\$HOME/.zsh_history}; echo '» $test_cmd'; echo; cd $(printf '%q' "$pkg_dir") && $test_cmd 2>&1; echo; echo '--- done ---'; exec zsh"
 
 if [ -n "$TMUX" ]; then
   # Reuse named pane "tests" in current window, or create a new split
