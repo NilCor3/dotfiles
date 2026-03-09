@@ -400,7 +400,7 @@ td() {
   local file line
   file="${TODOS_DIR}/$(echo "$result" | cut -d: -f1)"
   line=$(echo "$result" | cut -d: -f2)
-  sed -i '' "${line}s/- \[ ?\]/- [x]/" "$file"
+  sed -i '' -E "${line}s/- \[ ?\]/- [x]/" "$file"
   echo "Done: $(sed -n "${line}p" "$file")"
 }
 
