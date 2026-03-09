@@ -35,7 +35,9 @@ if [ -f "$pane_id_file" ]; then
   fi
 fi
 
-run_cmd="echo '» richgo test -run ${pattern} -v .'; echo; cd $(printf '%q' "$pkg_dir") && richgo test -run $(printf '%q' "$pattern") -v . 2>&1; echo; echo '--- done ---'; exec zsh"
+test_cmd="richgo test -run $(printf '%q' "$pattern") -v ."
+hist_entry="cd $(printf '%q' "$pkg_dir") && $test_cmd"
+run_cmd="echo $(printf '%q' "$hist_entry") >> \${HISTFILE:-\$HOME/.zsh_history}; echo '» $test_cmd'; echo; cd $(printf '%q' "$pkg_dir") && $test_cmd 2>&1; echo; echo '--- done ---'; exec zsh"
 
 if [ -n "$ZELLIJ" ]; then
   # Zellij: floating pane (no pane-id targeting available)
