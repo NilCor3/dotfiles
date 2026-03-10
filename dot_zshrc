@@ -521,7 +521,9 @@ hrun() {
   if [[ -z "$file" ]]; then
     file=$(fd -t f -e http -e rest . 2>/dev/null | fzf --prompt="http file> " --height=15) || return 1
   fi
-  local args=(-i)
+  local name
+  name=$(grep -E '^# @name' "$file" | sed 's/# @name *//' | fzf --prompt="request> " --height=15) || return 1
+  local args=(--name "$name")
   [[ -n "${HTTPYAC_ENV:-}" ]] && args+=(--env "$HTTPYAC_ENV")
   httpyac send "$file" "${args[@]}" 2>/dev/null
 }
