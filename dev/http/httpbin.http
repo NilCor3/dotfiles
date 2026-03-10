@@ -1,0 +1,48 @@
+# httpbin — HTTP request & response testing
+# https://httpbin.org
+
+# @name get-request
+# @description Echo back query params, headers, origin
+GET {{httpbin_host}}/get?foo=bar&hello=world
+Accept: application/json
+
+###
+
+# @name post-json
+# @description POST JSON body — echoed back in response
+POST {{httpbin_host}}/post
+Content-Type: application/json
+
+{
+  "message": "hello from httpyac",
+  "env": "{{$env HTTPYAC_ENV}}"
+}
+
+###
+
+# @name inspect-headers
+# @description Echo request headers back
+GET {{httpbin_host}}/headers
+Accept: application/json
+X-Custom-Header: httpyac-test
+
+###
+
+# @name delayed-response
+# @description Response delayed by {{delay}} seconds (tests timeout handling)
+GET {{httpbin_host}}/delay/{{delay}}
+Accept: application/json
+
+###
+
+# @name status-codes
+# @description Test a specific HTTP status code
+GET {{httpbin_host}}/status/404
+Accept: application/json
+
+###
+
+# @name bearer-auth
+# @description Test Bearer token auth
+GET {{httpbin_host}}/bearer
+Authorization: Bearer my-test-token
