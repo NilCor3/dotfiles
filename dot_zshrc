@@ -523,5 +523,5 @@ hrun() {
   fi
   local args=(-i)
   [[ -n "${HTTPYAC_ENV:-}" ]] && args+=(--env "$HTTPYAC_ENV")
-  httpyac send "$file" "${args[@]}"
+  httpyac send "$file" "${args[@]}" 2>/dev/null
 }
