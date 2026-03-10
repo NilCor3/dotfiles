@@ -925,3 +925,17 @@ tp <project>
 
 # Filter todos by tag (fzf, opens in helix)
 tg <tag>
+
+% httpyac, http
+
+# Pick env file and environment for httpyac session
+henv
+
+# Run HTTP file with httpyac interactive picker (fzf file select if no arg)
+hrun
+
+# Run specific HTTP request by name (uses current HTTPYAC_ENV if set)
+httpyac send <file> --name <request_name> --env <env>
+
+# Run all requests in a file
+httpyac send <file> --all --env <env>
