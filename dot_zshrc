@@ -502,3 +502,26 @@ dlvg() {
   kill "$dlv_pid" 2>/dev/null
   wait "$dlv_pid" 2>/dev/null
 }
+
+# --- httpyac: HTTP file runner ---
+# henv: pick env file and environment, export HTTPYAC_ENV for the session
+henv() {
+  local env_file
+  env_file=$(fd -t f -g "http-client.env.json" . 2>/dev/null | fzf --prompt="env file> " --height=10) || return 1
+  export HTTPYAC_ENV_FILE="$env_file"
+  local env_name
+  env_name=$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); [print(k) for k in d if not k.startswith('$')]" "$env_file" | fzf --prompt="environment> " --height=10) || return 1
+  export HTTPYAC_ENV="$env_name"
+  echo "httpyac env: $env_name (from $env_file)"
+}
+
+# hrun [file]: pick .http file with fzf (if not given), run with httpyac interactive picker
+hrun() {
+  local file="${1:-}"
+  if [[ -z "$file" ]]; then
+    file=$(fd -t f -e http -e rest . 2>/dev/null | fzf --prompt="http file> " --height=15) || return 1
+  fi
+  local args=(-i)
+  [[ -n "${HTTPYAC_ENV:-}" ]] && args+=(--env "$HTTPYAC_ENV")
+  httpyac send "$file" "${args[@]}"
+}

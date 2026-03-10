@@ -13,6 +13,7 @@ node = 'latest'
 'npm:@bitwarden/cli' = 'latest'
 'npm:tldr' = 'latest'
 'npm:@github/copilot-language-server' = 'latest'
+'npm:httpyac' = 'latest'
 fzf = 'latest'
 kafka = 'latest'
 python = "latest"
