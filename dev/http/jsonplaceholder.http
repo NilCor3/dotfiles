@@ -1,0 +1,41 @@
+# JSONPlaceholder — fake REST API for testing
+# https://jsonplaceholder.typicode.com
+
+# @name list-posts
+# @description Get all posts (100 items)
+GET {{jsonplaceholder_host}}/posts
+Accept: application/json
+
+###
+
+# @name get-post
+# @description Get a single post by ID
+GET {{jsonplaceholder_host}}/posts/1
+Accept: application/json
+
+###
+
+# @name create-post
+# @description Create a new post (returns 201)
+POST {{jsonplaceholder_host}}/posts
+Content-Type: application/json
+
+{
+  "title": "Test post",
+  "body": "Hello from httpyac",
+  "userId": 1
+}
+
+###
+
+# @name list-comments
+# @description Get comments for post 1
+GET {{jsonplaceholder_host}}/posts/1/comments
+Accept: application/json
+
+###
+
+# @name get-user
+# @description Get user profile
+GET {{jsonplaceholder_host}}/users/1
+Accept: application/json
