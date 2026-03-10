@@ -521,9 +521,20 @@ hrun() {
   if [[ -z "$file" ]]; then
     file=$(fd -t f -e http -e rest . 2>/dev/null | fzf --prompt="http file> " --height=15) || return 1
   fi
-  local name
-  name=$(grep -E '^# @name' "$file" | sed 's/# @name *//' | fzf --prompt="request> " --height=15) || return 1
-  local args=(--name "$name")
+  local args=()
   [[ -n "${HTTPYAC_ENV:-}" ]] && args+=(--env "$HTTPYAC_ENV")
+  if grep -qE '^# @name' "$file"; then
+    # @name annotation format
+    local name
+    name=$(grep -E '^# @name' "$file" | sed 's/# @name *//' | fzf --prompt="request> " --height=15) || return 1
+    args+=(--name "$name")
+  else
+    # ### description format (IntelliJ style) — select by line number
+    local selection
+    selection=$(grep -nE '^### ?' "$file" | sed 's/^//' | fzf --prompt="request> " --height=15 --delimiter=':' --with-nth='2..') || return 1
+    local lineno
+    lineno=$(echo "$selection" | cut -d: -f1)
+    args+=(--line "$lineno")
+  fi
   httpyac send "$file" "${args[@]}" 2>/dev/null
 }
