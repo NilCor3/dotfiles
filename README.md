@@ -28,6 +28,19 @@ the best tools are ones you can configure, compose, and own.
   - [hx-gotest](#hx-gotest)
 - [macOS Utilities](#macos-utilities)
 - [Manual Backup & Restore](#manual-backup--restore)
+  - [Amethyst](#amethyst)
+  - [Raycast](#raycast)
+  - [Ice](#ice)
+  - [Bitwarden](#bitwarden)
+  - [Finicky](#finicky)
+  - [Zen](#zen)
+  - [HyperKey](#hyperkey)
+  - [AltTab](#alttab)
+  - [BetterMouse](#bettermouse)
+  - [Docker Desktop](#docker-desktop)
+  - [TimeyMeet](#timeymeet)
+  - [Keyboard Pilot](#keyboard-pilot)
+  - [Marta](#marta)
 - [Updating macOS Defaults](#updating-macos-defaults)
 - [Database tools](#database-tools)
 - [Postgres CLI — pgcli](#postgres-cli--pgcli)
@@ -248,6 +261,11 @@ brew install --cask \
   hyperkey \
   jordanbaird-ice \
   finicky \
+  amethyst \
+  zen \
+  bitwarden \
+  bettermouse \
+  docker-desktop \
   dbeaver-community \
   insomnia \
   marta \
@@ -257,6 +275,10 @@ brew install --cask \
   font-fira-mono-nerd-font \
   copilot-cli@prerelease
 ```
+
+**App Store** (install manually):
+- [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) — meeting join buttons in menu bar
+- [Keyboard Pilot](https://apps.apple.com/app/keyboard-pilot/id1496719023) — per-app keyboard shortcut routing
 
 ---
 
@@ -487,17 +509,24 @@ Config: `~/.gitconfig`
 
 ## macOS Utilities
 
-| App | Purpose |
-|-----|---------|
-| Raycast | Launcher, replaces Spotlight |
-| AltTab | Windows-style app switcher |
-| HyperKey | Caps Lock → Hyper key modifier |
-| Ice | Menu bar manager |
-| Stats | System stats in menu bar |
-| Finicky | Browser router (default: Zen, localhost → Chrome) |
-| Marta | Dual-pane file manager |
-| PearCleaner | App uninstaller |
-| UTM | Virtual machines |
+| App | Purpose | Config |
+|-----|---------|--------|
+| [Amethyst](https://ianyh.com/amethyst/) | Tiling window manager (xmonad-style) | `~/.config/amethyst/amethyst.yml` in chezmoi |
+| [Raycast](https://raycast.com) | Launcher, replaces Spotlight | iCloud sync |
+| [AltTab](https://alt-tab-macos.netlify.app) | Windows-style app switcher | `defaults write` |
+| [HyperKey](https://hyperkey.app) | Caps Lock → Hyper key (⌃⌥⇧⌘) | `defaults write` |
+| [Ice](https://icemenubar.app) | Menu bar manager | Export/Import |
+| [Finicky](https://github.com/johnste/finicky) | Browser router (default: Zen, localhost → Chrome) | `~/.finicky.js` in chezmoi |
+| [Zen](https://zen-browser.app) | Default browser (Firefox-based) | Firefox account sync |
+| [Bitwarden](https://bitwarden.com) | Password manager + SSH agent | Cloud-synced vault |
+| [BetterMouse](https://better-mouse.com) | Mouse scroll speed, pointer precision | GUI only |
+| [Keyboard Pilot](https://apps.apple.com/app/keyboard-pilot/id1496719023) | Per-app keyboard layout / shortcut routing | GUI only |
+| [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) | Meeting join buttons in menu bar | No config |
+| [Docker Desktop](https://docker.com/products/docker-desktop) | Container runtime | Key settings documented below |
+| [Stats](https://github.com/exelban/stats) | System stats in menu bar | GUI only |
+| [Marta](https://marta.sh) | Dual-pane file manager | chezmoi tracked |
+| [PearCleaner](https://itsalin.com/appInfo/?id=pearcleaner) | App uninstaller | No config |
+| [UTM](https://mac.getutm.app) | Virtual machines | No config |
 
 ---
 
@@ -505,6 +534,18 @@ Config: `~/.gitconfig`
 
 Some apps don't support config files or `defaults write` and must be backed up
 and restored manually.
+
+### Amethyst
+
+Config tracked in chezmoi — applied automatically on `chezmoi apply`:
+
+```
+~/.config/amethyst/amethyst.yml
+```
+
+**First launch:** System Settings → Privacy & Security → Accessibility → enable Amethyst.
+
+Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen 1/2/3 · `⌃⌥⇧ W/E/R` throw to screen · `⌥⇧ Space` cycle layout · `⌥⇧ D` fullscreen layout · `⌥⇧ T` toggle float.
 
 ### Raycast
 
@@ -524,7 +565,90 @@ Ice stores complex menu bar layout data that doesn't map to plain
 ### Bitwarden
 
 The Bitwarden vault is cloud-synced. Just log in after a fresh install.
-SSH agent must be enabled manually: Settings → SSH Agent → enable.
+
+**Post-install steps:**
+1. Settings → SSH Agent → enable (required for git over SSH)
+2. Install browser extension for Zen
+
+### Finicky
+
+Config tracked in chezmoi — applied automatically on `chezmoi apply`:
+
+```
+~/.finicky.js
+```
+
+Current rules: default browser = Zen · http → https redirect · `localhost*`, `*curseforge.com`, `*overwolf.com` → Chrome (Profile 1).
+
+**First launch:** System Settings → Privacy & Security → grant Finicky permission to set itself as default browser.
+
+### Zen
+
+Firefox-based browser. Sign in with a Firefox account to sync bookmarks, history, and extensions.
+
+Config not tracked in chezmoi (profile data is too large and browser-managed). Key extensions to reinstall: Bitwarden, uBlock Origin.
+
+### HyperKey
+
+**Key setting:** Caps Lock → Hyper (⌃⌥⇧⌘)
+
+On first launch:
+1. Enable "Launch at Login"
+2. Set Caps Lock remapping to Hyper (⌃⌥⇧⌘)
+3. Grant Accessibility permission when prompted
+
+Settings stored as defaults — if needed:
+```sh
+defaults write com.knollsoft.Hyperkey capsLockRemapped -int 2
+defaults write com.knollsoft.Hyperkey launchOnLogin -bool true
+```
+
+### AltTab
+
+Windows-style app switcher. Key settings to configure:
+
+- Appearance: match system
+- Show windows from: all spaces
+- Shortcut: `⌘Tab` (replaces macOS default)
+
+Settings stored as defaults — export/restore:
+```sh
+# Backup
+defaults export com.lwouis.alt-tab-macos ~/alt-tab-backup.plist
+
+# Restore
+defaults import com.lwouis.alt-tab-macos ~/alt-tab-backup.plist
+```
+
+### BetterMouse
+
+Mouse scroll and pointer customization. No export feature — reconfigure manually on a fresh install. Key settings:
+
+- Scroll direction: Natural (or adjust per preference)
+- Pointer speed and acceleration: tune to preference
+- Per-app overrides: set if needed
+
+### Docker Desktop
+
+Install via `brew install --cask docker-desktop`. Key settings already at sensible defaults after install. Notable:
+
+- `UseContainerdSnapshotter: true` — better image compatibility
+- `OpenUIOnStartupDisabled: true` — don't open UI on login
+- `EnableDockerAI: false`
+
+No backup needed — settings regenerate; project `docker-compose.yml` files are version-controlled.
+
+### TimeyMeet
+
+App Store app. Adds meeting join buttons to the menu bar by reading your calendar.
+
+**Post-install:** Grant Calendar access when prompted. No settings to back up.
+
+### Keyboard Pilot
+
+App Store app. Routes keyboard layouts and shortcuts per active app.
+
+**Post-install:** Configure per-app rules via the menu bar icon. No file export available — reconfigure from scratch on a new machine. Document any critical routes here.
 
 ### Marta
 
