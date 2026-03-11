@@ -939,3 +939,35 @@ httpyac send <file> --name <request_name> --env <env>
 
 # Run all requests in a file
 httpyac send <file> --all --env <env>
+
+% amethyst, window
+
+# Focus screen 1 / 2 / 3
+# ⌥⇧ W / E / R
+
+# Throw window to screen 1 / 2 / 3
+# ⌃⌥⇧ W / E / R
+
+# Throw window to Space N (1-9)
+# ⌃⌥⇧ [number]
+
+# Throw window to adjacent Space
+# ⌃⌥⇧ ← / →
+
+# Focus prev / next window
+# ⌥⇧ J / K
+
+# Swap window with main pane
+# ⌥⇧ Enter
+
+# Shrink / expand main pane
+# ⌥⇧ H / L
+
+# Cycle layout forward / backward
+# ⌥⇧ Space / ⌃⌥⇧ Space
+
+# Toggle float for focused window
+# ⌥⇧ T
+
+# Force re-evaluate window layout
+# ⌥⇧ Z
