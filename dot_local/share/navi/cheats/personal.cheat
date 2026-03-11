@@ -971,3 +971,11 @@ httpyac send <file> --all --env <env>
 
 # Force re-evaluate window layout
 # ⌥⇧ Z
+
+% plists, backup
+
+# Backup all tracked app plists (Ice, AltTab, HyperKey) → chezmoi re-add
+~/.config/backups/plists/backup-plists.sh && chezmoi re-add ~/.config/backups/plists/
+
+# Restore all tracked app plists (fresh install)
+~/.config/backups/plists/restore-plists.sh

@@ -538,12 +538,12 @@ Config: `~/.gitconfig`
 | Finicky | chezmoi | `~/.finicky.js` |
 | Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
-| Ice | `defaults export/import` | `~/.config/backups/com.jordanbaird.Ice.plist` |
+| Ice | plist (`backup-plists.sh`) | `~/.config/backups/plists/com.jordanbaird.Ice.plist` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
 | Bitwarden | Cloud-synced | Log in · enable SSH Agent manually |
 | Zen | Firefox account | Sign in · reinstall extensions |
-| HyperKey | `defaults write` | See section below |
-| AltTab | `defaults export` | See section below |
+| HyperKey | plist (`backup-plists.sh`) | `~/.config/backups/plists/com.knollsoft.Hyperkey.plist` |
+| AltTab | plist (`backup-plists.sh`) | `~/.config/backups/plists/com.lwouis.alt-tab-macos.plist` |
 | Docker Desktop | No backup | Sensible defaults on fresh install |
 | TimeyMeet | No config | Grant Calendar access on install |
 | Keyboard Pilot | No export | Reconfigure per-app rules manually |
@@ -573,15 +573,10 @@ chezmoi add ~/.config/backups/raycast-settings.rayconfig
 
 Ice stores its config in `~/Library/Preferences/com.jordanbaird.Ice.plist`.
 
-**Backup:**
+Use the shared plist backup/restore scripts:
 ```sh
-defaults export com.jordanbaird.Ice ~/.config/backups/com.jordanbaird.Ice.plist
-chezmoi add ~/.config/backups/com.jordanbaird.Ice.plist
-```
-
-**Restore:**
-```sh
-defaults import com.jordanbaird.Ice ~/.config/backups/com.jordanbaird.Ice.plist
+~/.config/backups/plists/backup-plists.sh   # export all plists, then: chezmoi re-add ~/.config/backups/plists/
+~/.config/backups/plists/restore-plists.sh  # import all plists (fresh install)
 ```
 
 ### Bitwarden
@@ -619,10 +614,10 @@ On first launch:
 2. Set Caps Lock remapping to Hyper (⌃⌥⇧⌘)
 3. Grant Accessibility permission when prompted
 
-Settings stored as defaults — if needed:
+Settings stored as defaults. Use the shared plist backup/restore scripts:
 ```sh
-defaults write com.knollsoft.Hyperkey capsLockRemapped -int 2
-defaults write com.knollsoft.Hyperkey launchOnLogin -bool true
+~/.config/backups/plists/backup-plists.sh   # export all plists, then: chezmoi re-add ~/.config/backups/plists/
+~/.config/backups/plists/restore-plists.sh  # import all plists (fresh install)
 ```
 
 ### AltTab
@@ -633,13 +628,10 @@ Windows-style app switcher. Key settings to configure:
 - Show windows from: all spaces
 - Shortcut: `⌘Tab` (replaces macOS default)
 
-Settings stored as defaults — export/restore:
+Settings stored as defaults. Use the shared plist backup/restore scripts:
 ```sh
-# Backup
-defaults export com.lwouis.alt-tab-macos ~/alt-tab-backup.plist
-
-# Restore
-defaults import com.lwouis.alt-tab-macos ~/alt-tab-backup.plist
+~/.config/backups/plists/backup-plists.sh   # export all plists, then: chezmoi re-add ~/.config/backups/plists/
+~/.config/backups/plists/restore-plists.sh  # import all plists (fresh install)
 ```
 
 ### BetterMouse
