@@ -537,7 +537,7 @@ Config: `~/.gitconfig`
 | Amethyst | chezmoi | `~/.config/amethyst/amethyst.yml` |
 | Finicky | chezmoi | `~/.finicky.js` |
 | Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
-| Raycast | iCloud sync | Auto · manual: export to `~/.config/backups/raycast-settings.rayconfig` |
+| Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
 | Ice | Export/Import | `~/.config/backups/ice-settings.json` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
 | Bitwarden | Cloud-synced | Log in · enable SSH Agent manually |
@@ -562,14 +562,8 @@ Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen 1/2/3
 
 ### Raycast
 
-Raycast syncs settings via iCloud automatically — no manual action needed.
-
-For a manual backup tracked in chezmoi:
+**Backup:** Raycast → Settings → Advanced → Export → save to `~/.config/backups/raycast-settings.rayconfig`, then:
 ```sh
-# Export: Raycast → Settings → Advanced → Export → save to:
-~/.config/backups/raycast-settings.rayconfig
-
-# Add to chezmoi
 chezmoi add ~/.config/backups/raycast-settings.rayconfig
 
 # Restore: Raycast → Settings → Advanced → Import
