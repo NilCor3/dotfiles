@@ -1,0 +1,29 @@
+# Amethyst configuration
+# https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md
+
+# Layout cycle order: tall (master+stack) → fullscreen → wide (horizontal master+stack)
+layouts:
+  - tall
+  - fullscreen
+  - wide
+
+# Gaps between windows (px)
+window-margin-size: 6
+smart-window-margins: false
+
+# Auto-float small popups (< 500px)
+float-small-windows: true
+small-window-size: 500
+
+# Don't move mouse to focused window — conflicts with tmux mouse mode
+mouse-follows-focus: false
+focus-follows-mouse: false
+
+# Float these apps always (never tile them)
+floating:
+  - com.apple.systempreferences
+  - com.apple.finder
+  - com.apple.FaceTime
+  - com.apple.Stickies
+  - com.apple.calculator
+floating-is-blacklist: true
