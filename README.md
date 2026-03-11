@@ -550,15 +550,24 @@ Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen 1/2/3
 ### Raycast
 
 Raycast syncs settings via iCloud automatically — no manual action needed.
-If iCloud is unavailable: Settings → Advanced → Export/Import.
+
+For a manual backup tracked in chezmoi:
+```sh
+# Export: Raycast → Settings → Advanced → Export → save to:
+~/.config/backups/raycast-settings.rayconfig
+
+# Add to chezmoi
+chezmoi add ~/.config/backups/raycast-settings.rayconfig
+
+# Restore: Raycast → Settings → Advanced → Import
+```
 
 ### Ice
 
 Ice stores complex menu bar layout data that doesn't map to plain
 `defaults write` calls.
 
-**Backup:** Ice → Settings → General → Export Settings → save to a safe location
-(e.g. Bitwarden attachment or iCloud).
+**Backup:** Ice → Settings → General → Export Settings → save to `~/.config/backups/ice-settings.json`, then `chezmoi add ~/.config/backups/ice-settings.json`.
 
 **Restore:** Ice → Settings → General → Import Settings.
 
