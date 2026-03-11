@@ -538,7 +538,7 @@ Config: `~/.gitconfig`
 | Finicky | chezmoi | `~/.finicky.js` |
 | Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
-| Ice | Export/Import | `~/.config/backups/ice-settings.json` |
+| Ice | `defaults export/import` | `~/.config/backups/com.jordanbaird.Ice.plist` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
 | Bitwarden | Cloud-synced | Log in · enable SSH Agent manually |
 | Zen | Firefox account | Sign in · reinstall extensions |
@@ -571,12 +571,18 @@ chezmoi add ~/.config/backups/raycast-settings.rayconfig
 
 ### Ice
 
-Ice stores complex menu bar layout data that doesn't map to plain
-`defaults write` calls.
+Ice stores its config in `~/Library/Preferences/com.jordanbaird.Ice.plist`.
 
-**Backup:** Ice → Settings → General → Export Settings → save to `~/.config/backups/ice-settings.json`, then `chezmoi add ~/.config/backups/ice-settings.json`.
+**Backup:**
+```sh
+defaults export com.jordanbaird.Ice ~/.config/backups/com.jordanbaird.Ice.plist
+chezmoi add ~/.config/backups/com.jordanbaird.Ice.plist
+```
 
-**Restore:** Ice → Settings → General → Import Settings.
+**Restore:**
+```sh
+defaults import com.jordanbaird.Ice ~/.config/backups/com.jordanbaird.Ice.plist
+```
 
 ### Bitwarden
 
