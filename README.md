@@ -519,7 +519,7 @@ Config: `~/.gitconfig`
 | [Finicky](https://github.com/johnste/finicky) | Browser router (default: Zen, localhost → Chrome) | `~/.finicky.js` in chezmoi |
 | [Zen](https://zen-browser.app) | Default browser (Firefox-based) | Firefox account sync |
 | [Bitwarden](https://bitwarden.com) | Password manager + SSH agent | Cloud-synced vault |
-| [BetterMouse](https://better-mouse.com) | Mouse scroll speed, pointer precision | GUI only |
+| [BetterMouse](https://better-mouse.com) | Mouse scroll speed, pointer precision | Export/Import |
 | [Keyboard Pilot](https://apps.apple.com/app/keyboard-pilot/id1496719023) | Per-app keyboard layout / shortcut routing | GUI only |
 | [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) | Meeting join buttons in menu bar | No config |
 | [Docker Desktop](https://docker.com/products/docker-desktop) | Container runtime | Key settings documented below |
@@ -532,8 +532,21 @@ Config: `~/.gitconfig`
 
 ## Manual Backup & Restore
 
-Some apps don't support config files or `defaults write` and must be backed up
-and restored manually.
+| App | Config method | Location / action |
+|-----|--------------|-------------------|
+| Amethyst | chezmoi | `~/.config/amethyst/amethyst.yml` |
+| Finicky | chezmoi | `~/.finicky.js` |
+| Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
+| Raycast | iCloud sync | Auto · manual: export to `~/.config/backups/raycast-settings.rayconfig` |
+| Ice | Export/Import | `~/.config/backups/ice-settings.json` |
+| BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
+| Bitwarden | Cloud-synced | Log in · enable SSH Agent manually |
+| Zen | Firefox account | Sign in · reinstall extensions |
+| HyperKey | `defaults write` | See section below |
+| AltTab | `defaults export` | See section below |
+| Docker Desktop | No backup | Sensible defaults on fresh install |
+| TimeyMeet | No config | Grant Calendar access on install |
+| Keyboard Pilot | No export | Reconfigure per-app rules manually |
 
 ### Amethyst
 
@@ -631,11 +644,14 @@ defaults import com.lwouis.alt-tab-macos ~/alt-tab-backup.plist
 
 ### BetterMouse
 
-Mouse scroll and pointer customization. No export feature — reconfigure manually on a fresh install. Key settings:
+Mouse scroll and pointer customization.
 
-- Scroll direction: Natural (or adjust per preference)
-- Pointer speed and acceleration: tune to preference
-- Per-app overrides: set if needed
+**Backup:** BetterMouse menu bar icon → Export Settings → save to `~/.config/backups/bettermouse-settings.bms`, then:
+```sh
+chezmoi add ~/.config/backups/bettermouse-settings.bms
+```
+
+**Restore:** BetterMouse menu bar icon → Import Settings → select the file.
 
 ### Docker Desktop
 
