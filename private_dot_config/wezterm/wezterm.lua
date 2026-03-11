@@ -25,9 +25,6 @@ local config = {
 	tab_bar_at_bottom = false,
 	enable_tab_bar = false,
 	hide_mouse_cursor_when_typing = true,
-	inactive_pane_hsb = {
-		brightness = 0.5,
-	},
 	scrollback_lines = 10000,
 	audible_bell = "Disabled",
 	enable_scroll_bar = true,
@@ -41,6 +38,7 @@ local config = {
 	disable_default_key_bindings = true,
 
 	native_macos_fullscreen_mode = false,
+	window_decorations = "RESIZE",
 }
 
 local colors = require("colors")
