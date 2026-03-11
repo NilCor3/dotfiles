@@ -15,9 +15,10 @@ smart-window-margins: false
 float-small-windows: true
 small-window-size: 500
 
-# Don't move mouse to focused window — conflicts with tmux mouse mode
-mouse-follows-focus: false
+mouse-follows-focus: true
 focus-follows-mouse: false
+mouse-resizes-windows: true
+
 
 # Float these apps always (never tile them)
 floating:
