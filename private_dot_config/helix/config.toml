@@ -1,7 +1,8 @@
 theme = "gruvbox"
 
 [editor]
-inline-completion-timeout = 150
+clipboard-provider = "pasteboard"
+
 inline-completion-auto-trigger = false
 bufferline = "multiple"
 line-number = "relative"
@@ -32,6 +33,9 @@ C-s = ":write"
 "C-S-s" = ":write-all"
 C-e = "file_explorer_in_current_buffer_directory"
 "A-t" = ["open_below", "normal_mode", ":insert-output ~/.config/helix/scripts/hx-todo-insert.sh '%{buffer_name}'", "goto_line_end", "append_mode"]
+
+[keys.normal.space."u"]
+i = ":toggle lsp.display-inlay-hints"
 
 [keys.normal.space.","]
 b = ":sh ~/.config/helix/scripts/hx-blame.sh %{buffer_name} %{cursor_line}"
