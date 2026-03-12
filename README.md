@@ -548,6 +548,17 @@ Config tracked in chezmoi — applied automatically on `chezmoi apply`:
 
 **First launch:** System Settings → Privacy & Security → Accessibility → enable Amethyst.
 
+**Window layout**: All new windows float by default. The apps listed below are tiled automatically (via `floating-is-blacklist: true` in config):
+
+| Tiled | Tiled | Tiled |
+|-------|-------|-------|
+| WezTerm | Zen Browser | Chrome |
+| VS Code | Slack | Discord |
+| WhatsApp | Spotify | Docker Desktop |
+| Bitwarden | Seashore | |
+
+All other apps (system dialogs, utilities, etc.) open as floating windows.
+
 Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen 1/2/3 · `⌃⌥⇧ W/E/R` throw to screen · `⌥⇧ Space` cycle layout · `⌥⇧ D` fullscreen layout · `⌥⇧ T` toggle float.
 
 ### Raycast
