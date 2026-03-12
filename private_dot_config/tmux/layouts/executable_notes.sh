@@ -5,9 +5,10 @@
 SESSION="${1:-notes}"
 CWD="${2:-$HOME/notes}"
 
-COLS=$(tmux display-message -p '#{client_width}')
-ROWS=$(tmux display-message -p '#{client_height}')
-
+COLS=$(tmux display-message -p '#{client_width}' 2>/dev/null)
+ROWS=$(tmux display-message -p '#{client_height}' 2>/dev/null)
+COLS=${COLS:-$(tput cols 2>/dev/null || echo 220)}
+ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 # ── Window 1: todos ───────────────────────────────────────────────────────────
 tmux new-session -d -s "$SESSION" -n "todos" -c "$CWD/todos" -x "$COLS" -y "$ROWS"
 
