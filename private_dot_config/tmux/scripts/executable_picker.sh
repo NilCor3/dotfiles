@@ -32,6 +32,14 @@ switch_or_attach() {
 
 create_and_switch() {
   session_name="$1"; cwd="$2"; layout="$3"
+
+  # Block if already attached in another window
+  if session_is_attached "$session_name"; then
+    printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
+    sleep 2
+    exit 0
+  fi
+
   if tmux has-session -t "$session_name" 2>/dev/null; then
     switch_or_attach "$session_name"
   else
@@ -100,10 +108,12 @@ case "$layout" in
     [ -z "$session_name" ] && exit 130
 
     # Block reattaching to a session that is currently open in another window
+    # (also enforced inside create_and_switch, but checked early here to give
+    # a nicer message before the shell name prompt disappears)
     if session_is_attached "$session_name"; then
       printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
       sleep 2
-      exit 0  # Exit 0 → wezterm-picker.sh re-shows the picker
+      exit 0
     fi
 
     create_and_switch "$session_name" "$HOME" "shell"
@@ -136,15 +146,9 @@ case "$layout" in
       | fzf $FZF_OPTS --prompt="repo ($workspace) > ") || exit 130
     [ -z "$repo" ] && exit 130
 
-    # Strip "[open]" annotation and block already-attached sessions
+    # Strip "[open]" annotation before using repo name
     repo_name=$(printf '%s' "$repo" | sed 's/  \[open\]$//')
     session_name="${workspace}-${repo_name}"
-
-    if session_is_attached "$session_name"; then
-      printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
-      sleep 2
-      exit 0
-    fi
 
     create_and_switch "$session_name" "${base_dir}/${repo_name}" "$layout"
     ;;
