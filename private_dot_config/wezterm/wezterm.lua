@@ -39,6 +39,9 @@ local config = {
 
 	native_macos_fullscreen_mode = false,
 	window_decorations = "RESIZE",
+	-- Open large enough for Amethyst to tile immediately (avoids float-small-windows threshold)
+	initial_cols = 220,
+	initial_rows = 50,
 }
 
 local colors = require("colors")
