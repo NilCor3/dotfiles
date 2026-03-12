@@ -418,20 +418,11 @@ LSP setup:
 - **Java** — jdtls (Homebrew) + Lombok + Fortnox code style
 - **Go** — gopls with staticcheck, gofumpt, full inlay hints
 - **Rust** — rust-analyzer with Clippy on save, proc macros, inlay hints
-- **All languages** — Copilot LSP (default) or ollama-ls (toggle with `Space , a`)
+- **All languages** — Copilot LSP for inline completion
 
 ### Inline completion
 
-The fork exposes `textDocument/inlineCompletion`. Two providers available:
-
-| Provider | Source | Trigger |
-|----------|--------|---------|
-| `copilot` | GitHub Copilot cloud | `A-i` |
-| `ollama-ls` | Local qwen2.5-coder:7b via ollama | `A-i` |
-
-Toggle with **`Space , a`** (restarts LSP). State persists in `~/.config/helix/.ai-provider`.
-
-`ollama-ls` is a ~150-line Python bridge (`~/.config/helix/scripts/ollama-ls.py`) — no daemon, no auth, connects directly to `localhost:11434`. Logs to `/tmp/ollama-ls.log`.
+GitHub Copilot provides inline completion (ghost text) via the `copilot-language-server`. Trigger: **`A-i`**.
 
 ### Helix Keybindings
 
@@ -458,7 +449,6 @@ Scripts at `~/.config/helix/scripts/`. All scripts detect `$TMUX` / `$ZELLIJ` / 
 | `Space , F` | Run all tests in file (Go or Rust) | `hx-test.sh` |
 | `Space , m` | Markdown preview (glow) in floating pane | `hx-markdown.sh` |
 | `Space , y` | Open yazi at current buffer's dir, send chosen files to Helix | `hx-yazi.sh` |
-| `Space , a` | Toggle AI provider (Copilot ↔ ollama) | `hx-toggle-ai.sh` |
 
 ### hx-gotest + hx-rusttest
 

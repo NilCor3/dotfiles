@@ -83,6 +83,11 @@ export EDITOR='hx'
 export PATH="$HOME/.local/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 export SSH_AUTH_SOCK=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
+# Auto-start tmux picker when inside WezTerm (no tmux session yet)
+if [[ -z "$TMUX" ]] && [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
+  exec ~/.config/tmux/scripts/wezterm-picker.sh
+fi
+
 # --- Zellij auto-start (kept for rollback) ---
 # if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
 #   _zellij_pick() {

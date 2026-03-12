@@ -769,16 +769,6 @@ cd ~/hx/source && cargo build --release && cd ~/hx && bash setup_build.sh
 python3 ~/hx/copilot_auth.py
 
 
-# Toggle inline AI provider between Copilot and ollama (requires hx restart)
-bash ~/.config/helix/scripts/hx-toggle-ai.sh && echo "Restart hx to apply"
-
-# Check current AI provider
-cat ~/.config/helix/.ai-provider
-
-# View ollama-ls debug log
-tail -f /tmp/ollama-ls.log
-
-
 % helix, files
 
 # Open yazi file manager in popup at current buffer's dir, open chosen files
