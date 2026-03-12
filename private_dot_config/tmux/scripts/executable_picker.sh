@@ -120,9 +120,32 @@ case "$layout" in
 
     base_dir="$([ "$workspace" = "dev" ] && echo "$DEV_DIR" || echo "$SOURCE_DIR")"
 
-    repo=$(fd --type d --max-depth 1 --base-directory "$base_dir" | fzf $FZF_OPTS --prompt="repo ($workspace) > ") || exit 130
+    # Annotate repos whose session is already attached in another window
+    attached_sessions=$(tmux list-sessions -F "#{session_attached}:#{session_name}" 2>/dev/null \
+      | awk -F: '$1=="1" {print $2}')
+
+    repo=$(fd --type d --max-depth 1 --base-directory "$base_dir" \
+      | sed 's|/$||' \
+      | while IFS= read -r r; do
+          if printf '%s\n' "$attached_sessions" | grep -qx "${workspace}-${r}"; then
+            printf '%s  [open]\n' "$r"
+          else
+            printf '%s\n' "$r"
+          fi
+        done \
+      | fzf $FZF_OPTS --prompt="repo ($workspace) > ") || exit 130
     [ -z "$repo" ] && exit 130
 
-    create_and_switch "${workspace}-${repo%/}" "${base_dir}/${repo%/}" "$layout"
+    # Strip "[open]" annotation and block already-attached sessions
+    repo_name=$(printf '%s' "$repo" | sed 's/  \[open\]$//')
+    session_name="${workspace}-${repo_name}"
+
+    if session_is_attached "$session_name"; then
+      printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
+      sleep 2
+      exit 0
+    fi
+
+    create_and_switch "$session_name" "${base_dir}/${repo_name}" "$layout"
     ;;
 esac
