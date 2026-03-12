@@ -10,7 +10,7 @@ end
 local config = {
 	enable_kitty_keyboard = true,
 	default_workspace = "~",
-	default_prog = { "/Users/joakim.karlsson/.config/tmux/scripts/wezterm-picker.sh" },
+	default_prog = { "/opt/homebrew/bin/mise", "exec", "--", "/Users/joakim.karlsson/.config/tmux/scripts/wezterm-picker.sh" },
 	font = require("font").font,
 	font_rules = require("font").font_rules,
 	warn_about_missing_glyphs = false,
