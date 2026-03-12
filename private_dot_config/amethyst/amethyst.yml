@@ -19,13 +19,30 @@ mouse-follows-focus: true
 focus-follows-mouse: false
 mouse-resizes-windows: true
 
+# Invert the floating list into a tiling allowlist.
+# When true: apps in the `floating` list are TILED; everything else floats.
+floating-is-blacklist: true
 
-# Float these apps always (never tile them)
+# Apps that should be TILED (all other windows float by default)
 floating:
-  # - com.apple.systempreferences
+  # Primary productivity
+  - com.github.wez.wezterm
+  - app.zen-browser.zen
+  - com.google.Chrome
+  - com.microsoft.VSCode
+
+  # Communication
+  - net.whatsapp.WhatsApp
+  - com.tinyspeck.slackmacgap
+  - com.hnc.Discord
+
+  # Media & utilities
+  - com.spotify.client
+  - com.docker.docker
+  - com.bitwarden.desktop
+  - app.seashore
+
+  # Uncomment to tile additional apps:
   # - com.apple.finder
-  # - com.apple.FaceTime
-  # - com.apple.Stickies
-  # - com.apple.calculator
-  # - colony
-floating-is-blacklist: false
+  # - com.tableplus.tableplus
+  # - com.googlecode.iterm2
