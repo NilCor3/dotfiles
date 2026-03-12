@@ -29,7 +29,8 @@ while :; do
       exit 0
       ;;
     *)
-      exit "$status"
+      # Unexpected error — loop with a brief pause rather than closing the window.
+      sleep 1
       ;;
   esac
 done
