@@ -79,7 +79,7 @@ case "$layout" in
     ;;
   shell)
     # Count existing shell sessions to suggest next name
-    next=$(tmux list-sessions -F "#S" 2>/dev/null | grep -c "^shell-" || echo 0)
+    next=$(tmux list-sessions -F "#S" 2>/dev/null | grep "^shell-" | wc -l | tr -d ' ')
     next=$((next + 1))
 
     # Build list of unattached shell-* sessions as selectable options
