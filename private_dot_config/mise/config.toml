@@ -61,6 +61,7 @@ ollama = "latest"
 "npm:tsx" = "latest"
 "npm:knip" = "latest"
 tmux = "latest"
+yazi = "latest"
 
 
 [env]

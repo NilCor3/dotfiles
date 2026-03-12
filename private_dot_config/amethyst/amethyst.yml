@@ -22,9 +22,10 @@ mouse-resizes-windows: true
 
 # Float these apps always (never tile them)
 floating:
-  - com.apple.systempreferences
-  - com.apple.finder
-  - com.apple.FaceTime
-  - com.apple.Stickies
-  - com.apple.calculator
-floating-is-blacklist: true
+  # - com.apple.systempreferences
+  # - com.apple.finder
+  # - com.apple.FaceTime
+  # - com.apple.Stickies
+  # - com.apple.calculator
+  # - colony
+floating-is-blacklist: false
