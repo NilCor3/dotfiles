@@ -85,6 +85,9 @@ case "$layout" in
   notes)
     create_and_switch "notes" "$HOME/notes" "notes"
     ;;
+  dotfiles)
+    create_and_switch "dotfiles" "$HOME/.local/share/chezmoi" "dotfiles"
+    ;;
   shell)
     # Count existing shell sessions to suggest next name
     next=$(tmux list-sessions -F "#S" 2>/dev/null | grep "^shell-" | wc -l | tr -d ' ')
