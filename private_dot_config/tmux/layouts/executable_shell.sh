@@ -13,5 +13,7 @@ fi
 COLS=$(tmux display-message -p '#{client_width}' 2>/dev/null)
 ROWS=$(tmux display-message -p '#{client_height}' 2>/dev/null)
 COLS=${COLS:-$(tput cols 2>/dev/null || echo 220)}
-ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}tmux new-session -d -s "$SESSION" -n "shell" -c "$CWD" -x "$COLS" -y "$ROWS"
+ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
+
+tmux new-session -d -s "$SESSION" -n "shell" -c "$CWD" -x "$COLS" -y "$ROWS"
 tmux select-pane -t "$SESSION:shell.1" -T "shell"
