@@ -88,9 +88,11 @@ case "$layout" in
 
     # fzf with --print-query: user types a name (pre-filled) or selects an idle session.
     # Output line 1 = typed query; line 2 = selected item (if any).
-    # We prefer the selected item over the typed query when the user picks from the list.
+    # Exit 130 = Esc/Ctrl-C (cancel). Exit 1 = empty list, Enter pressed (still valid — query is captured).
     raw=$(printf '%s\n' $idle_shells \
-      | fzf $FZF_OPTS --print-query --query "shell-$next" --prompt="shell name > ") || exit 130
+      | fzf $FZF_OPTS --print-query --query "shell-$next" --prompt="shell name > ")
+    fzf_status=$?
+    [ "$fzf_status" = "130" ] && exit 130
 
     typed=$(printf '%s\n' "$raw" | sed -n '1p')
     selected=$(printf '%s\n' "$raw" | sed -n '2p')
