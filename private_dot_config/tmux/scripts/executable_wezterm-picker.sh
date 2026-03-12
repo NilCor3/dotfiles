@@ -8,6 +8,9 @@
 
 set -eu
 
+PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin${PATH:+:$PATH}"
+export PATH
+
 PICKER="$HOME/.config/tmux/scripts/picker.sh"
 
 while :; do
