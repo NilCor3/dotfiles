@@ -77,7 +77,7 @@ case "$layout" in
     ;;
   ai)
     # Using fd: --type d (directories), --max-depth 3, --strip-cwd-prefix for cleaner output
-    folder=$(fd --type d --max-depth 3 --strip-cwd-prefix . "$HOME" | fzf $FZF_OPTS --prompt="folder (ai) > ") || exit 130
+    folder=$(fd --type d --max-depth 3 --base-directory "$HOME" | fzf $FZF_OPTS --prompt="folder (ai) > ") || exit 130
     [ -z "$folder" ] && exit 130
     create_and_switch "ai-$(basename "$folder")" "$HOME/$folder" "ai"
     ;;
