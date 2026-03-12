@@ -1,6 +1,9 @@
 #!/bin/sh
 # picker.sh — fzf project/session picker for tmux using fd
 
+PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin${PATH:+:$PATH}"
+export PATH
+
 LAYOUTS_DIR="$HOME/.config/tmux/layouts"
 DEV_DIR="$HOME/dev"
 SOURCE_DIR="$HOME/source"
