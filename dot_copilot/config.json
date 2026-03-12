@@ -20,7 +20,7 @@
     "/Users/joakim.karlsson/Documents/Obsidian Vault",
     "/Users/joakim.karlsson"
   ],
-  "show_reasoning": false,
+  "show_reasoning": true,
   "allowed_urls": [
     "https://code.claude.com",
     "https://agentsmd.io",

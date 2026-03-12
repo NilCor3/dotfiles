@@ -41,7 +41,7 @@ local config = {
 	window_decorations = "RESIZE",
 	-- Open large enough for Amethyst to tile immediately (avoids float-small-windows threshold)
 	initial_cols = 220,
-	initial_rows = 50,
+	initial_rows = 100,
 }
 
 local colors = require("colors")
