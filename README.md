@@ -417,6 +417,8 @@ LSP setup:
 - **Java** — jdtls (Homebrew) + Lombok + Fortnox code style
 - **Go** — gopls with staticcheck, gofumpt, full inlay hints
 - **Rust** — rust-analyzer with Clippy on save, proc macros, inlay hints
+
+  > **Fresh install**: `rustup component add rust-analyzer` — required so helix finds it via the active toolchain (otherwise infinite fallback loop).
 - **All languages** — Copilot LSP for inline completion
 
 ### Inline completion
