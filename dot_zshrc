@@ -88,42 +88,6 @@ if [[ -z "$TMUX" ]] && [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
   exec ~/.config/tmux/scripts/wezterm-picker.sh
 fi
 
-# --- Zellij auto-start (kept for rollback) ---
-# if [[ -z "$ZELLIJ" ]] && [[ -n "$WEZTERM_PANE" ]]; then
-#   _zellij_pick() {
-#     local layouts_dir="$HOME/.config/zellij/layouts"
-#     local items=()
-#     while IFS= read -r s; do
-#       [[ -n "$s" ]] && items+=("session: $s")
-#     done < <(zellij list-sessions -s 2>/dev/null)
-#     if [[ -d "$layouts_dir" ]]; then
-#       for f in "$layouts_dir"/*.kdl; do
-#         [[ -f "$f" ]] && items+=("layout:  $(basename "$f" .kdl)")
-#       done
-#     fi
-#     items+=("new session")
-#     local choice
-#     choice=$(printf '%s\n' "${items[@]}" | fzf \
-#       --prompt="Zellij › " --height=40% --reverse --no-info --border=rounded) \
-#       || { exec zellij attach --create; return; }
-#     if [[ "$choice" == session:* ]]; then
-#       exec zellij attach "${choice#session: }"
-#     elif [[ "$choice" == layout:* ]]; then
-#       local layout="${choice#layout:  }"
-#       local dir
-#       dir=$(find ~/dev ~/source -mindepth 1 -maxdepth 1 -type d 2>/dev/null \
-#         | sed "s|$HOME/||" \
-#         | fzf --prompt="Project › " --height=40% --reverse --no-info --border=rounded) \
-#         || dir=""
-#       [[ -n "$dir" ]] && cd "$HOME/$dir"
-#       exec zellij --layout "$layout"
-#     else
-#       exec zellij
-#     fi
-#   }
-#   _zellij_pick
-# fi
-
 # --- Navigation ---
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -486,13 +450,8 @@ dlvg() {
   # Wait for server to be ready
   sleep 0.8
 
-  # Open gdlv companion (native GUI or Zellij right pane)
-  if [ -n "$ZELLIJ" ]; then
-    zellij action new-pane --direction right -- gdlv connect ":$port" &
-  else
-    # Open gdlv GUI in background (native macOS window)
-    gdlv connect ":$port" &
-  fi
+  # Open gdlv GUI in background (native macOS window)
+  gdlv connect ":$port" &
 
   # Connect dlv CLI in current pane (blocks until session ends)
   dlv connect ":$port"

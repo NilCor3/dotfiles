@@ -29,8 +29,8 @@ cursor-line = "warning" # show warnings and errors on the cursorline inline
 [keys.normal]
 esc = ["collapse_selection","keep_primary_selection"]
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
-C-s = ":write"
 "C-S-s" = ":write-all"
+C-s = ":write"
 C-e = "file_explorer_in_current_buffer_directory"
 "A-t" = ["open_below", "normal_mode", ":insert-output ~/.config/helix/scripts/hx-todo-insert.sh '%{buffer_name}'", "goto_line_end", "append_mode"]
 
@@ -52,5 +52,5 @@ y = ":sh ~/.config/helix/scripts/hx-yazi.sh %{buffer_name}"
 "A-r" = "inline_completion_dismiss"
 "A-i" = "inline_completion_trigger"
 "A-t" = ["normal_mode", "open_below", "normal_mode", ":insert-output ~/.config/helix/scripts/hx-todo-insert.sh '%{buffer_name}'", "goto_line_end", "append_mode"]
+"C-S-s" = ["normal_mode", ":write-all"]
 C-s = ["normal_mode", ":write"]
-"C-S-s" = ["normal_mode", ":wa"]
