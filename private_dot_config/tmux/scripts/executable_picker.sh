@@ -8,7 +8,7 @@ LAYOUTS_DIR="$HOME/.config/tmux/layouts"
 DEV_DIR="$HOME/dev"
 SOURCE_DIR="$HOME/source"
 
-FZF_OPTS='--height=50% --border=rounded --color=bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921 --no-info'
+FZF_OPTS='--height=50% --border=rounded --color=bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921 --no-info --tiebreak=index'
 
 # ── server check ──────────────────────────────────────────────────────────────
 # Start the tmux server up front so session queries/layout creation work from a

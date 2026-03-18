@@ -963,3 +963,20 @@ httpyac send <file> --all --env <env>
 
 # Restore all tracked app plists (fresh install)
 ~/.config/backups/plists/restore-plists.sh
+
+% macos, caffeinate
+
+# Prevent idle sleep indefinitely (Ctrl-C to stop)
+caffeinate
+
+# Keep display on indefinitely (Ctrl-C to stop)
+caffeinate -d
+
+# Prevent idle sleep for N seconds
+caffeinate -t <seconds>
+
+# Prevent sleep while a command runs
+caffeinate -i <command>
+
+# Prevent sleep until a process exits
+caffeinate -w <pid>
