@@ -36,7 +36,7 @@ golangci-lint-langserver = "latest"
 golangci-lint = "latest"
 rumdl = "latest"
 yq = "latest"
-rust = "stable"
+rust = { version = "stable", components = "rust-analyzer,rust-src" }
 eza = "latest"
 xh = "latest"
 uv = "latest"
@@ -62,6 +62,9 @@ ollama = "latest"
 "npm:knip" = "latest"
 tmux = "latest"
 yazi = "latest"
+"go:github.com/kyoh86/richgo" = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
 
 
 [env]
