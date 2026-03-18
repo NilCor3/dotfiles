@@ -155,3 +155,10 @@ language-servers = ["gopls"]
 # LSP support (hover, diagnostics) in go.work files
 name = "gowork"
 language-servers = ["gopls"]
+
+[[language]]
+name = "markdown"
+# Wrap lines at 80 chars and auto-fix on save via prettier
+text-width = 80
+formatter = { command = "prettier", args = ["--parser", "markdown", "--prose-wrap", "always", "--print-width", "80"] }
+auto-format = true
