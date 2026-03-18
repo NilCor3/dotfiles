@@ -29,7 +29,7 @@ When helping with this setup, apply the same principles:
 - **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
 - **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix over VS Code). WezTerm is the GPU terminal emulator; tmux handles all pane/window/session management — use `tmux display-popup` or `tmux split-window` in scripts rather than WezTerm Lua APIs.
-- **Merge conflicts** — mergiraf fires automatically as a git merge driver for Go, Rust, Java, TypeScript, JSON, YAML etc. Do not suggest separate merge tools. For remaining conflicts: lazygit (`e` on conflicted file).
+- **Merge conflicts** — standard git 3-way merge with `zdiff3` conflict style. Resolve with lazygit (`e` on conflicted file → Helix for manual edits). Do not suggest separate merge driver tools.
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
 ---

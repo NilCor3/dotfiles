@@ -243,7 +243,6 @@ brew install \
   wget \
   markdown-oxide \
   usage \
-  mergiraf \
   mods \
   pgcli \
   slides
@@ -753,16 +752,13 @@ Config at `~/.config/pgcli/config` (vi mode, monokai theme, 1000 row limit, uppe
 
 ## Git — Merge Conflicts
 
-Mergiraf + lazygit covers the full conflict resolution workflow:
+Standard git 3-way merge with `conflictStyle = zdiff3` (shows the common ancestor in conflict markers for better context). lazygit handles interactive resolution.
 
-- **[mergiraf](https://mergiraf.org)** — syntax-aware merge driver; fires automatically on `git merge`/`git rebase` for supported files (Go, Rust, Java, TypeScript, JSON, YAML, TOML, etc.). Pre-resolves structural conflicts (e.g. two branches adding different functions in the same file) so you never see them.
-- **lazygit** — handles remaining conflicts interactively. `e` on a conflicted file → 3-panel view, pick ours/theirs/base per hunk.
-
-Configured globally via `~/.gitconfig` (merge driver) and `~/.gitattributes` (file type routing).
+- **`zdiff3`** — conflict markers include the ancestor block, making it clear what both sides changed from
+- **lazygit** — `e` on a conflicted file → 3-panel view, pick ours/theirs/base per hunk; open in Helix for manual edits
 
 ```sh
-mgsolve <file>     # alias: mergiraf solve — clean up remaining markers in a file
-mergiraf review <file>  # compare mergiraf resolution vs line-based
+git diff --name-only --diff-filter=U   # list all conflicted files
 ```
 
 ---

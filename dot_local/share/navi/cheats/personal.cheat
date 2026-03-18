@@ -128,14 +128,8 @@ grb --continue
 
 % git, merge conflicts
 
-# Solve conflict markers in a file (mergiraf post-process)
-mergiraf solve <file>
-
-# Review how mergiraf resolved a merge vs line-based
-mergiraf review <file>
-
-# Solve all conflicted files in repo
-git diff --name-only --diff-filter=U | xargs -I{} mergiraf solve {}
+# Open conflicted file in Helix via lazygit (press e on conflict file in lazygit)
+lg
 
 % git, misc
 

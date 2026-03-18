@@ -17,10 +17,6 @@
     diffFilter = delta --color-only
 [merge]
     conflictStyle = zdiff3
-[merge "mergiraf"]
-    name = mergiraf
-    driver = mergiraf merge %O %A %B %L %P
-    recursive = binary
 [mergetool]
 	prompt = false
 	keepBackup = false
