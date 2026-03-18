@@ -1,6 +1,7 @@
 [language-server.copilot]
 command = "copilot-language-server"
 args = ["--stdio"]
+environment = { "NODE_NO_WARNINGS" = "1" }
 
 [language-server.copilot.config]
 editorInfo = { name = "Helix", version = "25.01" }
