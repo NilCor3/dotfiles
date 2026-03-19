@@ -13,8 +13,11 @@ if [ -n "$ZELLIJ" ]; then
   # Zellij: floating pane, closes when lazygit exits
   zellij action new-pane --floating --close-on-exit --name "lazygit" -- lazygit
 elif [ -n "$TMUX" ]; then
-  # tmux: 80%x80% popup
-  tmux display-popup -E -w 80% -h 80% -b rounded -s "fg=#d79921" lazygit
+  # tmux: 80%x80% popup — pass helix pane ID so hx-remote-open.sh can send :open
+  HELIX_PANE=$(tmux display-message -p '#{pane_id}')
+  tmux display-popup -E -w 80% -h 80% -b rounded -s "fg=#d79921" \
+    -e "HELIX_PANE=$HELIX_PANE" \
+    lazygit
 else
   # WezTerm: bottom pane zoomed for overlay effect
   pane_id=$(wezterm cli split-pane --bottom --percent 40)
