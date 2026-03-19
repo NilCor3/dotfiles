@@ -2,3 +2,6 @@ git:
   paging:
     colorArg: always
     pager: delta --paging=never
+os:
+  edit: "~/.config/helix/scripts/hx-remote-open.sh {{filename}} {{line}}"
+  suspend: false
