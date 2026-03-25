@@ -23,7 +23,8 @@ cat << 'EOF' | less -r
    C-h/j/k/l      swap in dir             W    session tree       │    n / N            next / prev search match
    o              rotate panes            g    lazygit            │    arrow keys       scroll
    Space          cycle layout            G    AI commit          │    q  /  Esc        exit copy mode
-   J              move (fzf)              d    detach             │
+   J              move (fzf)              Q    pgcli              │
+   m              mark pane               d    detach             │
    m              mark pane               ?    this help          │  SESSION TREE  (prefix + W)
    M-j / M-k      join marked full-width↓↑  Alt+r  reload config  │  SESSION TREE  (prefix + W)
                                                                   │  ───────────────────────────────────────────────────────
@@ -49,5 +50,4 @@ cat << 'EOF' | less -r
                                                                   │    dev    ->  workspace -> repo -> dev-<repo>
                                                                   │    shell  ->  prompt name (default: shell-N)
                                                                   │    ai     ->  folder picker -> ai-<folder> + copilot
-
 EOF
