@@ -980,3 +980,23 @@ caffeinate -i <command>
 
 # Prevent sleep until a process exits
 caffeinate -w <pid>
+
+% postgres, lsp
+
+# Check SQL file for errors (no DB required)
+postgres-language-server check <file>
+
+# Check all SQL files in a directory
+postgres-language-server check <directory>
+
+# Init per-project config (creates postgres-language-server.jsonc)
+postgres-language-server init
+
+# Open pgcli (postgres interactive client) — tmux: prefix + Q
+pgcli
+
+# Connect to postgres with a URL
+pgcli <connection_url>
+
+# Connect with explicit host/user/db
+pgcli -h <host> -U <user> -d <database>
