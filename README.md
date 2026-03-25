@@ -245,6 +245,7 @@ brew install \
   usage \
   mods \
   pgcli \
+  postgres-language-server \
   slides
 ```
 
