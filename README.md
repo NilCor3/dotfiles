@@ -731,6 +731,8 @@ pgcli postgresql://user:pass@host/db
 
 Config at `~/.config/pgcli/config` (vi mode, monokai theme, 1000 row limit, uppercase keywords).
 
+Open pgcli quickly with **tmux prefix + `Q`** — spawns a popup from anywhere.
+
 ### Key meta-commands
 
 | Command | Description |
@@ -748,6 +750,33 @@ Config at `~/.config/pgcli/config` (vi mode, monokai theme, 1000 row limit, uppe
 - Set `EDITOR=hx` — `\e` opens the current query in Helix, save to execute
 - Named queries (`\ns`) are great for frequently used reports — stored in `~/.config/pgcli/named_queries.cfg`
 - Pairs with **DBeaver** for GUI exploration and **lazysql** for a TUI overview
+
+## Postgres Language Server
+
+**[postgres-language-server](https://github.com/supabase-community/postgres-language-server)** (by Supabase) provides LSP support for `.sql` files in Helix:
+
+- **Syntax diagnostics** — works without a DB connection
+- **Formatting** — auto-format on save
+- **Autocomplete, hover, type checking** — requires a DB connection (per-project config)
+- **Migration linting** — validates schema changes
+
+Install: `brew install postgres-language-server`
+
+Helix picks it up automatically for `.sql` files (configured in `languages.toml`).
+
+### Per-project config
+
+For autocomplete and type checking, create a `postgres-language-server.jsonc` in your project root:
+
+```sh
+postgres-language-server init
+```
+
+Edit the generated file to set your DB credentials. **Do not commit this file** — add it to `.gitignore`:
+
+```
+postgres-language-server.jsonc
+```
 
 ---
 
