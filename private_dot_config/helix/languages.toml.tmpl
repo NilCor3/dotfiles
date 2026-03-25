@@ -1,3 +1,8 @@
+[language-server.postgres-ls]
+command = "postgres-language-server"
+args = ["lsp-proxy"]
+timeout = 10
+
 [language-server.copilot]
 command = "copilot-language-server"
 args = ["--stdio"]
@@ -156,6 +161,17 @@ language-servers = ["gopls"]
 # LSP support (hover, diagnostics) in go.work files
 name = "gowork"
 language-servers = ["gopls"]
+
+[[language]]
+name = "sql"
+language-servers = ["postgres-ls", { name = "copilot", only-features = ["inline-completion"] }]
+auto-format = true
+roots = ["postgres-language-server.jsonc", ".git"]
+file-types = ["sql"]
+
+[language.indent]
+tab-width = 2
+unit = "  "
 
 [[language]]
 name = "markdown"
