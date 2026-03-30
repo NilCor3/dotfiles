@@ -246,7 +246,12 @@ brew install \
   mods \
   pgcli \
   postgres-language-server \
-  slides
+  slides \
+  zoxide \
+  forgit \
+  procs \
+  sd \
+  massren
 ```
 
 > Most dev tools (go, node, java, python, etc.) are managed via **mise**, not brew.
@@ -778,6 +783,54 @@ Edit the generated file to set your DB credentials. **Do not commit this file** 
 ```
 postgres-language-server.jsonc
 ```
+
+---
+
+## Git — Shortcuts
+
+### Static aliases
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `g` | `git` | Git shorthand |
+| `gs` | `git status` | Status |
+| `gaa` | `git add --all` | Stage all |
+| `gc` | `git commit` | Commit |
+| `gcm` | `git commit -m` | Commit with message |
+| `gca` | `git commit --amend --no-edit` | Amend last commit |
+| `gp` | `git push` | Push |
+| `gpf` | `git push --force-with-lease` | Force push (safe) |
+| `gpl` | `git pull --rebase` | Pull with rebase |
+| `gb` | `git branch` | List branches |
+| `gds` | `git diff --staged` | Diff staged |
+| `gl` | `git log --oneline --graph --decorate` | Pretty log |
+| `gst` | `git stash` | Stash |
+| `gstp` | `git stash pop` | Stash pop |
+| `gf` | `git fetch --all --prune` | Fetch + prune |
+| `gcl` | `git clone` | Clone |
+| `lg` | `lazygit` | Open lazygit TUI |
+
+### forgit — interactive fzf commands
+
+[forgit](https://github.com/wfxr/forgit) replaces common git operations with fzf-powered interactive selectors.
+
+| Command | Description |
+|---------|-------------|
+| `ga` | Interactive `git add` with diff preview |
+| `gd` | Interactive `git diff` viewer |
+| `glo` | Interactive `git log` viewer |
+| `gcb` | Interactive `git checkout <branch>` |
+| `gcf` | Interactive `git checkout <file>` |
+| `gco` | Interactive `git checkout <commit>` |
+| `gsw` | Interactive `git switch <branch>` |
+| `gbd` | Interactive `git branch -D` |
+| `gss` | Interactive stash viewer |
+| `gcp` | Interactive `git cherry-pick` |
+| `grb` | Interactive `git rebase -i` |
+| `gbl` | Interactive `git blame` |
+| `gfu` | Interactive fixup + autosquash |
+| `gclean` | Interactive `git clean` |
+| `grl` | Interactive `git reflog` |
 
 ---
 
