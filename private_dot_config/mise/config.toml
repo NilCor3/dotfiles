@@ -65,8 +65,34 @@ yazi = "latest"
 "go:github.com/kyoh86/richgo" = "latest"
 "go:golang.org/x/tools/gopls" = "latest"
 "go:golang.org/x/tools/cmd/goimports" = "latest"
+"go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "latest"
+"go:github.com/mfridman/tparse" = "latest"
 
 
 [env]
 _.path = ["~/hx/builds/current/bin"]
 HELIX_RUNTIME="~/hx/builds/current/runtime"
+
+[tasks.ai-lock]
+description = "Back up AI setup files to ~/.claude/blink-ai-backup"
+run = """
+mkdir -p ~/.claude/blink-ai-backup
+rsync -aR AGENTS.md CLAUDE.md .claude/ .github/copilot-instructions.md .github/instructions/ .github/hooks/ .github/agents/ ~/.claude/blink-ai-backup/
+echo "✓ AI setup backed up — run 'mise run ai-apply' after switching branches"
+"""
+
+[tasks.ai-apply]
+description = "Apply backed up AI setup files into current working directory"
+run = """
+rm -rf .claude .github/agents .github/instructions .github/hooks .github/copilot-instructions.md AGENTS.md CLAUDE.md
+rsync -a ~/.claude/blink-ai-backup/ ./
+echo "✓ AI setup applied"
+"""
+
+[tasks.ai-unlock]
+description = "Remove AI backup and restore current branch files (run after PR merges)"
+run = """
+rm -rf ~/.claude/blink-ai-backup
+git checkout -- AGENTS.md CLAUDE.md .claude/ .github/copilot-instructions.md .github/instructions/ .github/hooks/ .github/agents/
+echo "✓ AI setup unlocked — files restored to current branch version"
+"""
