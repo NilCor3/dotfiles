@@ -29,14 +29,31 @@ zinit light-mode for \
 zinit ice blockf atpull'zinit creinstall -q .'
 zinit light zsh-users/zsh-completions
 
+# Completion caching (speeds up git checkout and other slow completions)
+mkdir -p "$HOME/.zsh/cache"
+zstyle ':completion::complete:*' use-cache yes
+zstyle ':completion::complete:*' cache-path "$HOME/.zsh/cache"
+
+# fzf-tab zstyle config (must be before compinit)
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+
 autoload compinit
 compinit
+
+# fzf-tab: must load after compinit, before syntax-highlight/autosuggestions
+zinit light Aloxaf/fzf-tab
 
 zinit light zdharma-continuum/fast-syntax-highlighting
 
 zinit light zsh-users/zsh-autosuggestions
 
-zinit load agkozak/zsh-z
+[ -f /opt/homebrew/opt/forgit/share/forgit/forgit.plugin.zsh ] && source /opt/homebrew/opt/forgit/share/forgit/forgit.plugin.zsh
 
 zinit light romkatv/powerlevel10k
 PURE_POWER_MODE=modern
@@ -103,10 +120,9 @@ alias llt='eza -lah --tree --icons --git -L 2'
 alias mkdir='mkdir -p'
 alias reload='source ~/.zshrc'
 
-# --- Git ---
+# --- Git (static aliases — interactive git ops handled by forgit) ---
 alias g='git'
 alias gs='git status'
-alias ga='git add'
 alias gaa='git add --all'
 alias gc='git commit'
 alias gcm='git commit -m'
@@ -114,21 +130,13 @@ alias gca='git commit --amend --no-edit'
 alias gp='git push'
 alias gpf='git push --force-with-lease'
 alias gpl='git pull --rebase'
-alias gco='git checkout'
-alias gsw='git switch'
 alias gb='git branch'
-alias gbd='git branch -d'
-alias gd='git diff'
 alias gds='git diff --staged'
 alias gl='git log --oneline --graph --decorate'
 alias gst='git stash'
 alias gstp='git stash pop'
-alias grb='git rebase'
-alias grbi='git rebase -i'
 alias gf='git fetch --all --prune'
 alias gcl='git clone'
-alias gcp='git cherry-pick'
-alias gclean='git clean -fd'
 alias lg='lazygit'
 
 # --- HTTP ---
@@ -144,6 +152,11 @@ alias jsr='json-server'
 
 # --- Postgres ---
 alias pgc='pgcli'
+alias ps='procs'
+
+# --- Open with Helix (vim muscle memory) ---
+alias :e='hx'
+alias :o='hx'
 
 # --- Go ---
 alias gob='go build ./...'
@@ -440,6 +453,9 @@ zle -N fzf-redraw-prompt
 bindkey '^f' fzf-redraw-prompt
 
 eval "$(mise activate zsh)"
+
+# zoxide — smart cd replacement (replaces zsh-z)
+eval "$(zoxide init zsh)"
 
 # Debug binary in current Go package
 dlvr() { dlv debug . }
