@@ -59,6 +59,11 @@ zinit light jeffreytse/zsh-vi-mode
 
 zinit light wintermi/zsh-mise
 
+zinit ice as"command" from"gh-r" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin" \
+    atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" \
+    atpull"%atclone" src"init.zsh"
+zinit light atuinsh/atuin
+
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 
