@@ -1000,3 +1000,31 @@ pgcli <connection_url>
 
 # Connect with explicit host/user/db
 pgcli -h <host> -U <user> -d <database>
+
+% files, sd
+
+# Replace text in a file
+sd '<old_text>' '<new_text>' <file>
+
+# Replace text across multiple files (glob)
+sd '<old_text>' '<new_text>' **/<glob>
+
+# Preview replacements without applying
+sd --preview '<old_text>' '<new_text>' <file>
+
+# Replace with regex
+sd '<regex>' '<replacement>' <file>
+
+# Replace in all files from fd output
+fd -e <ext> | xargs sd '<old_text>' '<new_text>'
+
+% files, massren
+
+# Bulk rename files matching a pattern in current dir
+massren *.<ext>
+
+# Bulk rename from fd output
+massren $(fd -e <ext>)
+
+# Bulk rename all files in current dir
+massren *
