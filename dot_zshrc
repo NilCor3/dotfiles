@@ -81,8 +81,13 @@ zinit ice as"command" from"gh-r" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin"
     atpull"%atclone" src"init.zsh"
 zinit light atuinsh/atuin
 
-# Set up fzf key bindings and fuzzy completion
+# Set up fzf key bindings and fuzzy completion (before atuin so atuin's ^r wins)
 source <(fzf --zsh)
+
+zinit ice as"command" from"gh-r" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin" \
+    atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" \
+    atpull"%atclone" src"init.zsh"
+zinit light atuinsh/atuin
 
 # Ctrl+G to open navi cheatsheet (bound after zsh-vi-mode via its hook)
 function zvm_after_init() {
