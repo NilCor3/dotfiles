@@ -10,23 +10,23 @@ cat << 'EOF' | less -r
  PANES                                  WINDOWS                   │    h / j / k / l    resize fine     (3 cells)
    h / j / k / l  navigate                n    new window         │    H / J / K / L    resize coarse  (10 cells)
    C-h/j/k/l      navigate (ctrl alias)   x    close window       │    =                even layout
-   w              next pane               [ ]  prev / next       │    Esc  /  r        exit resize mode
+   w              next pane               [ ]  prev / next        │    Esc  /  r        exit resize mode
    v              split right             1-9  go to window N     │
-   V              split full right                                 │
+   V              split full right                                │
    s              split down              b    break to window    │  MOVE MODE  (prefix + M)
    S              split full below        R    rename window      │  ───────────────────────────────────────────────────────
    q              close pane              P    rename pane        │    h / j / k / l    swap pane in direction
-   z              zoom toggle                                      │    Esc  /  M        exit move mode
+   z              zoom toggle                                     │    Esc  /  M        exit move mode
    e              copy mode               SESSIONS                │
    F              float shell             p    project picker     │  COPY MODE  (prefix + e)
                                           W    session tree       │  ───────────────────────────────────────────────────────
  PANE MOVEMENT                           g    lazygit             │    v                begin selection
    { / }          swap prev/next          G    AI commit          │    C-v              rectangle (block) toggle
-   M → h/j/k/l   swap in dir (move mode) Q    pgcli              │    y                yank selection + exit
+   M → h/j/k/l   swap in dir (move mode) Q    pgcli               │    y                yank selection + exit
    o              rotate panes            d    detach             │    / or ?           search forward / backward
    Space          cycle layout            ?    this help          │    n / N            next / prev search match
    J              move (fzf)              Alt+r  reload config    │    arrow keys       scroll
-   m              mark pane                                        │    q  /  Esc        exit copy mode
+   m              mark pane                                       │    q  /  Esc        exit copy mode
    M-j / M-k      join marked full-width↓↑                        │
                                                                   │  SESSION TREE  (prefix + W)
                                                                   │  ───────────────────────────────────────────────────────
