@@ -425,6 +425,20 @@ fcd()   { cd "$(fd --type d | fzf)" }
 fh()    { print -z $(fc -l 1 | fzf --tac | sed 's/^ *[0-9]* *//') }
 fhx()   { hx $(fzf --preview 'bat --color=always {}') }
 
+# Function to find a directory and insert it into the command line
+fzf-redraw-prompt() {
+  local selected_dir
+  selected_dir=$(find . -maxdepth 3 -type d 2> /dev/null | fzf --height 40% --reverse)
+  if [[ -n "$selected_dir" ]]; then
+    LBUFFER+="$selected_dir"
+  fi
+  zle reset-prompt
+}
+
+# Create the widget and bind it to Ctrl-f
+zle -N fzf-redraw-prompt
+bindkey '^f' fzf-redraw-prompt
+
 eval "$(mise activate zsh)"
 
 # Debug binary in current Go package
