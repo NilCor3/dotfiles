@@ -20,7 +20,7 @@ cat << 'EOF' | less -r
                                                                   │    C-v              rectangle (block) toggle
  PANE MOVEMENT                          SESSIONS                  │    y                yank selection + exit
    { / }          swap prev/next          p    project picker     │    / or ?           search forward / backward
-   C-h/j/k/l      swap in dir             W    session tree       │    n / N            next / prev search match
+   M → h/j/k/l   swap in dir             W    session tree       │    n / N            next / prev search match
    o              rotate panes            g    lazygit            │    arrow keys       scroll
    Space          cycle layout            G    AI commit          │    q  /  Esc        exit copy mode
    J              move (fzf)              Q    pgcli              │
