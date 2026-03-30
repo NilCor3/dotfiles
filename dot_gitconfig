@@ -16,7 +16,7 @@
 [interactive]
     diffFilter = delta --color-only
 [merge]
-    conflictStyle = zdiff3
+	conflictStyle = zdiff3
 [mergetool]
 	prompt = false
 	keepBackup = false
