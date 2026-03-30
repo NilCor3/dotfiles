@@ -9,24 +9,26 @@ cat << 'EOF' | less -r
  ──────────────────────────────         ─────────────────────     │  ───────────────────────────────────────────────────────
  PANES                                  WINDOWS                   │    h / j / k / l    resize fine     (3 cells)
    h / j / k / l  navigate                n    new window         │    H / J / K / L    resize coarse  (10 cells)
-   w              next pane               x    close window       │    =                even layout
-   v              split right             [ ]  prev / next       │    Esc  /  r        exit resize mode
-   V              split full right          1-9  go to window N   │
-   s              split down                                      │
-   S              split full below                                │
-   q              close pane              b    break to window    │  COPY MODE  (prefix + e)
-   z              zoom toggle             R    rename window      │  ───────────────────────────────────────────────────────
-   F              float shell             P    rename pane        │    v                begin selection
-                                                                  │    C-v              rectangle (block) toggle
- PANE MOVEMENT                          SESSIONS                  │    y                yank selection + exit
-   { / }          swap prev/next          p    project picker     │    / or ?           search forward / backward
-   M → h/j/k/l   swap in dir             W    session tree       │    n / N            next / prev search match
-   o              rotate panes            g    lazygit            │    arrow keys       scroll
-   Space          cycle layout            G    AI commit          │    q  /  Esc        exit copy mode
-   J              move (fzf)              Q    pgcli              │
-   m              mark pane               d    detach             │
-   m              mark pane               ?    this help          │  SESSION TREE  (prefix + W)
-   M-j / M-k      join marked full-width↓↑  Alt+r  reload config  │  SESSION TREE  (prefix + W)
+   C-h/j/k/l      navigate (ctrl alias)   x    close window       │    =                even layout
+   w              next pane               [ ]  prev / next       │    Esc  /  r        exit resize mode
+   v              split right             1-9  go to window N     │
+   V              split full right                                 │
+   s              split down              b    break to window    │  MOVE MODE  (prefix + M)
+   S              split full below        R    rename window      │  ───────────────────────────────────────────────────────
+   q              close pane              P    rename pane        │    h / j / k / l    swap pane in direction
+   z              zoom toggle                                      │    Esc  /  M        exit move mode
+   e              copy mode               SESSIONS                │
+   F              float shell             p    project picker     │  COPY MODE  (prefix + e)
+                                          W    session tree       │  ───────────────────────────────────────────────────────
+ PANE MOVEMENT                           g    lazygit             │    v                begin selection
+   { / }          swap prev/next          G    AI commit          │    C-v              rectangle (block) toggle
+   M → h/j/k/l   swap in dir (move mode) Q    pgcli              │    y                yank selection + exit
+   o              rotate panes            d    detach             │    / or ?           search forward / backward
+   Space          cycle layout            ?    this help          │    n / N            next / prev search match
+   J              move (fzf)              Alt+r  reload config    │    arrow keys       scroll
+   m              mark pane                                        │    q  /  Esc        exit copy mode
+   M-j / M-k      join marked full-width↓↑                        │
+                                                                  │  SESSION TREE  (prefix + W)
                                                                   │  ───────────────────────────────────────────────────────
                                                                   │    Enter            switch to session / window / pane
                                                                   │    x / X            kill selected / kill tagged
@@ -43,7 +45,6 @@ cat << 'EOF' | less -r
                                                                   │    rename-session <name>
                                                                   │    rename-window <name>
                                                                   │    move-window -t <session>:
-                                                                  │    customize-mode
                                                                   │
                                                                   │  PROJECT PICKER  (prefix + p)
                                                                   │  ───────────────────────────────────────────────────────
