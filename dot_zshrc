@@ -172,8 +172,6 @@ alias gocc='go clean -testcache'
 alias gw='gotestsum'
 alias gwa='gotestsum --watch'
 alias gwf='gotestsum --format testname'
-alias sqlcg='sqlc generate'
-alias sqlcv='sqlc vet'
 
 # Run all tests
 gota() { richgo test -v "${1:-./...}" }
