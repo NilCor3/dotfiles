@@ -6,6 +6,7 @@ env_shell_expand = false
 [tools]
 java = 'latest'
 lua = "5.1"
+'cargo:stylua' = 'latest'
 go = "latest"
 "go:github.com/golang-migrate/migrate/v4/cmd/migrate" = { version = "latest", tags = "postgres" }
 node = 'latest'
