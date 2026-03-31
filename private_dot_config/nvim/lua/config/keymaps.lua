@@ -4,22 +4,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
--- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
--- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
--- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
--- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- buffers
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
@@ -38,18 +23,90 @@ vim.keymap.set('n', '<leader>bD', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Wi
 
 -- files
 vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save File' })
-vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save File' })
 
--- disable default surround using mini.surrond instead
-vim.keymap.set('n', 's', '<Nop>', { desc = 'do nothing' })
+-- LSP (replacing lspsaga)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Docs' })
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action' })
+vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'Rename' })
+vim.keymap.set('n', '<leader>cd', function() Snacks.picker.lsp_definitions() end, { desc = 'Peek Definition' })
+vim.keymap.set('n', '<leader>ct', function() Snacks.picker.lsp_type_definitions() end, { desc = 'Type Definition' })
+vim.keymap.set('n', '<leader>cf', function() Snacks.picker.lsp_references() end, { desc = 'Find References' })
 
+-- Test runner (reuses hx-test.sh + hx-gotest binary for Go/Rust)
+local function run_test(mode)
+  local file = vim.fn.expand('%:p')
+  local line = vim.fn.line('.')
+  local ft = vim.bo.filetype
+
+  if mode == 'all' then
+    local cmd
+    if ft == 'go' then
+      cmd = 'go test ./...'
+    elseif ft == 'rust' then
+      cmd = 'cargo nextest run'
+    elseif ft == 'java' then
+      cmd = 'mvn test'
+    elseif ft == 'javascript' or ft == 'typescript' or ft == 'typescriptreact' then
+      cmd = 'npx vitest run'
+    else
+      cmd = 'echo "No test runner for ' .. ft .. '"'
+    end
+    vim.fn.system('tmux send-keys -t .1 ' .. vim.fn.shellescape(cmd) .. ' Enter')
+    return
+  end
+
+  vim.fn.system(string.format(
+    '%s %s %d %s',
+    vim.fn.expand('~/.config/helix/scripts/hx-test.sh'),
+    vim.fn.shellescape(file),
+    line,
+    mode
+  ))
+end
+
+vim.keymap.set('n', '<leader>ts', function() run_test('cursor') end, { desc = 'Test: nearest subtest' })
+vim.keymap.set('n', '<leader>tt', function() run_test('func') end, { desc = 'Test: function' })
+vim.keymap.set('n', '<leader>tf', function() run_test('file') end, { desc = 'Test: file' })
+vim.keymap.set('n', '<leader>ta', function() run_test('all') end, { desc = 'Test: all' })
+
+-- Tmux runner (build/run current filetype)
+vim.keymap.set('n', '<leader>tr', function()
+  local ft = vim.bo.filetype
+  vim.fn.system(vim.fn.expand('~/.config/nvim/bin/tmux-runner.sh') .. ' ' .. ft)
+end, { desc = 'Tmux run' })
+
+-- Tmux side panes
+vim.keymap.set('n', '<leader>gg', function()
+  local root = vim.trim(vim.fn.system('git rev-parse --show-toplevel 2>/dev/null'))
+  if root == '' then root = vim.fn.expand('%:p:h') end
+  vim.fn.system('tmux split-window -h -l 40% -c ' .. vim.fn.shellescape(root) .. ' lazygit')
+end, { desc = 'Lazygit pane' })
+
+vim.keymap.set('n', '<leader>fy', function()
+  local dir = vim.fn.expand('%:p:h')
+  vim.fn.system('tmux split-window -h -l 40% -c ' .. vim.fn.shellescape(dir) .. ' yazi')
+end, { desc = 'Yazi pane' })
+
+-- UI toggles
 vim.keymap.set('n', '<leader>uw', function()
   vim.o.wrap = not vim.o.wrap
 end, { desc = 'Toggle wrap' })
 
+vim.keymap.set('n', '<leader>ud', function()
+  local vt = vim.diagnostic.config().virtual_text
+  vim.diagnostic.config({ virtual_text = not vt })
+end, { desc = 'Toggle diagnostic virtual_text' })
+
+vim.keymap.set('n', '<leader>uc', function()
+  vim.o.colorcolumn = vim.o.colorcolumn == '' and '80,120' or ''
+end, { desc = 'Toggle colorcolumn' })
+
+vim.keymap.set('n', '<leader>uG', function()
+  require('copilot.suggestion').toggle_auto_trigger()
+end, { desc = 'Toggle Copilot ghost text' })
+
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   if args.bang then
-    -- FormatDisable! will disable formatting just for this buffer
     vim.b.disable_autoformat = true
   else
     vim.g.disable_autoformat = true

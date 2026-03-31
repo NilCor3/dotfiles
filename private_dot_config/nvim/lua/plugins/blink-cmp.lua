@@ -58,6 +58,8 @@ return {
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
+        -- Manually trigger copilot popup only (not during normal typing)
+        ['<C-a>'] = { function() require('blink.cmp').show({ providers = { 'copilot' } }) end },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -102,7 +104,7 @@ return {
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev', 'buffer', 'copilot' },
+        default = { 'lsp', 'path', 'snippets', 'lazydev', 'buffer' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 1 },
           lsp = { score_offset = 10 },

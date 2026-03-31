@@ -51,13 +51,20 @@ return {
     { '<leader>,', function() Snacks.picker.buffers() end, desc = 'Buffers', },
     { '<leader>n', function() Snacks.picker.notifications() end, desc = 'Notification History', },
     { '<leader>e', function() Snacks.explorer() end, desc = 'File Explorer', },
-    -- find
-    -- { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Buffers', },
+    -- find (Helix Space+f/b/r/g/p aligned)
+    { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Buffers', },
     { '<leader>fc', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = 'Find Config File', },
     { '<leader>ff', function() Snacks.picker.files() end, desc = 'Find Files', },
     { '<leader>fg', function() Snacks.picker.git_files() end, desc = 'Find Git Files', },
     { '<leader>fp', function() Snacks.picker.projects() end, desc = 'Projects', },
     { '<leader>fr', function() Snacks.picker.recent() end, desc = 'Recent', },
+    -- Helix Space+d/D diagnostics
+    { '<leader>fd', function() Snacks.picker.diagnostics() end, desc = 'Workspace Diagnostics', },
+    { '<leader>fD', function() Snacks.picker.diagnostics_buffer() end, desc = 'Buffer Diagnostics', },
+    -- Helix Space+? keymaps / command palette
+    { '<leader>fk', function() Snacks.picker.keymaps() end, desc = 'Keymaps', },
+    -- Global search (Helix Space+/)
+    { '<leader>/', function() Snacks.picker.grep() end, desc = 'Grep', },
     -- git
     -- { '<leader>gb', function() Snacks.picker.git_branches() end, desc = 'Git Branches', },
     -- { '<leader>gl', function() Snacks.picker.git_log() end, desc = 'Git Log', },
@@ -102,6 +109,9 @@ return {
     { '<leader>gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto T[y]pe Definition', },
     { '<leader>ss', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols', },
     { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols', },
+    -- Helix Space+s/S symbol pickers
+    { '<leader>fs', function() Snacks.picker.lsp_symbols() end, desc = 'Document Symbols', },
+    { '<leader>fS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'Workspace Symbols', },
     -- Other
     -- { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode', },
     -- { '<leader>Z', function() Snacks.zen.zoom() end, desc = 'Toggle Zoom', },

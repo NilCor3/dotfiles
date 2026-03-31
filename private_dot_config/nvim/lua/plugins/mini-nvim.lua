@@ -126,7 +126,18 @@ return {
         silent = false,
       }
 
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        -- Use vim-surround-style keys so `s` is free for flash.nvim
+        mappings = {
+          add = 'ys',
+          delete = 'ds',
+          replace = 'cs',
+          find = '',
+          find_left = '',
+          highlight = '',
+          update_n_lines = '',
+        },
+      }
       require('mini.operators').setup()
       require('mini.statusline').setup { use_icons = true }
       require('mini.icons').setup {

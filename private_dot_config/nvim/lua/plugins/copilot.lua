@@ -6,7 +6,15 @@ return {
     event = 'BufReadPost',
     opts = {
       suggestion = {
-        enabled = false,
+        enabled = true,
+        auto_trigger = false, -- only show ghost text when explicitly triggered
+        keymap = {
+          accept = '<M-a>',      -- accept full suggestion
+          accept_word = '<M-w>', -- accept one word
+          next = '<M-]>',
+          prev = '<M-[>',
+          dismiss = '<M-e>',
+        },
       },
       panel = { enabled = false },
     },

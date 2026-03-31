@@ -1,3 +1,6 @@
+-- Ensure mise-managed tools (gopls, vtsls, etc.) are available to LSP
+vim.env.PATH = vim.fn.expand('~/.local/share/mise/shims') .. ':' .. vim.env.PATH
+
 local opt = vim.opt
 
 opt.number = true
