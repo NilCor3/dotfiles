@@ -25,7 +25,6 @@ vim.keymap.set('n', '[q', '<cmd>cprev<cr>', { desc = 'Prev quickfix' })
 vim.keymap.set('n', ']q', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
 vim.keymap.set('n', '<leader>qq', '<cmd>copen<cr>', { desc = 'Open quickfix list' })
 vim.keymap.set('n', '<leader>ql', '<cmd>lopen<cr>', { desc = 'Open location list' })
-vim.keymap.set('n', '<leader>qd', function() Snacks.picker.diagnostics() end, { desc = 'Workspace diagnostics' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
@@ -33,13 +32,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Files
 vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save File' })
 
--- LSP (replacing lspsaga)
+-- LSP
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Docs' })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action' })
 vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'Rename' })
-vim.keymap.set('n', '<leader>cd', function() Snacks.picker.lsp_definitions() end, { desc = 'Peek Definition' })
-vim.keymap.set('n', '<leader>ct', function() Snacks.picker.lsp_type_definitions() end, { desc = 'Type Definition' })
-vim.keymap.set('n', '<leader>cf', function() Snacks.picker.lsp_references() end, { desc = 'Find References' })
 
 -- Test runner (nvim-local script)
 local function run_test(mode)

@@ -129,7 +129,7 @@ return {
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'prefer_rust_with_warning', sorts = { 'score', 'exact', 'sort_text' } },
+      fuzzy = { implementation = 'lua', sorts = { 'score', 'exact', 'sort_text' } },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },

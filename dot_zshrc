@@ -457,8 +457,10 @@ bindkey '^f' fzf-redraw-prompt
 
 eval "$(mise activate zsh)"
 
-# zoxide — smart cd replacement (replaces zsh-z)
-eval "$(zoxide init zsh)"
+# zoxide — must run after zsh-vi-mode which overwrites chpwd_functions
+function zvm_after_init() {
+  eval "$(zoxide init zsh)"
+}
 
 # Debug binary in current Go package
 dlvr() { dlv debug . }

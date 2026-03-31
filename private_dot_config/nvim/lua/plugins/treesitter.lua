@@ -38,6 +38,7 @@ return {
         'yaml',
         'tsx',
         'java',
+        'rust',
       },
       auto_install = true,
       highlight = {
