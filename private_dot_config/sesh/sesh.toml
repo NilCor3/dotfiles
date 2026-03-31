@@ -1,0 +1,11 @@
+[[session]]
+name = "notes"
+path = "~/notes"
+
+[[session]]
+name = "dotfiles"
+path = "~/.local/share/chezmoi"
+
+[[session]]
+name = "shell"
+path = "~"

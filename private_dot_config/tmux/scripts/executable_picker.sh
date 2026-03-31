@@ -1,5 +1,5 @@
 #!/bin/sh
-# picker.sh — fzf project/session picker for tmux using fd
+# picker.sh — session picker: sesh for discovery, tmux for create/switch
 
 PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin${PATH:+:$PATH}"
 export PATH
@@ -11,17 +11,9 @@ SOURCE_DIR="$HOME/source"
 FZF_OPTS='--height=50% --border=rounded --color=bg+:#3c3836,fg+:#ebdbb2,hl+:#d79921,border:#504945,prompt:#458588,pointer:#d79921 --no-info --tiebreak=index'
 
 # ── server check ──────────────────────────────────────────────────────────────
-# Start the tmux server up front so session queries/layout creation work from a
-# fresh WezTerm window without creating a dummy session.
 tmux start-server 2>/dev/null || true
 
 # ── helpers ───────────────────────────────────────────────────────────────────
-# Returns 1 if a session exists AND has a client attached (open in another window)
-session_is_attached() {
-  tmux list-sessions -F "#{session_name}:#{session_attached}" 2>/dev/null \
-    | awk -F: -v s="$1" '$1==s && $2=="1" {found=1} END {exit !found}'
-}
-
 switch_or_attach() {
   if [ -n "$TMUX" ]; then
     tmux switch-client -t "$1"
@@ -30,129 +22,60 @@ switch_or_attach() {
   fi
 }
 
-create_and_switch() {
-  session_name="$1"; cwd="$2"; layout="$3"
-
-  # Block if already attached in another window
-  if session_is_attached "$session_name"; then
-    printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
-    sleep 2
-    exit 0
-  fi
-
-  if tmux has-session -t "$session_name" 2>/dev/null; then
-    switch_or_attach "$session_name"
-  else
-    # Ensure the layout script exists before running
-    if [ -f "$LAYOUTS_DIR/${layout}.sh" ]; then
-      "$LAYOUTS_DIR/${layout}.sh" "$session_name" "$cwd"
-    else
-      tmux new-session -d -s "$session_name" -c "$cwd"
-    fi
-    switch_or_attach "$session_name"
-  fi
+create_named_session() {
+  name="$1"
+  case "$name" in
+    notes)    "$LAYOUTS_DIR/notes.sh"    "$name" "$HOME/notes" ;;
+    dotfiles) "$LAYOUTS_DIR/dotfiles.sh" "$name" "$HOME/.local/share/chezmoi" ;;
+    shell)    "$LAYOUTS_DIR/shell.sh"    "$name" "$HOME" ;;
+    *)        tmux new-session -d -s "$name" -c "$HOME" ;;
+  esac
 }
 
-# ── build option list — hide attached sessions ────────────────────────────────
-# Sessions already open in another WezTerm window (session_attached=1) are
-# excluded so each window gets its own exclusive session.
+# ── build option list ─────────────────────────────────────────────────────────
+# Sessions: running tmux sessions + configured sessions (sesh.toml), deduplicated
+# Projects: dirs under dev/ and source/ with workspace prefix
 options=$(
-  tmux list-sessions -F "#{session_attached}:#{session_name}" 2>/dev/null \
-    | awk -F: '$1=="0" {print "session:  "$2}' | sort
-  for f in "$LAYOUTS_DIR"/*.sh; do
-    [ -f "$f" ] && echo "layout:  $(basename "$f" .sh)"
-  done
+  sesh list -c -t -d 2>/dev/null | awk '{print "session:  " $0}'
+  fd --type d --max-depth 1 --base-directory "$DEV_DIR" 2>/dev/null \
+    | sed 's|/$||' | sort | awk '{print "dev:  " $0}'
+  fd --type d --max-depth 1 --base-directory "$SOURCE_DIR" 2>/dev/null \
+    | sed 's|/$||' | sort | awk '{print "src:  " $0}'
 )
 
-[ -z "$options" ] && options="layout:  dev"
+[ -z "$options" ] && options="session:  shell"
 
-# ── first pick ────────────────────────────────────────────────────────────────
+# ── pick ──────────────────────────────────────────────────────────────────────
 choice=$(printf '%s\n' "$options" | fzf $FZF_OPTS --prompt="tmux > ") || exit 130
 [ -z "$choice" ] && exit 130
 
-ctype=$(echo "$choice" | cut -d: -f1 | tr -d ' ')
-cname=$(echo "$choice" | sed 's/^[^:]*: *//')
+ctype=$(echo "$choice" | cut -d: -f1)
+cname=$(echo "$choice" | sed 's/^[^:]*:  *//')
 
-if [ "$ctype" = "session" ]; then
-  switch_or_attach "$cname"
-  exit 0
-fi
-
-layout="$cname"
-
-# ── layout logic ──────────────────────────────────────────────────────────────
-case "$layout" in
-  notes)
-    create_and_switch "notes" "$HOME/notes" "notes"
-    ;;
-  dotfiles)
-    create_and_switch "dotfiles" "$HOME/.local/share/chezmoi" "dotfiles"
-    ;;
-  shell)
-    # Count existing shell sessions to suggest next name
-    next=$(tmux list-sessions -F "#S" 2>/dev/null | grep "^shell-" | wc -l | tr -d ' ')
-    next=$((next + 1))
-
-    # Build list of unattached shell-* sessions as selectable options
-    idle_shells=$(tmux list-sessions -F "#{session_attached}:#{session_name}" 2>/dev/null \
-      | awk -F: '$1=="0" && $2~/^shell-/ {print $2}' | sort)
-
-    # fzf with --print-query: user types a name (pre-filled) or selects an idle session.
-    # Output line 1 = typed query; line 2 = selected item (if any).
-    # Exit 130 = Esc/Ctrl-C (cancel). Exit 1 = empty list, Enter pressed (still valid — query is captured).
-    raw=$(printf '%s\n' $idle_shells \
-      | fzf $FZF_OPTS --print-query --query "shell-$next" --prompt="shell name > ")
-    fzf_status=$?
-    [ "$fzf_status" = "130" ] && exit 130
-
-    typed=$(printf '%s\n' "$raw" | sed -n '1p')
-    selected=$(printf '%s\n' "$raw" | sed -n '2p')
-    session_name="${selected:-$typed}"
-    [ -z "$session_name" ] && exit 130
-
-    # Block reattaching to a session that is currently open in another window
-    # (also enforced inside create_and_switch, but checked early here to give
-    # a nicer message before the shell name prompt disappears)
-    if session_is_attached "$session_name"; then
-      printf '\n  ✗ "%s" is already open in another window.\n\n' "$session_name" >/dev/tty
-      sleep 2
-      exit 0
+# ── connect ───────────────────────────────────────────────────────────────────
+case "$ctype" in
+  session)
+    if ! tmux has-session -t "$cname" 2>/dev/null; then
+      create_named_session "$cname"
     fi
-
-    create_and_switch "$session_name" "$HOME" "shell"
+    switch_or_attach "$cname"
     ;;
-  ai)
-    folder=$(fd --type d --max-depth 3 --base-directory "$HOME" | fzf $FZF_OPTS --prompt="folder (ai) > ") || exit 130
-    [ -z "$folder" ] && exit 130
-    create_and_switch "ai-$(basename "$folder")" "$HOME/$folder" "ai"
+  dev)
+    session_name="dev-$cname"
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      switch_or_attach "$session_name"
+    else
+      "$LAYOUTS_DIR/dev.sh" "$session_name" "$DEV_DIR/$cname"
+      switch_or_attach "$session_name"
+    fi
     ;;
-  *)
-    # Default Project Picker (dev/source)
-    workspace=$(printf "dev\nsource" | fzf $FZF_OPTS --prompt="workspace > ") || exit 130
-    [ -z "$workspace" ] && exit 130
-
-    base_dir="$([ "$workspace" = "dev" ] && echo "$DEV_DIR" || echo "$SOURCE_DIR")"
-
-    # Annotate repos whose session is already attached in another window
-    attached_sessions=$(tmux list-sessions -F "#{session_attached}:#{session_name}" 2>/dev/null \
-      | awk -F: '$1=="1" {print $2}')
-
-    repo=$(fd --type d --max-depth 1 --base-directory "$base_dir" \
-      | sed 's|/$||' \
-      | while IFS= read -r r; do
-          if printf '%s\n' "$attached_sessions" | grep -qx "${workspace}-${r}"; then
-            printf '%s  [open]\n' "$r"
-          else
-            printf '%s\n' "$r"
-          fi
-        done \
-      | fzf $FZF_OPTS --prompt="repo ($workspace) > ") || exit 130
-    [ -z "$repo" ] && exit 130
-
-    # Strip "[open]" annotation before using repo name
-    repo_name=$(printf '%s' "$repo" | sed 's/  \[open\]$//')
-    session_name="${workspace}-${repo_name}"
-
-    create_and_switch "$session_name" "${base_dir}/${repo_name}" "$layout"
+  src)
+    session_name="src-$cname"
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      switch_or_attach "$session_name"
+    else
+      "$LAYOUTS_DIR/dev.sh" "$session_name" "$SOURCE_DIR/$cname"
+      switch_or_attach "$session_name"
+    fi
     ;;
 esac
