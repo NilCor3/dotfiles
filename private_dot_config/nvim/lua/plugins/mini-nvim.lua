@@ -158,26 +158,11 @@ return {
           ['copilot'] = { glyph = '', hl = 'MiniIconsAzure' },
         },
       }
-      require('mini.pairs').setup()
       require('mini.comment').setup {
         options = {
           ignore_blank_line = true,
         },
       }
-      require('mini.move').setup {
-        mappings = {
-          left = '<M-S-h>',
-          right = '<M-S-l>',
-          down = '<M-S-j>',
-          up = '<M-S-k>',
-
-          line_left = '<M-S-h>',
-          line_right = '<M-S-l>',
-          line_down = '<M-S-j>',
-          line_up = '<M-S-k>',
-        },
-      }
-      require('mini.sessions').setup {}
     end,
   },
 }

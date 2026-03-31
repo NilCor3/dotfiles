@@ -1,27 +1,36 @@
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- buffers
+-- Split navigation (no plugin needed)
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left split' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower split' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper split' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right split' })
+
+-- Buffers
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 vim.keymap.set('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-vim.keymap.set('n', '<leader>bd', function()
-  Snacks.bufdelete()
-end, { desc = 'Delete Buffer' })
-vim.keymap.set('n', '<leader>bo', function()
-  Snacks.bufdelete.other()
-end, { desc = 'Delete Other Buffers' })
+vim.keymap.set('n', '<leader>bd', function() Snacks.bufdelete() end, { desc = 'Delete Buffer' })
+vim.keymap.set('n', '<leader>bo', function() Snacks.bufdelete.other() end, { desc = 'Delete Other Buffers' })
 vim.keymap.set('n', '<leader>bD', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Window' })
 
--- files
+-- Quickfix / location list (replaces trouble)
+vim.keymap.set('n', '[q', '<cmd>cprev<cr>', { desc = 'Prev quickfix' })
+vim.keymap.set('n', ']q', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
+vim.keymap.set('n', '<leader>qq', '<cmd>copen<cr>', { desc = 'Open quickfix list' })
+vim.keymap.set('n', '<leader>ql', '<cmd>lopen<cr>', { desc = 'Open location list' })
+vim.keymap.set('n', '<leader>qd', function() Snacks.picker.diagnostics() end, { desc = 'Workspace diagnostics' })
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
+
+-- Files
 vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save File' })
 
 -- LSP (replacing lspsaga)
@@ -32,7 +41,7 @@ vim.keymap.set('n', '<leader>cd', function() Snacks.picker.lsp_definitions() end
 vim.keymap.set('n', '<leader>ct', function() Snacks.picker.lsp_type_definitions() end, { desc = 'Type Definition' })
 vim.keymap.set('n', '<leader>cf', function() Snacks.picker.lsp_references() end, { desc = 'Find References' })
 
--- Test runner (reuses hx-test.sh + hx-gotest binary for Go/Rust)
+-- Test runner (nvim-local script)
 local function run_test(mode)
   local file = vim.fn.expand('%:p')
   local line = vim.fn.line('.')
@@ -57,7 +66,7 @@ local function run_test(mode)
 
   vim.fn.system(string.format(
     '%s %s %d %s',
-    vim.fn.expand('~/.config/helix/scripts/hx-test.sh'),
+    vim.fn.expand('~/.config/nvim/bin/nvim-test.sh'),
     vim.fn.shellescape(file),
     line,
     mode
@@ -111,13 +120,9 @@ vim.api.nvim_create_user_command('FormatDisable', function(args)
   else
     vim.g.disable_autoformat = true
   end
-end, {
-  desc = 'Disable autoformat-on-save',
-  bang = true,
-})
+end, { desc = 'Disable autoformat-on-save', bang = true })
+
 vim.api.nvim_create_user_command('FormatEnable', function()
   vim.b.disable_autoformat = false
   vim.g.disable_autoformat = false
-end, {
-  desc = 'Re-enable autoformat-on-save',
-})
+end, { desc = 'Re-enable autoformat-on-save' })

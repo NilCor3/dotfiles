@@ -18,7 +18,6 @@ return {
         'vim',
         'vimdoc',
         'regex',
-        'norg',
         'go',
         'gowork',
         'css',
