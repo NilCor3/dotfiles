@@ -11,6 +11,7 @@ go = "latest"
 "go:github.com/golang-migrate/migrate/v4/cmd/migrate" = { version = "latest", tags = "postgres" }
 node = 'latest'
 'npm:prettier' = 'latest'
+'npm:@vtsls/language-server' = 'latest'
 'npm:@bitwarden/cli' = 'latest'
 'npm:tldr' = 'latest'
 'npm:@github/copilot-language-server' = 'latest'
