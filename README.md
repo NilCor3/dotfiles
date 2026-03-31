@@ -18,6 +18,8 @@ the best tools are ones you can configure, compose, and own.
 - [Shell](#shell)
 - [Terminal & Multiplexer](#terminal--multiplexer)
 - [Editor](#editor)
+  - [Helix](#helix)
+  - [Neovim](#neovim)
 - [Git](#git)
 - [File Management](#file-management)
 - [HTTP & APIs](#http--apis)
@@ -38,8 +40,9 @@ the best tools are ones you can configure, compose, and own.
 ## Features
 
 - 🖥️ **[WezTerm](https://wezfurlong.org/wezterm/)** — GPU-accelerated terminal (fonts, window, clipboard)
-- ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust)
-- 🗂️ **[tmux](#terminal--multiplexer)** — multiplexer with vi copy mode, sessions, and Helix-mirrored keybinds (`Ctrl+Space` leader)
+- ✏️ **[Helix](https://helix-editor.com/)** — modal editor with full LSP support (Go, Java, Rust); custom fork with inline completion
+- ⌨️ **[Neovim](https://neovim.io/)** — lean nvim 0.12 setup with lazy.nvim; native LSP (no Mason), blink.cmp, Copilot, snacks picker
+- 🗂️ **[tmux](#terminal--multiplexer)** — multiplexer with vi copy mode, sessions, and editor-mirrored keybinds (`Ctrl+Space` leader)
 - 🔍 **[Helix integration](#helix-integration)** — blame, lazygit, markdown preview, and test runner via tmux panes
 - 🧪 **[hx-gotest](#hx-gotest--hx-rusttest)** — custom Go AST tool to run the exact test under cursor (subtests, table-driven tests)
 - 🔐 **Age-encrypted secrets** in dotfiles — key stored at `~/.config/age/chezmoi-key.txt`
@@ -150,7 +153,9 @@ brew install \
   git-filter-repo \
   git-crypt \
   jdtls \
+  lua-language-server \
   mise \
+  neovim \
   mkcert \
   navi \
   rsync \
@@ -389,6 +394,71 @@ To rebuild after changes:
 ```sh
 cd ~/dev/hx-gotest && go build -o ~/.local/bin/hx-gotest .
 ```
+
+---
+
+### Neovim
+
+Installed via Homebrew (`brew install neovim`, v0.12.0). Config: `~/.config/nvim/`.
+
+**Design goal:** Helix-lean feel inside nvim. No Mason, no DAP UI, no neotest framework. LSP via nvim 0.12's native `vim.lsp.config`/`vim.lsp.enable` API. Plugins are single-purpose and composable.
+
+**Plugin manager:** lazy.nvim — `nvim --headless "+Lazy restore" +qa` to reproduce from lockfile.
+
+#### Key plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| `snacks.nvim` | Picker (files, grep, LSP, git log, diagnostics), dashboard, notifier |
+| `blink.cmp` | Completion (pure Lua, no binary downloads) |
+| `copilot.lua` + `CopilotChat.nvim` | Ghost text (`<M-a>`), on-demand popup (`<C-a>`), AI chat (`<leader>aa`) |
+| `flash.nvim` | Jump with `s`, treesitter select with `S` |
+| `oil.nvim` | File browser at `-` |
+| `diagflow.nvim` | Diagnostics rendered top-right (no inline virtual text) |
+| `mini.nvim` | textobjects, surround (`ys`/`ds`/`cs`), statusline, icons, comment |
+| `gitsigns.nvim` | Hunk nav `]h`/`[h`, stage/reset/preview, blame |
+| `conform.nvim` | Format-on-save: stylua, rustfmt, prettier |
+| `nvim-lint` | golangcilint (Go only) |
+| `nvim-jdtls` | Java LSP via `ftplugin/java.lua` |
+
+#### LSP (native, no Mason)
+
+| Server | Language | Installed via |
+|--------|----------|---------------|
+| `gopls` | Go | mise |
+| `rust_analyzer` | Rust | rustup |
+| `lua_ls` | Lua | brew |
+| `vtsls`, `eslint` | TypeScript/JS | mise npm |
+| `cssls`, `cssmodules_ls` | CSS | mise npm |
+| `marksman` | Markdown | mise |
+| `sqlls` | SQL | mise npm |
+
+Java (jdtls) is separate: JARs at `~/.local/share/nvim-java/`, provisioned by `run_once_setup-java-lsp.sh`.
+
+#### Key keymaps (leader = `<Space>`)
+
+| Key | Action |
+|-----|--------|
+| `<leader><space>` | Smart file picker |
+| `<leader>/` | Grep |
+| `<leader>ff/fg/fr` | Find files / git files / recent |
+| `<leader>fd/fD` | Workspace / buffer diagnostics |
+| `<leader>fk` | Keymaps |
+| `<leader>gd/gr/gI/gy` | LSP: definition / references / impl / type |
+| `<leader>ca/cr` | Code action / rename |
+| `<leader>gB` | Git blame line |
+| `<leader>gl` | Git log (current file) |
+| `]h` / `[h` | Next / prev hunk |
+| `<leader>ghs/ghr/ghp` | Stage / reset / preview hunk |
+| `<leader>tr` | Build/run in tmux pane |
+| `<leader>ts/tf/tF/ta` | Test: cursor / func / file / all |
+| `s` / `S` | Flash jump / treesitter select |
+| `-` | Oil (parent dir) |
+
+#### Scripts
+
+- `~/.config/nvim/bin/nvim-test.sh` — sends test commands to tmux pane; uses `hx-gotest` for Go, `cargo nextest` for Rust
+- `~/.config/nvim/bin/tmux-runner.sh` — build/run commands to tmux pane `.1` by filetype
 
 ---
 
