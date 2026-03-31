@@ -116,19 +116,4 @@ return {
       end
     end,
   },
-  {
-    'ray-x/lsp_signature.nvim',
-    event = 'InsertEnter',
-    opts = {
-      bind = true,
-      wrap = true,
-      hint_enable = true,
-      hint_prefix = {
-        above = '↙ ',
-        current = '← ',
-        below = '↖ ',
-      },
-      toggle_key = '<M-x>',
-    },
-  },
 }

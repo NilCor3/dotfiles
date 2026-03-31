@@ -122,14 +122,7 @@ local on_attach = function(_, bufnr)
   require('jdtls.setup').add_commands()
   vim.lsp.codelens.refresh()
 
-  require('lsp_signature').on_attach({
-    bind = true,
-    padding = '',
-    handler_opts = { border = 'rounded' },
-    hint_prefix = '󱄑 ',
-  }, bufnr)
-
-  vim.api.nvim_create_autocmd('BufWritePost', {
+vim.api.nvim_create_autocmd('BufWritePost', {
     pattern = { '*.java' },
     callback = function()
       pcall(vim.lsp.codelens.refresh)
