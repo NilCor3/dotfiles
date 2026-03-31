@@ -473,7 +473,7 @@ pgcli postgresql://<user>:<password>@<host>/<database>
 # Inside pgcli: export query result to CSV
 \copy (SELECT * FROM <table>) TO '<file>.csv' CSV HEADER
 
-% http, mock, prism, json-server
+% http, mock, prism
 
 # Mock from OpenAPI spec (local file)
 prism mock <openapi.yaml>
@@ -487,16 +487,7 @@ prism mock --verbose <openapi.yaml>
 # Proxy to real API + validate requests/responses
 prism proxy <openapi.yaml> <https://real-api.example.com>
 
-# Start json-server from a db.json file
-json-server <db.json>
-
-# json-server with custom port
-json-server --port <port> <db.json>
-
-# json-server with custom routes file
-json-server --routes <routes.json> <db.json>
-
-% go, tools, air, sqlc, gotestsum, dlv, oapi-codegen
+% go, tools, air, gotestsum, dlv
 
 # Run gotestsum (pretty test output)
 gotestsum
@@ -512,15 +503,6 @@ air init
 
 # Start air live reload server
 air
-
-# Generate SQL code from schema + queries
-sqlc generate
-
-# Vet SQL queries for errors
-sqlc vet
-
-# Init new sqlc project
-sqlc init
 
 # Start delve debugger on current package
 dlv debug
@@ -542,12 +524,6 @@ gdlv connect :2345
 
 # Connect dlv CLI to headless dlv server
 dlv connect :2345
-
-# Generate Go server/client from OpenAPI spec
-oapi-codegen -generate types,server -package api openapi.yaml > api/api.gen.go
-
-# Generate only types
-oapi-codegen -generate types -package api openapi.yaml > api/types.gen.go
 
 % rust, cargo, bacon, nextest, audit, expand
 
@@ -681,6 +657,12 @@ nreview
 # Review a specific note with local AI
 nreview <path/to/note.md>
 
+# Lint markdown file for style issues
+rumdl <file.md>
+
+# Lint all markdown files in directory
+rumdl <directory>
+
 % ai, ollama, mods
 
 # Start ollama as background launchd service (auto-starts on login)
@@ -786,103 +768,81 @@ python3 ~/hx/copilot_auth.py
 
 % wezterm, scroll, keybindings
 
-# Scroll view down 1 line — works without entering scroll mode
+# Scroll view down 1 line
 # Keybind: CTRL+SHIFT+j
 
-# Scroll view up 1 line — works without entering scroll mode
+# Scroll view up 1 line
 # Keybind: CTRL+SHIFT+k
 
-# Scroll half page down — works without entering scroll mode
+# Scroll half page down
 # Keybind: CTRL+SHIFT+d
 
-# Scroll half page up — works without entering scroll mode
+# Scroll half page up
 # Keybind: CTRL+SHIFT+u
 
-# Enter scroll mode (j/k lines, d/u half-page, g/G top/bottom, v → copy, / → search)
-# Keybind: LEADER y  (CTRL+SHIFT+Space, then y)
+% tmux, keybindings
 
-# Enter copy mode (hjkl, w/e/b words, v visual, V line, x select-line, y yank, / search)
-# Keybind: LEADER c  (CTRL+SHIFT+Space, then c)
+# Leader key: Ctrl+Space
 
-% wezterm, pane, keybindings
+# New window
+# Keybind: Ctrl+Space n
 
-# Navigate pane left (mirrors Helix CTRL+w h)
-# Keybind: LEADER h  (CTRL+SHIFT+Space, then h)
+# Next / prev window
+# Keybind: Ctrl+Space ] / [
 
-# Navigate pane down (mirrors Helix CTRL+w j)
-# Keybind: LEADER j  (CTRL+SHIFT+Space, then j)
+# Select window by number
+# Keybind: Ctrl+Space 1-8
 
-# Navigate pane up (mirrors Helix CTRL+w k)
-# Keybind: LEADER k  (CTRL+SHIFT+Space, then k)
+# Rename window
+# Keybind: Ctrl+Space R
 
-# Navigate pane right (mirrors Helix CTRL+w l)
-# Keybind: LEADER l  (CTRL+SHIFT+Space, then l)
+# Split horizontal (new pane below)
+# Keybind: Ctrl+Space s
 
-# Resize pane left
-# Keybind: ALT+h
+# Split vertical (new pane right)
+# Keybind: Ctrl+Space v
 
-# Resize pane down
-# Keybind: ALT+j
+# Navigate panes (h/j/k/l)
+# Keybind: Ctrl+Space h/j/k/l
 
-# Resize pane up
-# Keybind: ALT+k
+# Zoom pane (toggle fullscreen)
+# Keybind: Ctrl+Space z
 
-# Resize pane right
-# Keybind: ALT+l
+# Kill pane (with confirm)
+# Keybind: Ctrl+Space q
 
-# Zoom pane (toggle fullscreen for current pane)
-# Keybind: LEADER z  (CTRL+SHIFT+Space, then z)
+# Kill window (with confirm)
+# Keybind: Ctrl+Space x
 
-# Collapse current pane to 1 row/col (focus moves to neighbor)
-# Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
-
-# Restore collapsed pane (navigate back to it first, then press)
-# Keybind: LEADER a  (CTRL+SHIFT+Space, then a)
-
-
-% zellij, multiplexer
-
-# Start Zellij (runs inside WezTerm)
-zellij
-
-# Attach to existing session
-zellij attach <session>
-
-# List sessions
-zellij list-sessions
-
-# Detach from session
-# Keybind: Ctrl+\ then g, then d
-
-# Navigate panes (mirrors Helix Ctrl+w h/j/k/l)
-# Keybind: Ctrl+\ then h/j/k/l
-
-# New vertical split / horizontal split
-# Keybind: Ctrl+\ then v (vsplit) or s (hsplit)
-
-# Close focused pane
-# Keybind: Ctrl+\ then q
-
-# Zoom pane (fullscreen toggle)
-# Keybind: Ctrl+\ then z
-
-# Toggle floating panes (show/hide)
-# Keybind: Ctrl+\ then f
-
-# New floating pane
-# Keybind: Ctrl+\ then F
-
-# New tab / close tab
-# Keybind: Ctrl+\ then n / x
-
-# Go to tab by number
-# Keybind: Ctrl+\ then 1-9
-
-# Enter resize mode (h/j/k/l to resize, Esc to exit)
-# Keybind: Ctrl+\ then R
+# Floating shell popup
+# Keybind: Ctrl+Space F
 
 # Session picker
-# Keybind: Ctrl+\ then g
+# Keybind: Ctrl+Space p
+
+# Session tree chooser
+# Keybind: Ctrl+Space W
+
+# Detach session
+# Keybind: Ctrl+Space d
+
+# lazygit popup
+# Keybind: Ctrl+Space g
+
+# pgcli popup
+# Keybind: Ctrl+Space Q
+
+# AI commit popup
+# Keybind: Ctrl+Space G
+
+# Move pane mode (swap with h/j/k/l, Esc to exit)
+# Keybind: Ctrl+Space M
+
+# Mark pane (for join operations)
+# Keybind: Ctrl+Space m
+
+# Show keybinding help
+# Keybind: Ctrl+Space ?
 
 % todos, notes
 
@@ -1028,3 +988,106 @@ massren $(fd -e <ext>)
 
 # Bulk rename all files in current dir
 massren *
+
+% git, forgit
+
+# Interactive stage (fzf hunk selector)   [ga]
+ga
+
+# Interactive diff viewer   [gd]
+gd
+
+# Interactive log browser   [glo]
+glo
+
+# Checkout branch interactively   [gcb]
+gcb
+
+# Checkout file interactively   [gcf]
+gcf
+
+# Checkout commit interactively   [gco]
+gco
+
+# Switch branch interactively   [gsw]
+gsw
+
+# Delete branch interactively   [gbd]
+gbd
+
+# Interactive stash viewer   [gss]
+gss
+
+# Cherry-pick interactively   [gcp]
+gcp
+
+# Interactive rebase   [grb]
+grb
+
+# Blame interactively   [gbl]
+gbl
+
+# Interactive fixup   [gfu]
+gfu
+
+# Clean untracked files interactively   [gclean]
+gclean
+
+# Restore file interactively   [grl]
+grl
+
+% kafka, kcat
+
+# List topics on broker
+kcat -L -b <host:port>
+
+# Consume topic from beginning
+kcat -C -b <host:port> -t <topic> -o beginning
+
+# Consume latest N messages
+kcat -C -b <host:port> -t <topic> -o -<n> -e
+
+# Produce message from stdin
+echo '{"key":"value"}' | kcat -P -b <host:port> -t <topic>
+
+# Consume with key display
+kcat -C -b <host:port> -t <topic> -f '%k: %s\n'
+
+# SASL/PLAIN auth (e.g. Confluent Cloud)
+kcat -C -b <host:port> -t <topic> -X security.protocol=SASL_SSL -X sasl.mechanism=PLAIN -X sasl.username=<key> -X sasl.password=<secret>
+
+% kafka, kaskade
+
+# Browse topics interactively
+kaskade <host:port>
+
+% shell, fzf
+
+# Fuzzy kill process
+fkill
+
+# Fuzzy cd into directory
+fcd
+
+# Fuzzy open file in Helix
+fhx
+
+# Fuzzy view git log entry (show commit)
+fgl
+
+# Fuzzy switch git branch
+fbr
+
+# Fuzzy stage files (git add)
+fga
+
+% mise, tasks
+
+# Back up AI setup files (AGENTS.md, CLAUDE.md, .claude/, .github/)
+mise run ai-lock
+
+# Restore AI setup files from backup into current working directory
+mise run ai-apply
+
+# Remove backup and restore current branch files (after PR merge)
+mise run ai-unlock
