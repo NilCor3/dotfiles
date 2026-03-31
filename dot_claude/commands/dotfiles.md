@@ -22,10 +22,10 @@ Source repo: `github.com:NilCor3/dotfiles` (at `~/.local/share/chezmoi/`)
 - **Avoid adding new tool dependencies** without asking — mise manages runtimes, and adding a tool has real cost
 - **New tool config belongs in chezmoi** — if you configure a new tool, `chezmoi add` its config file
 - **When you teach the user a useful command**, add it as a navi cheat to `~/.local/share/navi/cheats/personal.cheat` and `chezmoi re-add` it. Cheats are grouped by `% topic, subtopic` headers; each entry is a `# Description` comment followed by the command on the next line. Use `<placeholder>` for variable parts.
-- **Scripts live in `~/.config/helix/scripts/`** (for editor integration) or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
+- **Scripts live in `~/.config/helix/scripts/`** (for Helix integration), `~/.config/nvim/bin/` (for nvim integration), or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
-- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix over VS Code). WezTerm is the GPU terminal emulator; tmux handles all pane/window/session management — use `tmux display-popup` or `tmux split-window` in scripts rather than WezTerm Lua APIs.
-- **Merge conflicts** — standard git 3-way merge with `zdiff3` conflict style. Resolve with lazygit (`e` on conflicted file → Helix for manual edits). Do not suggest separate merge driver tools.
+- **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix or nvim over VS Code). WezTerm is the GPU terminal emulator; tmux handles all pane/window/session management — use `tmux display-popup` or `tmux split-window` in scripts rather than WezTerm Lua APIs.
+- **Merge conflicts** — standard git 3-way merge with `zdiff3` conflict style. Resolve with lazygit (`e` on conflicted file → editor for manual edits). Do not suggest separate merge driver tools.
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
 
 ---
@@ -59,7 +59,7 @@ chezmoi encrypt ~/.config/something/secret > ~/.local/share/chezmoi/private_dot_
 Key configs tracked in chezmoi:
 - Shell: `.zshrc`, `.zshenv`, `.zprofile`, `.zsh_plugins.txt`, `.p10k.zsh`
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
-- Editor: `.config/helix/` (config, languages, scripts)
+- Editors: `.config/helix/` (config, languages, scripts) and `.config/nvim/` (lazy.nvim config, plugins, bin scripts)
 - Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
@@ -97,6 +97,80 @@ Shell functions (defined in `.zshrc`, use `$TODOS_DIR`):
 Helix keybind `Alt+t` (normal + insert mode): inserts `- [ ] ` on new line below cursor in `.md` files only. Script: `~/.config/helix/scripts/hx-todo-insert.sh`.
 
 tmux `notes` layout: 2-window session. `todos` window = Helix + tl pane + shell. `tl` sends `:open file:line` to `notes:todos.1` (helix pane).
+
+---
+
+## Neovim setup
+
+Installed via `brew install neovim` (v0.12.0). Config at `~/.config/nvim/`, tracked in chezmoi.
+
+**Plugin manager:** lazy.nvim with `lazy-lock.json` for reproducible installs. Restore with `nvim --headless "+Lazy restore" +qa`.
+
+**Philosophy:** Helix-lean feel. No Mason, no DAP UI, no neotest. LSP via native `vim.lsp.config` (nvim 0.12 API). Scripts are local to nvim config, not shared with Helix.
+
+### Key plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| `snacks.nvim` | Picker (files, grep, LSP, git), dashboard, notifier, indent guides |
+| `blink.cmp` | Completion (Lua implementation, no Rust binary) |
+| `copilot.lua` | Ghost text (`<M-a>` accept, `<C-a>` trigger popup) |
+| `CopilotChat.nvim` | AI chat (`<leader>aa`) |
+| `flash.nvim` | Jump with `s`, treesitter select with `S` |
+| `oil.nvim` | File explorer with `-` |
+| `diagflow.nvim` | Diagnostics at top-right (virtual_text disabled) |
+| `mini.nvim` | textobjects, surround (`ys`/`ds`/`cs`), statusline, icons, comment |
+| `gitsigns.nvim` | Hunk signs + nav (`]h`/`[h`), stage/reset/preview |
+| `conform.nvim` | Format-on-save: stylua, rustfmt, prettier |
+| `nvim-lint` | golangcilint on save (Go only) |
+| `nvim-jdtls` | Java LSP via `ftplugin/java.lua` |
+| `zen-mode.nvim` | `<leader>uz` |
+
+### LSP — native vim.lsp.config (no Mason)
+
+All servers installed via mise shims or brew. Config in `lua/plugins/lspconfig.lua`.
+
+| Server | Language | Source |
+|--------|----------|--------|
+| `gopls` | Go | mise |
+| `rust_analyzer` | Rust | rustup (`~/.cargo/bin`) |
+| `lua_ls` | Lua | brew |
+| `vtsls` | TypeScript/JS | mise npm |
+| `eslint` | TypeScript/JS | mise npm |
+| `cssls`, `cssmodules_ls` | CSS | mise npm |
+| `marksman` | Markdown | mise |
+| `sqlls` | SQL | mise npm |
+
+Java (jdtls) is separate — loaded via `ftplugin/java.lua`, JARs at `~/.local/share/nvim-java/` (installed by `run_once_setup-java-lsp.sh`).
+
+### Key keymaps (leader = `<Space>`)
+
+| Key | Action |
+|-----|--------|
+| `<leader><space>` | Smart file picker |
+| `<leader>/` | Grep |
+| `<leader>ff/fg/fr` | Find files / git files / recent |
+| `<leader>fd/fD` | Workspace / buffer diagnostics |
+| `<leader>fk` | Keymaps |
+| `<leader>fs/fS` | Document / workspace symbols |
+| `<leader>gd/gr/gI/gy` | LSP: definition / references / impl / type |
+| `<leader>ca/cr` | Code action / rename |
+| `<leader>gB` | Git blame line (Snacks popup) |
+| `<leader>gl` | Git log for current file |
+| `]h` / `[h` | Next / prev hunk |
+| `<leader>ghs/ghr/ghp` | Stage / reset / preview hunk |
+| `<leader>tr` | Run build/run in tmux pane (tmux-runner.sh) |
+| `<leader>ts/tf/tF/ta` | Test: cursor / func / file / all (nvim-test.sh) |
+| `<leader>gg` | Lazygit in tmux popup |
+| `<leader>fy` | Yazi in tmux popup |
+| `s` / `S` | Flash jump / Flash treesitter select |
+| `-` | Oil (parent dir) |
+| `<leader>aa` | CopilotChat toggle |
+
+### Scripts (local to nvim config)
+
+- `~/.config/nvim/bin/nvim-test.sh` — test runner for Go/Rust/Java/TS; uses `hx-gotest` binary for Go AST patterns
+- `~/.config/nvim/bin/tmux-runner.sh` — sends build/run commands to tmux pane `.1` based on filetype
 
 ---
 
