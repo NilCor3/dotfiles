@@ -64,6 +64,21 @@ yazi = "latest"
 "go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "latest"
 "go:github.com/mfridman/tparse" = "latest"
 
+# LSP servers (not covered by brew)
+'npm:vscode-langservers-extracted' = 'latest'   # vscode-eslint-ls, vscode-css-ls, vscode-json-ls, vscode-html-ls
+'npm:cssmodules-language-server' = 'latest'     # CSS Modules LSP
+'npm:sql-language-server' = 'latest'            # SQL LSP (sqlls)
+'npm:bash-language-server' = 'latest'           # Bash/shell LSP
+'npm:dockerfile-language-server-nodejs' = 'latest'  # Dockerfile LSP
+'npm:intelephense' = 'latest'                   # PHP LSP
+
+# Formatters
+'npm:@fsouza/prettierd' = 'latest'              # Prettier daemon (replaces cold-start prettier)
+'npm:sql-formatter' = 'latest'                  # SQL formatter
+
+# Linters
+'npm:markdownlint-cli2' = 'latest'              # Markdown linter
+
 
 [env]
 _.path = ["~/hx/builds/current/bin"]
