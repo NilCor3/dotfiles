@@ -67,7 +67,7 @@ Key configs tracked in chezmoi:
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Navi cheats: `.local/share/navi/cheats/personal.cheat`
-- GitHub Copilot CLI: `.copilot/config.json`, `.copilot/mcp-config.json`, `.copilot/agents/`
+- GitHub Copilot CLI: `.copilot/config.json`, `.copilot/agents/`
 - Legacy (not actively used): `.config/ghostty/`, `.config/zellij/`
 
 ## What to NEVER add
@@ -79,8 +79,24 @@ Key configs tracked in chezmoi:
 - `~/.netrc`, `~/.env.secrets` — credentials
 - `~/.local/bin/` — compiled binaries (rebuild from source)
 - Cache/runtime dirs: `~/.cache/`, `~/.local/share/` (most), `~/.zsh_history`, `.DS_Store`
+- Any file with **hardcoded credentials** — API keys, tokens, passwords, connection strings with user:pass
 
----
+## ⚠️ Secret hygiene — mandatory before every commit
+
+**Scan before you commit.** When adding or modifying any config file, check for secrets first:
+
+```sh
+# Check for common secret patterns
+grep -rni 'api.key\s*[:=]\|api.secret\s*[:=]\|token\s*[:=]\|password\s*[:=]\|passwd\s*[:=]' <file>
+# Check for credentials embedded in URLs
+grep -rn '://[^@\s]\+:[^@\s]\+@' <file>
+```
+
+**Decision tree for secrets:**
+1. **Whole file is secret** → `chezmoi encrypt <file>` → commit the `.age` file
+2. **One field in a config is secret** → use env var reference (`api-key-env: MY_VAR`) or chezmoi template (`{{ env "MY_VAR" }}`) — never the value itself
+3. **Machine-local / test credentials** → do NOT track in chezmoi at all; use `chezmoi forget` if already added
+4. **Accidentally committed** → purge with `git filter-repo --path <file> --invert-paths --force`, re-add remote, force-push. A delete commit is NOT enough — it leaves the secret in history.
 
 ## Todo system
 
