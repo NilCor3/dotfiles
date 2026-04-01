@@ -1,65 +1,40 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main', -- CRUCIAL for Neovim 0.12.0
     build = ':TSUpdate',
-    main = 'nvim-treesitter',
+    config = function(_, opts)
+      require('nvim-treesitter').setup(opts)
+
+      -- Recommended for 0.12.0: Let Neovim's core handle the high-speed
+      -- highlighting trigger instead of the old plugin-based one.
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end,
     opts = {
       ensure_installed = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'comment',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-        'regex',
-        'go',
-        'gowork',
-        'css',
-        'csv',
-        'dockerfile',
-        'editorconfig',
-        'gomod',
-        'gosum',
-        'gotmpl',
-        'graphql',
-        'http',
-        'javascript',
-        'typescript',
-        'json',
-        'jsonnet',
-        'php',
-        'sql',
-        'yaml',
-        'tsx',
-        'java',
-        'rust',
-        'xml',
-        'toml',
-        'scss',
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
+        'query', 'vim', 'vimdoc', 'regex', 'go', 'gowork', 'css', 'csv',
+        'dockerfile', 'editorconfig', 'gomod', 'gosum', 'gotmpl', 'graphql',
+        'http', 'javascript', 'typescript', 'json', 'php', 'sql', 'yaml',
+        'tsx', 'java', 'rust', 'xml', 'toml',
       },
       auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
+      highlight = { enable = true },
+      indent = { enable = true },
     },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
+
+  -- Helix-style text objects (maf, mif, etc.)
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'main', -- Must match the parent branch
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  },
+
   -- Auto-close and auto-rename paired JSX/HTML tags
   {
     'windwp/nvim-ts-autotag',
@@ -67,3 +42,4 @@ return {
     opts = {},
   },
 }
+

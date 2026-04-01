@@ -5,9 +5,6 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
     bigfile = { enabled = true },
     dashboard = { enabled = true },
     explorer = { enabled = true },
@@ -18,7 +15,6 @@ return {
       layout = {
         fullscreen = true,
         cycle = true,
-        --- Use the default layout or vertical if the window is too narrow
         preset = function()
           return vim.o.columns >= 220 and 'default' or 'vertical'
         end,
@@ -26,16 +22,6 @@ return {
       sources = {
         explorer = { enabled = true, layout = { fullscreen = false } },
       },
-      -- layouts = {
-      --   vertical = {
-      --     layout = {
-      --       box = 'vertical',
-      --       { win = 'input', border = 'rounded', height = 1 },
-      --       { win = 'list', border = 'rounded' },
-      --       { win = 'preview', border = 'rounded' },
-      --     },
-      --   },
-      -- },
     },
     notifier = { enabled = true },
     quickfile = { enabled = true },
@@ -102,16 +88,12 @@ return {
     { '<leader>fs', function() Snacks.picker.lsp_symbols() end, desc = 'Document Symbols', },
     { '<leader>fS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'Workspace Symbols', },
     -- Other
-    -- { '<leader>z', function() Snacks.zen() end, desc = 'Toggle Zen Mode', },
-    -- { '<leader>Z', function() Snacks.zen.zoom() end, desc = 'Toggle Zoom', },
     { '<leader>.', function() Snacks.scratch() end, desc = 'Toggle Scratch Buffer', },
     { '<leader>S', function() Snacks.scratch.select() end, desc = 'Select Scratch Buffer', },
     { '<leader>n', function() Snacks.notifier.show_history() end, desc = 'Notification History', },
     { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Buffer', },
     { '<leader>cR', function() Snacks.rename.rename_file() end, desc = 'Rename File', },
     { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications', },
-    -- { '<c-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal', },
-    -- { '<c-_>', function() Snacks.terminal() end, desc = 'which_key_ignore', },
     { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' }, },
     { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' }, },
   },

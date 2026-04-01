@@ -7,7 +7,7 @@ return {
     -- of queries. note: it also has an alternative method of textobject creation,
     -- but we will use mini.ai's instead.
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
     },
     version = false,
     config = function()
@@ -25,12 +25,8 @@ return {
           u = ai.gen_spec.function_call(), -- u for "Usage" (function CALL)
           U = ai.gen_spec.function_call { name_pattern = '[%w_]' }, -- same as 'u' but without dot in function name
 
-          -- These seem to be too spotty / unsupported in language queries to be
-          -- worthy of replacing the regex-based defaults in mini.ai
-          -- ['='] = ai.gen_spec.treesitter({
-          --   a = '@assignment.outer', -- these don't account for dicts/attributes (eg lua tables)
-          --   i = '@assignment.inner',
-          -- }),
+          -- These are too spotty / unsupported across language queries to reliably replace the regex-based defaults
+          -- ['='] = ai.gen_spec.treesitter({ a = '@assignment.outer', i = '@assignment.inner' }),
           -- a = ai.gen_spec.treesitter({ a = '@parameter.outer', i = '@parameter.inner' }),
 
           c = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' }, -- class
@@ -64,15 +60,14 @@ return {
               '%f[^%s%p][%a%d]+%f[^%a%d]', -- after whitespace/punctuation, 1+ letters, to end of letters
               '^[%a%d]+%f[^%a%d]', -- after beginning of line, 1+ letters, to end of letters
             },
-            -- { -- original version from mini.ai help file:
-            --   '%u[%l%d]+%f[^%l%d]',
-            --   '%f[%S][%l%d]+%f[^%l%d]',
-            --   '%f[%P][%l%d]+%f[^%l%d]',
-            --   '^[%l%d]+%f[^%l%d]',
-            -- },
+            -- original version from mini.ai help file:
+            -- '%u[%l%d]+%f[^%l%d]',
+            -- '%f[%S][%l%d]+%f[^%l%d]',
+            -- '%f[%P][%l%d]+%f[^%l%d]',
+            -- '^[%l%d]+%f[^%l%d]',
             '^().*()$',
           },
-          -- i = LazyVim.mini.ai_indent, -- indent -- requires mini.indent
+          -- i = LazyVim.mini.ai_indent, -- requires mini.indent
           g = function() -- Whole buffer
             local from = { line = 1, col = 1 }
             local to = {
@@ -141,18 +136,8 @@ return {
       require('mini.operators').setup()
       require('mini.statusline').setup { use_icons = true }
       require('mini.icons').setup {
-        default = {
-          -- Override default glyph for "file" category (reuse highlight group)
-          --   file = { glyph = '󰈤' },
-        },
-        extension = {
-          -- Override highlight group (not necessary from 'mini.icons')
-          -- lua = { hl = 'Special' },
-          --
-          -- Add icons for custom extension. This will also be used in
-          -- 'file' category for input like 'file.my.ext'.
-          -- ['my.ext'] = { glyph = '󰻲', hl = 'MiniIconsRed' },
-        },
+        default = {},
+        extension = {},
         lsp = {
           ['snippets'] = { glyph = '', hl = 'MiniIconsRed' },
           ['copilot'] = { glyph = '', hl = 'MiniIconsAzure' },
