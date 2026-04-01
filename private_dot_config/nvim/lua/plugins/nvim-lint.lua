@@ -10,7 +10,7 @@ return {
       sh = { 'shellcheck' },
       bash = { 'shellcheck' },
       dockerfile = { 'hadolint' },
-      markdown = { 'markdownlint_cli2' },
+      markdown = { 'markdownlint-cli2' },
     }
 
     local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
