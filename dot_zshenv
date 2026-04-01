@@ -1,1 +1,6 @@
 . "$HOME/.cargo/env"
+
+# mise shims must be in PATH for all processes (not just interactive shells).
+# mise activate (in .zshrc) also adds shims, but non-interactive subprocesses
+# (LSP servers, build tools spawned by nvim/tmux) only inherit .zshenv.
+export PATH="$HOME/.local/share/mise/shims:$PATH"
