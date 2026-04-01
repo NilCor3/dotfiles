@@ -24,6 +24,7 @@ Source repo: `github.com:NilCor3/dotfiles` (at `~/.local/share/chezmoi/`)
 - **When you teach the user a useful command**, add it as a navi cheat to `~/.local/share/navi/cheats/personal.cheat` and `chezmoi re-add` it. Cheats are grouped by `% topic, subtopic` headers; each entry is a `# Description` comment followed by the command on the next line. Use `<placeholder>` for variable parts.
 - **Scripts live in `~/.config/helix/scripts/`** (for Helix integration), `~/.config/nvim/bin/` (for nvim integration), or `~/hx/` (for general helpers), compiled binaries in `~/.local/bin/`
 - **Don't reach for a framework** when a shell script will do — composability over abstraction
+- **AI-assisted** — these dotfiles are maintained with the help of GitHub Copilot. Scripts and configs may have been authored or refined through AI-assisted sessions. Prefer the established patterns you see in the repo over guessing new conventions.
 - **Terminal > GUI** — if a terminal-native option exists for a task, prefer it (lazygit over a Git GUI, helix or nvim over VS Code). WezTerm is the GPU terminal emulator; tmux handles all pane/window/session management — use `tmux display-popup` or `tmux split-window` in scripts rather than WezTerm Lua APIs.
 - **Merge conflicts** — standard git 3-way merge with `zdiff3` conflict style. Resolve with lazygit (`e` on conflicted file → editor for manual edits). Do not suggest separate merge driver tools.
 - **When adding secrets**, encrypt with age (`chezmoi encrypt`) — never commit plaintext credentials
@@ -198,7 +199,7 @@ Uses `nvim-treesitter` **main** branch (required for nvim 0.12). New API:
 
 ### Scripts (local to nvim config)
 
-- `~/.config/nvim/bin/nvim-test.sh` — test runner for Go/Rust/Java/TS; uses `hx-gotest` binary for Go AST patterns
+- `~/.config/nvim/bin/nvim-test.py` — Python test runner; language plugins in `nvim-test.d/` (vitest, playwright, go, rust, java, php); finds/creates a tmux pane titled `tests`; adds new languages by dropping a `<name>Runner` class in `nvim-test.d/`; test suite: `pytest ~/.config/nvim/bin/nvim-test-tests/`
 - `~/.config/nvim/bin/tmux-runner.sh` — sends build/run commands to tmux pane `.1` based on filetype
 
 ---

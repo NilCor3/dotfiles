@@ -7,6 +7,9 @@ This repo contains my personal dotfiles and machine setup — managed with [chez
 secrets encrypted with [age](https://age-encryption.org), and built around the philosophy that
 the best tools are ones you can configure, compose, and own.
 
+> [!NOTE]
+> These dotfiles are maintained with the help of [GitHub Copilot](https://github.com/features/copilot) as an AI pair programmer. Scripts, configs, and documentation in this repo may have been authored or refined through AI-assisted sessions.
+
 ---
 
 ## Table of Contents
@@ -485,7 +488,7 @@ avoid TypeError crashes in the vscode-eslint-language-server JS code (undefined 
 
 #### Scripts
 
-- `~/.config/nvim/bin/nvim-test.sh` — sends test commands to tmux pane; uses `hx-gotest` for Go, `cargo nextest` for Rust
+- `~/.config/nvim/bin/nvim-test.py` — Python test runner; plugin-per-language in `nvim-test.d/` (vitest, playwright, go, rust, java, php); auto-discovers `tests` tmux pane or creates one; pytest test suite in `nvim-test-tests/`
 - `~/.config/nvim/bin/tmux-runner.sh` — build/run commands to tmux pane `.1` by filetype
 
 ---

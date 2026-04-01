@@ -41,32 +41,18 @@ vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, { desc = 'Rename' })
 local function run_test(mode)
   local file = vim.fn.expand('%:p')
   local line = vim.fn.line('.')
-  local ft = vim.bo.filetype
 
-  if mode == 'all' then
-    local cmd
-    if ft == 'go' then
-      cmd = 'go test ./...'
-    elseif ft == 'rust' then
-      cmd = 'cargo nextest run'
-    elseif ft == 'java' then
-      cmd = 'mvn test'
-    elseif ft == 'javascript' or ft == 'typescript' or ft == 'typescriptreact' then
-      cmd = 'npx vitest run'
-    else
-      cmd = 'echo "No test runner for ' .. ft .. '"'
-    end
-    vim.fn.system('tmux send-keys -t .1 ' .. vim.fn.shellescape(cmd) .. ' Enter')
-    return
-  end
-
-  vim.fn.system(string.format(
+  local cmd = string.format(
     '%s %s %d %s',
-    vim.fn.expand('~/.config/nvim/bin/nvim-test.sh'),
+    vim.fn.expand('~/.config/nvim/bin/nvim-test.py'),
     vim.fn.shellescape(file),
     line,
     mode
-  ))
+  )
+  local out = vim.fn.system(cmd)
+  if vim.v.shell_error ~= 0 then
+    vim.notify('nvim-test failed (exit ' .. vim.v.shell_error .. '):\n' .. cmd .. '\n' .. out, vim.log.levels.ERROR)
+  end
 end
 
 vim.keymap.set('n', '<leader>ts', function() run_test('cursor') end, { desc = 'Test: nearest subtest' })

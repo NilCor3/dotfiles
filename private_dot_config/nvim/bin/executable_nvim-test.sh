@@ -1,15 +1,38 @@
 #!/usr/bin/env bash
 # nvim-test.sh <file> <line> <mode>
 # mode: cursor | func | file | all
-# Sends the appropriate test command to tmux pane .1
+# Sends the appropriate test command to the 'tests' tmux pane (creates it if needed)
 set -euo pipefail
 
 FILE="${1:-}"
 LINE="${2:-1}"
 MODE="${3:-all}"
-PANE="${TMUX_PANE%.*}.1"
+
+# Find or create a pane titled 'tests' in the current window
+WINDOW=$(tmux display-message -p '#{window_id}')
+PANE=$(tmux list-panes -t "$WINDOW" -F '#{pane_title} #{pane_id}' \
+  | awk '$1=="tests"{print $2; exit}')
+if [[ -z "$PANE" ]]; then
+  PANE=$(tmux split-window -h -P -F '#{pane_id}' -c "$(pwd)")
+  tmux select-pane -t "$PANE" -T "tests"
+  tmux select-pane -t "$TMUX_PANE"  # return focus to nvim
+fi
 
 send() { tmux send-keys -t "$PANE" "$1" Enter; }
+relpath() { python3 -c "import os,sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))" "$1" "$2"; }
+
+# Extract nearest it/test name at or above LINE using Python (reliable on macOS)
+js_test_name() {
+  python3 - "$1" "$2" <<'PYEOF'
+import re, sys
+lines = open(sys.argv[1]).read().splitlines()[:int(sys.argv[2])]
+for line in reversed(lines):
+    m = re.search(r'''(?:it|test)\s*\(\s*['"`]([^'"`]+)''', line)
+    if m:
+        print(m.group(1))
+        break
+PYEOF
+}
 
 ext="${FILE##*.}"
 
@@ -19,7 +42,7 @@ case "$ext" in
       all)
         send "go test ./..." ;;
       file)
-        PKG="./$(realpath --relative-to="$(pwd)" "$(dirname "$FILE")")"
+        PKG="./$(relpath "$(dirname "$FILE")" "$(pwd)")"
         send "go test -count=1 -v $PKG" ;;
       cursor|func)
         PATTERN="$(~/.local/bin/hx-gotest "$FILE" "$LINE" 2>/dev/null || true)"
@@ -45,12 +68,25 @@ case "$ext" in
         all)
           send "npx playwright test" ;;
         file)
-          send "npx playwright test $(realpath --relative-to="$(pwd)" "$FILE")" ;;
+          send "npx playwright test $(relpath "$FILE" "$(pwd)")" ;;
         cursor|func)
-          send "npx playwright test $(realpath --relative-to="$(pwd)" "$FILE"):$LINE" ;;
+          send "npx playwright test $(relpath "$FILE" "$(pwd)"):$LINE" ;;
       esac
     else
-      send "npx vitest run"
+      REL="$(relpath "$FILE" "$(pwd)")"
+      case "$MODE" in
+        all)
+          send "npx vitest run" ;;
+        file)
+          send "npx vitest run $REL" ;;
+        cursor|func)
+          NAME=$(js_test_name "$FILE" "$LINE")
+          if [[ -n "$NAME" ]]; then
+            send "npx vitest run $REL -t '$NAME'"
+          else
+            send "npx vitest run $REL"
+          fi ;;
+      esac
     fi ;;
   php)
     if [[ -f "vendor/bin/phpunit" ]]; then
