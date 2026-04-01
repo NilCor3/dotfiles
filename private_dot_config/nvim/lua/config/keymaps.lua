@@ -97,6 +97,20 @@ vim.keymap.set('n', '<leader>uw', function()
   vim.o.wrap = not vim.o.wrap
 end, { desc = 'Toggle wrap' })
 
+vim.keymap.set('n', '<leader>ul', function()
+  if not vim.o.list then
+    -- off → on (minimal: tabs + trailing)
+    vim.o.listchars = 'tab:» ,trail:·,nbsp:␣'
+    vim.o.list = true
+  elseif vim.o.listchars:find('space:') then
+    -- full → off
+    vim.o.list = false
+  else
+    -- minimal → full (show every space as ·)
+    vim.o.listchars = 'tab:»·,space:·,trail:◀,nbsp:␣,eol:↵'
+  end
+end, { desc = 'Toggle whitespace display' })
+
 vim.keymap.set('n', '<leader>ud', function()
   local vt = vim.diagnostic.config().virtual_text
   vim.diagnostic.config({ virtual_text = not vt })
