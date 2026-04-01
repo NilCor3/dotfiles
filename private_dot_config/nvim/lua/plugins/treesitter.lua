@@ -3,29 +3,34 @@ return {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main', -- CRUCIAL for Neovim 0.12.0
     build = ':TSUpdate',
-    config = function(_, opts)
-      require('nvim-treesitter').setup(opts)
+    config = function()
+      -- New main-branch API: setup() only accepts install_dir.
+      -- ensure_installed / auto_install / highlight / indent are old API (master branch)
+      -- and are silently ignored here — we manage everything explicitly below.
+      require('nvim-treesitter').setup()
 
-      -- Recommended for 0.12.0: Let Neovim's core handle the high-speed
-      -- highlighting trigger instead of the old plugin-based one.
-      vim.api.nvim_create_autocmd('FileType', {
-        callback = function()
-          pcall(vim.treesitter.start)
-        end,
-      })
-    end,
-    opts = {
-      ensure_installed = {
+      local parsers = {
         'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
         'query', 'vim', 'vimdoc', 'regex', 'go', 'gowork', 'css', 'csv',
         'dockerfile', 'editorconfig', 'gomod', 'gosum', 'gotmpl', 'graphql',
         'http', 'javascript', 'typescript', 'json', 'php', 'sql', 'yaml',
         'tsx', 'java', 'rust', 'xml', 'toml',
-      },
-      auto_install = true,
-      highlight = { enable = true },
-      indent = { enable = true },
-    },
+      }
+
+      -- Install any missing parsers asynchronously (idempotent: skips already-installed).
+      vim.defer_fn(function()
+        require('nvim-treesitter').install(parsers)
+      end, 0)
+
+      -- Enable nvim's native treesitter highlighting per filetype.
+      -- Scoped to known parsers so start() doesn't error on unsupported filetypes.
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = parsers,
+        callback = function()
+          vim.treesitter.start()
+        end,
+      })
+    end,
   },
 
   -- Helix-style text objects (maf, mif, etc.)
