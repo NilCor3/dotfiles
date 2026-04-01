@@ -22,12 +22,16 @@ return {
         require('nvim-treesitter').install(parsers)
       end, 0)
 
-      -- Enable nvim's native treesitter highlighting per filetype.
-      -- Scoped to known parsers so start() doesn't error on unsupported filetypes.
+      -- Enable nvim's native treesitter highlighting and AST-aware indentation
+      -- per filetype. Scoped to known parsers so start() doesn't error on
+      -- unsupported filetypes.
       vim.api.nvim_create_autocmd('FileType', {
         pattern = parsers,
         callback = function()
           vim.treesitter.start()
+          -- indentexpr: treesitter determines correct indent level for new lines
+          -- (works alongside vim-sleuth which handles tabs/spaces/width detection)
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
       })
     end,
