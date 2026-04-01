@@ -121,9 +121,11 @@ Installed via `brew install neovim` (v0.12.0). Config at `~/.config/nvim/`, trac
 | `diagflow.nvim` | Diagnostics at top-right (virtual_text disabled) |
 | `mini.nvim` | textobjects, surround (`ys`/`ds`/`cs`), statusline, icons, comment |
 | `gitsigns.nvim` | Hunk signs + nav (`]h`/`[h`), stage/reset/preview |
-| `conform.nvim` | Format-on-save: stylua, rustfmt, prettier |
-| `nvim-lint` | golangcilint on save (Go only) |
+| `conform.nvim` | Async format-on-save: stylua, rustfmt, prettierd, shfmt, sql-formatter, php-cs-fixer |
+| `nvim-lint` | golangcilint (Go), shellcheck (shell), hadolint (Docker), markdownlint (md) |
 | `nvim-jdtls` | Java LSP via `ftplugin/java.lua` |
+| `nvim-ts-autotag` | Auto-close and auto-rename paired JSX/HTML tags |
+| `vim-sleuth` | Detects indent style (tabs/spaces/width) from file content |
 | `zen-mode.nvim` | `<leader>uz` |
 
 ### LSP — native vim.lsp.config (no Mason)
@@ -135,13 +137,35 @@ All servers installed via mise shims or brew. Config in `lua/plugins/lspconfig.l
 | `gopls` | Go | mise |
 | `rust_analyzer` | Rust | rustup (`~/.cargo/bin`) |
 | `lua_ls` | Lua | brew |
-| `vtsls` | TypeScript/JS | mise npm |
+| `vtsls` | TypeScript/JS/React | mise npm |
 | `eslint` | TypeScript/JS | mise npm |
-| `cssls`, `cssmodules_ls` | CSS | mise npm |
+| `cssls`, `cssmodules_ls` | CSS/CSS Modules | mise npm |
+| `jsonls` | JSON (with SchemaStore) | mise npm |
+| `bashls` | Shell | mise npm |
+| `dockerls` | Dockerfile | mise npm |
+| `intelephense` | PHP | mise npm |
 | `marksman` | Markdown | mise |
 | `sqlls` | SQL | mise npm |
 
 Java (jdtls) is separate — loaded via `ftplugin/java.lua`, JARs at `~/.local/share/nvim-java/` (installed by `run_once_setup-java-lsp.sh`).
+
+**eslint config note:** `settings.nodePath`, `settings.experimental`, and `settings.problems` must
+be explicitly provided (not absent) — the vscode-eslint-language-server accesses them with property
+lookups that throw TypeError if undefined (JS: `undefined !== null`).
+
+### Treesitter (branch: `main`)
+
+Uses `nvim-treesitter` **main** branch (required for nvim 0.12). New API:
+- `setup()` accepts only `install_dir` — no `ensure_installed`/`highlight`/`indent` opts
+- Parsers installed via `require('nvim-treesitter').install(list)` in `vim.defer_fn` (idempotent, async)
+- Highlighting: FileType autocmd scoped to the parsers list, calls `vim.treesitter.start()`
+- Indentation: same autocmd sets `vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"`
+- Requires `tree-sitter-cli` (brew) for grammar compilation
+
+**Three-layer indent system:**
+1. `vim-sleuth` — auto-detects tabs/spaces/width from file content
+2. editorconfig (nvim built-in) — `.editorconfig` takes priority over sleuth
+3. Treesitter `indentexpr` — AST-aware new-line indent (correct level inside if/for/JSX blocks)
 
 ### Key keymaps (leader = `<Space>`)
 
@@ -163,6 +187,11 @@ Java (jdtls) is separate — loaded via `ftplugin/java.lua`, JARs at `~/.local/s
 | `<leader>ts/tf/tF/ta` | Test: cursor / func / file / all (nvim-test.sh) |
 | `<leader>gg` | Lazygit in tmux popup |
 | `<leader>fy` | Yazi in tmux popup |
+| `<leader>uw` | Toggle line wrap |
+| `<leader>ul` | Toggle whitespace display (off → minimal → full with every space visible) |
+| `<leader>ud` | Toggle diagnostic virtual text |
+| `<leader>uc` | Toggle colorcolumn (80/120) |
+| `<leader>uG` | Toggle Copilot ghost text |
 | `s` / `S` | Flash jump / Flash treesitter select |
 | `-` | Oil (parent dir) |
 | `<leader>aa` | CopilotChat toggle |
