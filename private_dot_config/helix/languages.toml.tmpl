@@ -3,6 +3,22 @@ command = "postgres-language-server"
 args = ["lsp-proxy"]
 timeout = 10
 
+[language-server.vscode-json-language-server]
+command = "vscode-json-language-server"
+args = ["--stdio"]
+
+[language-server.bash-language-server]
+command = "bash-language-server"
+args = ["start"]
+
+[language-server.docker-langserver]
+command = "docker-langserver"
+args = ["--stdio"]
+
+[language-server.intelephense]
+command = "intelephense"
+args = ["--stdio"]
+
 [language-server.copilot]
 command = "copilot-language-server"
 args = ["--stdio"]
@@ -175,7 +191,29 @@ unit = "  "
 
 [[language]]
 name = "markdown"
-# Wrap lines at 80 chars and auto-fix on save via prettier
+# Wrap lines at 80 chars and auto-fix on save via prettierd
 text-width = 80
-formatter = { command = "prettier", args = ["--parser", "markdown", "--prose-wrap", "always", "--print-width", "80"] }
+formatter = { command = "prettierd", args = ["--parser", "markdown"] }
 auto-format = true
+
+[[language]]
+name = "json"
+language-servers = ["vscode-json-language-server"]
+formatter = { command = "prettierd", args = ["--parser", "json"] }
+auto-format = true
+
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server", { name = "copilot", only-features = ["inline-completion"] }]
+formatter = { command = "shfmt" }
+auto-format = true
+
+[[language]]
+name = "dockerfile"
+language-servers = ["docker-langserver", { name = "copilot", only-features = ["inline-completion"] }]
+
+[[language]]
+name = "php"
+language-servers = ["intelephense", { name = "copilot", only-features = ["inline-completion"] }]
+roots = ["composer.json", "composer.lock", ".git"]
+

@@ -39,6 +39,9 @@ return {
         'tsx',
         'java',
         'rust',
+        'xml',
+        'toml',
+        'scss',
       },
       auto_install = true,
       highlight = {
@@ -56,5 +59,11 @@ return {
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+  -- Auto-close and auto-rename paired JSX/HTML tags
+  {
+    'windwp/nvim-ts-autotag',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {},
   },
 }

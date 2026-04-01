@@ -38,7 +38,33 @@ case "$ext" in
   java)
     send "mvn test" ;;
   ts|tsx|js|jsx)
-    send "npx vitest run" ;;
+    # Detect playwright vs vitest by presence of playwright config
+    if [[ -f "$(git rev-parse --show-toplevel 2>/dev/null)/playwright.config.ts" ]] || \
+       [[ -f "$(git rev-parse --show-toplevel 2>/dev/null)/playwright.config.js" ]]; then
+      case "$MODE" in
+        all)
+          send "npx playwright test" ;;
+        file)
+          send "npx playwright test $(realpath --relative-to="$(pwd)" "$FILE")" ;;
+        cursor|func)
+          send "npx playwright test $(realpath --relative-to="$(pwd)" "$FILE"):$LINE" ;;
+      esac
+    else
+      send "npx vitest run"
+    fi ;;
+  php)
+    if [[ -f "vendor/bin/phpunit" ]]; then
+      case "$MODE" in
+        all)
+          send "vendor/bin/phpunit" ;;
+        file)
+          send "vendor/bin/phpunit $FILE" ;;
+        cursor|func)
+          send "vendor/bin/phpunit --filter $(grep -oP '(?<=function )(test\w+)' "$FILE" | awk "NR<=$LINE" | tail -1 || echo '') $FILE" ;;
+      esac
+    else
+      tmux display-message "nvim-test: phpunit not found (run: composer require --dev phpunit/phpunit)"
+    fi ;;
   *)
     tmux display-message "nvim-test: no runner for .$ext" ;;
 esac

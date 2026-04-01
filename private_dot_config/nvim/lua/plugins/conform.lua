@@ -1,7 +1,7 @@
 return {
   {
     'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
+    event = { 'BufWritePre', 'BufWritePost' },
     cmd = { 'ConformInfo' },
     keys = {
       {
@@ -15,34 +15,42 @@ return {
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable with a global or buffer-local variable
+      -- format_after_save is async (fires on BufWritePost) — never blocks Neovim.
+      -- prettierd keeps Node warm so first-format latency is ~50ms instead of ~500ms.
+      format_after_save = function(bufnr)
         if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
           return
         end
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
+          return { lsp_format = 'fallback' }
         end
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
         rust = { 'rustfmt' },
-        javascript = { 'prettier' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
+        go = { 'goimports' },
+        -- Web: prettierd (daemon) keeps Node warm for near-instant formatting
+        javascript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        json = { 'prettierd' },
+        jsonc = { 'prettierd' },
+        html = { 'prettierd' },
+        css = { 'prettierd' },
+        scss = { 'prettierd' },
+        markdown = { 'prettierd' },
+        -- Shell
+        sh = { 'shfmt' },
+        bash = { 'shfmt' },
+        zsh = { 'shfmt' },
+        -- SQL
+        sql = { 'sql_formatter' },
+        -- PHP
+        php = { 'php_cs_fixer' },
       },
     },
   },

@@ -18,7 +18,10 @@ return {
     name = 'lsp-native',
     dir = vim.fn.stdpath 'config',
     event = 'VimEnter',
-    dependencies = { 'saghen/blink.cmp' },
+    dependencies = {
+      'saghen/blink.cmp',
+      'b0o/schemastore.nvim',
+    },
     config = function()
       -- Global capabilities for all servers
       vim.lsp.config('*', {
@@ -59,6 +62,25 @@ return {
         cmd = { 'vtsls', '--stdio' },
         filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         root_markers = { 'tsconfig.json', 'package.json', '.git' },
+        settings = {
+          typescript = {
+            preferences = { preferTypeOnlyAutoImports = true },
+            updateImportsOnFileMove = { enabled = 'always' },
+            suggest = { completeFunctionCalls = true },
+          },
+          javascript = {
+            preferences = { preferTypeOnlyAutoImports = true },
+            updateImportsOnFileMove = { enabled = 'always' },
+            suggest = { completeFunctionCalls = true },
+          },
+          vtsls = {
+            autoUseWorkspaceTsdk = true,
+            enableMoveToFileCodeAction = true,
+            experimental = {
+              completion = { enableServerSideFuzzyMatch = true },
+            },
+          },
+        },
       })
 
       vim.lsp.config('eslint', {
@@ -92,7 +114,37 @@ return {
         root_markers = { '.sqllsrc.json', '.git' },
       })
 
-      vim.lsp.enable { 'gopls', 'rust_analyzer', 'vtsls', 'eslint', 'cssls', 'cssmodules_ls', 'marksman', 'sqlls', 'lua_ls' }
+      vim.lsp.config('jsonls', {
+        cmd = { 'vscode-json-language-server', '--stdio' },
+        filetypes = { 'json', 'jsonc' },
+        root_markers = { 'package.json', '.git' },
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas(),
+            validate = { enable = true },
+          },
+        },
+      })
+
+      vim.lsp.config('intelephense', {
+        cmd = { 'intelephense', '--stdio' },
+        filetypes = { 'php' },
+        root_markers = { 'composer.json', 'composer.lock', '.git' },
+      })
+
+      vim.lsp.config('bashls', {
+        cmd = { 'bash-language-server', 'start' },
+        filetypes = { 'sh', 'bash' },
+        root_markers = { '.git' },
+      })
+
+      vim.lsp.config('dockerls', {
+        cmd = { 'docker-langserver', '--stdio' },
+        filetypes = { 'dockerfile' },
+        root_markers = { 'Dockerfile', 'docker-compose.yml', 'docker-compose.yaml', '.git' },
+      })
+
+      vim.lsp.enable { 'gopls', 'rust_analyzer', 'vtsls', 'eslint', 'cssls', 'cssmodules_ls', 'marksman', 'sqlls', 'lua_ls', 'jsonls', 'intelephense', 'bashls', 'dockerls' }
 
       vim.diagnostic.config {
         severity_sort = true,
