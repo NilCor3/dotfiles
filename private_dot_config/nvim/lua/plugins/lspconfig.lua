@@ -87,7 +87,6 @@ return {
         cmd = { 'vscode-eslint-language-server', '--stdio' },
         filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         root_markers = { 'eslint.config.js', 'eslint.config.mjs', '.eslintrc.js', '.eslintrc.json', 'package.json', '.git' },
-        settings = { experimental = { useFlatConfig = true } },
       })
 
       vim.lsp.config('cssls', {
