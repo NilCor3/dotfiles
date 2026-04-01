@@ -88,11 +88,15 @@ return {
         filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         root_markers = { 'eslint.config.js', 'eslint.config.mjs', '.eslintrc.js', '.eslintrc.json', '.eslintrc.cjs', 'package.json', '.git' },
         settings = {
-          -- nodePath must be explicit null (not absent/undefined) so the LSP guard
-          -- `settings.nodePath !== null` correctly short-circuits. When undefined,
-          -- path.isAbsolute(undefined) throws TypeError -32603.
+          -- These fields must be explicitly provided (not absent/undefined) because
+          -- the LSP accesses them with property lookups that crash on undefined:
+          --   settings.nodePath !== null  → path.isAbsolute(undefined) TypeError
+          --   settings.experimental.useFlatConfig → TypeError on undefined
+          --   settings.problems.shortenToSingleLine → TypeError on undefined
           nodePath = vim.NIL,
-          -- auto-detect working directory from project root indicators
+          experimental = { useFlatConfig = false },
+          problems = { shortenToSingleLine = false },
+          -- Behaviour config
           workingDirectory = { mode = 'auto' },
           validate = 'on',
           run = 'onType',
