@@ -71,16 +71,20 @@ outer.bottom     = 6
     "cmd-ctrl-alt-k" = 'move up'
     "cmd-ctrl-alt-l" = 'move right'
 
-    # Switch workspace — Hyper + 1-9 (includes focus-monitor to reliably jump across monitors)
-    "cmd-ctrl-alt-shift-1" = ['focus-monitor P24h-2L (1)', 'workspace 1']
-    "cmd-ctrl-alt-shift-2" = ['focus-monitor P24h-2L (1)', 'workspace 2']
-    "cmd-ctrl-alt-shift-3" = ['focus-monitor P24h-2L (1)', 'workspace 3']
-    "cmd-ctrl-alt-shift-4" = ['focus-monitor P24h-2L (1)', 'workspace 4']
-    "cmd-ctrl-alt-shift-5" = ['focus-monitor P24h-2L (1)', 'workspace 5']
-    "cmd-ctrl-alt-shift-6" = ['focus-monitor P24h-2L (2)', 'workspace 6']
-    "cmd-ctrl-alt-shift-7" = ['focus-monitor P24h-2L (2)', 'workspace 7']
-    "cmd-ctrl-alt-shift-8" = ['focus-monitor P24h-2L (2)', 'workspace 8']
-    "cmd-ctrl-alt-shift-9" = ['focus-monitor Built-in Retina Display', 'workspace 9']
+    # Switch workspace — Hyper + 1-9
+    # focus-monitor uses single-token substring pattern (space separates multiple patterns)
+    # (1) → P24h-2L (1) = main dev monitor
+    # (2) → P24h-2L (2) = left browser monitor
+    # Retina → Built-in Retina Display = laptop
+    "cmd-ctrl-alt-shift-1" = ['focus-monitor (1)', 'workspace 1']
+    "cmd-ctrl-alt-shift-2" = ['focus-monitor (1)', 'workspace 2']
+    "cmd-ctrl-alt-shift-3" = ['focus-monitor (1)', 'workspace 3']
+    "cmd-ctrl-alt-shift-4" = ['focus-monitor (1)', 'workspace 4']
+    "cmd-ctrl-alt-shift-5" = ['focus-monitor (1)', 'workspace 5']
+    "cmd-ctrl-alt-shift-6" = ['focus-monitor (2)', 'workspace 6']
+    "cmd-ctrl-alt-shift-7" = ['focus-monitor (2)', 'workspace 7']
+    "cmd-ctrl-alt-shift-8" = ['focus-monitor (2)', 'workspace 8']
+    "cmd-ctrl-alt-shift-9" = ['focus-monitor Retina', 'workspace 9']
 
     # Move window to workspace — Cmd+Ctrl+Alt + 1-9
     "cmd-ctrl-alt-1" = 'move-node-to-workspace 1'
@@ -96,8 +100,8 @@ outer.bottom     = 6
     # Toggle float / tile
     "cmd-ctrl-alt-shift-space" = 'layout floating tiling'
 
-    # Toggle layout: accordion ↔ tiling (Hyper+,)
-    "cmd-ctrl-alt-shift-comma" = 'layout accordion tiling'
+    # Toggle layout: accordion ↔ horizontal tiles (Hyper+,)
+    "cmd-ctrl-alt-shift-comma" = 'layout h_accordion h_tiles'
 
     # Resize mode
     "cmd-ctrl-alt-shift-r" = 'mode resize'

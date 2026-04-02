@@ -96,9 +96,11 @@ sketchybar \
   --add item spacer_l left \
   --set spacer_l width=8 label.drawing=off icon.drawing=off
 
-# ── Clock (center) ────────────────────────────────────────────────────────────
+# ── Right side ────────────────────────────────────────────────────────────────
+
+# Clock (rightmost — avoids MacBook notch hiding center items)
 sketchybar \
-  --add item clock center \
+  --add item clock right \
   --set clock \
   icon.drawing=off \
   label.font="JetBrainsMono Nerd Font:Bold:13.0" \
@@ -106,8 +108,6 @@ sketchybar \
   update_freq=30 \
   script="$PLUGIN_DIR/clock.sh" \
   --subscribe clock system_woke
-
-# ── Right side ────────────────────────────────────────────────────────────────
 
 # Now playing media
 sketchybar \
