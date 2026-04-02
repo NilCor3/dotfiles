@@ -189,7 +189,6 @@ brew install --cask \
   raycast \
   alt-tab \
   hyperkey \
-  jordanbaird-ice \
   finicky \
   amethyst \
   zen \
@@ -198,7 +197,6 @@ brew install --cask \
   docker-desktop \
   dbeaver-community \
   insomnia \
-  marta \
   pearcleaner \
   stats \
   utm \
@@ -1103,7 +1101,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | [Raycast](https://raycast.com) | Launcher, replaces Spotlight | iCloud sync |
 | [AltTab](https://alt-tab-macos.netlify.app) | Windows-style app switcher | plist backup |
 | [HyperKey](https://hyperkey.app) | Caps Lock → Hyper (⌃⌥⇧⌘) | plist backup |
-| [Ice](https://icemenubar.app) | Menu bar manager | plist backup |
 | [Finicky](https://github.com/johnste/finicky) | Browser router | `~/.finicky.js` in chezmoi |
 | [Zen](https://zen-browser.app) | Default browser (Firefox-based) | Firefox account sync |
 | [Bitwarden](https://bitwarden.com) | Password manager + SSH agent | Cloud-synced vault |
@@ -1112,7 +1109,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) | Meeting join buttons in menu bar | No config |
 | [Docker Desktop](https://docker.com/products/docker-desktop) | Container runtime | Sensible defaults |
 | [Stats](https://github.com/exelban/stats) | System stats in menu bar | GUI only |
-| [Marta](https://marta.sh) | Dual-pane file manager | chezmoi tracked |
 | [PearCleaner](https://itsalin.com/appInfo/?id=pearcleaner) | App uninstaller | No config |
 | [UTM](https://mac.getutm.app) | Virtual machines | No config |
 
@@ -1122,9 +1118,7 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 |-----|--------|----------|
 | Amethyst | chezmoi | `~/.config/amethyst/amethyst.yml` |
 | Finicky | chezmoi | `~/.finicky.js` |
-| Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
-| Ice | plist script | `~/.config/backups/plists/com.jordanbaird.Ice.plist` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
 | Bitwarden | Cloud-synced | Log in → enable SSH Agent |
 | Zen | Firefox account | Sign in → reinstall extensions |
