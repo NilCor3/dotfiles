@@ -110,15 +110,29 @@ vim.keymap.set('n', '<leader>uG', function()
   require('copilot.suggestion').toggle_auto_trigger()
 end, { desc = 'Toggle Copilot ghost text' })
 
+-- Reload non-plugin config (options, keymaps, autocmds).
+-- Plugin changes require a full nvim restart (Lazy doesn't support hot-reload).
 vim.keymap.set('n', '<leader>ur', function()
   for name, _ in pairs(package.loaded) do
-    if name:match('^plugins%.') or name:match('^config%.') then
+    if name:match('^config%.') then
       package.loaded[name] = nil
     end
   end
-  dofile(vim.env.MYVIMRC)
-  vim.notify('Config reloaded', vim.log.levels.INFO)
+  for _, mod in ipairs({ 'config.options', 'config.keymaps', 'config.autocmds' }) do
+    local ok, err = pcall(require, mod)
+    if not ok then vim.notify('Reload error: ' .. err, vim.log.levels.ERROR) end
+  end
+  vim.notify('Config reloaded (plugin changes need nvim restart)', vim.log.levels.INFO)
 end, { desc = 'Reload config' })
+
+-- Lazy plugin manager
+vim.keymap.set('n', '<leader>LL', '<cmd>Lazy<cr>',         { desc = 'Open Lazy' })
+vim.keymap.set('n', '<leader>Lu', '<cmd>Lazy update<cr>',  { desc = 'Update plugins' })
+vim.keymap.set('n', '<leader>Ls', '<cmd>Lazy sync<cr>',    { desc = 'Sync plugins' })
+vim.keymap.set('n', '<leader>Li', '<cmd>Lazy install<cr>', { desc = 'Install missing' })
+vim.keymap.set('n', '<leader>Lc', '<cmd>Lazy clean<cr>',   { desc = 'Clean unused' })
+vim.keymap.set('n', '<leader>Lr', '<cmd>Lazy restore<cr>', { desc = 'Restore lock file' })
+vim.keymap.set('n', '<leader>Lp', '<cmd>Lazy profile<cr>', { desc = 'Profile startup' })
 
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   if args.bang then

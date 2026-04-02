@@ -12,6 +12,7 @@ return {
       { '<leader>c', group = '[C]ode' },
       { '<leader>t', group = '[T]est' },
       { '<leader>u', group = '[U]i' },
+      { '<leader>L', group = '[L]azy' },
       { '<leader>q', group = '[Q]uicklists' },
     },
   },
