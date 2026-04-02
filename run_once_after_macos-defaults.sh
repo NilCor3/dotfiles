@@ -112,6 +112,20 @@ defaults write eu.exelban.Stats Sensors_widget -string ""
 defaults write eu.exelban.Stats Clock_widget -string ""
 
 ###############################################################################
+# Window management (AeroSpace + Sketchybar)
+###############################################################################
+
+# Hide the macOS native menu bar — Sketchybar replaces it
+# App menus still accessible via Ctrl+F2 or Cmd+?
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+
+# Drag windows by holding Ctrl+Cmd and dragging any part (not just title bar)
+defaults write NSGlobalDomain NSWindowShouldDragOnGesture -bool true
+
+# Disable window opening animations (e.g. Chrome new-window bounce)
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+
+###############################################################################
 # Restart affected apps
 ###############################################################################
 
@@ -119,4 +133,4 @@ for app in Dock Finder; do
   killall "$app" &>/dev/null || true
 done
 
-echo "Done. You may need to restart AltTab, HyperKey, Stats, and Ice manually."
+echo "Done. You may need to restart AltTab, HyperKey, and AeroSpace manually. Launch AeroSpace first to grant Accessibility permission."

@@ -62,6 +62,7 @@ Key configs tracked in chezmoi:
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editors: `.config/helix/` (config, languages, scripts) and `.config/nvim/` (lazy.nvim config, plugins, bin scripts)
 - Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
+- Window manager + status bar: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace) and `.config/sketchybar/` (Sketchybar, replaces macOS menu bar)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
@@ -270,9 +271,10 @@ In Helix integration scripts, detect `$TMUX` (set by tmux) for the tmux branch:
 
 Config files:
 - `~/.config/tmux/tmux.conf` — all keybindings and settings
-- `~/.config/tmux/layouts/dev.sh` — helix 70% top, 2 named shells 30% bottom
+- `~/.config/tmux/layouts/dev.sh` — editor 70% left, shell+tests stacked right (horizontal monitor layout)
 - `~/.config/tmux/scripts/picker.sh` — fzf session/project picker
 - `~/.config/tmux/scripts/help.sh` — keybind help popup content
+- `~/.config/tmux/scripts/rename-pane.sh` — fzf pane rename (sets @user_title; dynamic fallback shows command/dir)
 
 WezTerm is now terminal-only (GPU/fonts/window). Its keybinds:
 - `Ctrl+-/+` font size, `CMD+c/v` clipboard, `Shift+Up/Down` scroll-to-prompt
@@ -280,3 +282,61 @@ WezTerm is now terminal-only (GPU/fonts/window). Its keybinds:
 Config files:
 - `~/.config/wezterm/wezterm.lua` — main config (no plugins, no leader)
 - `~/.config/wezterm/keybinds.lua` — 6 bare-minimum bindings
+
+---
+
+## AeroSpace window manager
+
+AeroSpace is an i3-like tiling window manager. Modifier: **Hyper** (Caps Lock → Ctrl+Opt+Shift+Cmd via HyperKey).
+
+**Workspaces:**
+| # | Name | Monitor | Apps |
+|---|------|---------|------|
+| 1 | dev | main | WezTerm |
+| 2 | test | main | Chrome, Firefox, Safari |
+| 3 | ide | main | IntelliJ |
+| 4–5 | — | main | reserved |
+| 6 | browser | right | Zen Browser |
+| 7–8 | — | right | reserved |
+| 9 | laptop | built-in | Slack, WhatsApp, Discord, Spotify |
+
+Colony game window → float (matched by title regex).
+
+**Key binds:**
+- `Hyper+hjkl` — focus window
+- `Cmd+Ctrl+Alt+hjkl` — move window (3 modifiers, no Shift)
+- `Hyper+1–9` — switch workspace; `Cmd+Ctrl+Alt+1–9` — move window to workspace
+- `Hyper+f` fullscreen · `Hyper+Space` toggle float · `Hyper+,` cycle layout · `Hyper+r` resize mode
+
+**⚠️ Post-install (once):**
+```sh
+aerospace list-monitors   # → update [workspace-to-monitor-force-assignment] in aerospace.toml
+aerospace list-apps       # → confirm IntelliJ bundle ID
+sketchybar --query default_menu_items  # → confirm alias names for VPN/Docker/TimelyMeet
+```
+
+Config: `~/.config/aerospace/aerospace.toml`
+
+---
+
+## Sketchybar status bar
+
+Sketchybar replaces the macOS menu bar (hidden via `_HIHideMenuBar=true`).
+App menus still accessible via `Ctrl+F2` (focus hidden menu bar) or `⌘?` (search).
+
+**Bar layout:**
+```
+[1 dev][2 test]...[9 laptop]    Mon 2 Apr 14:32    [♫][⌨][↓↑][cpu][mem][🔋][🔊][wifi][bt][···]
+```
+
+- Left: AeroSpace workspace pills (gold = active, dim = has windows, faint = empty)
+- Center: clock (`Mon %-d %b  %H:%M`)
+- Right: now playing · keyboard layout · network speed · CPU% · memory · battery · volume · WiFi alias · Bluetooth alias · `···` overflow popup
+
+**Overflow popup:** click `···` to see VPN, Docker, TimelyMeet, and other native bar items.
+
+**Theme:** gruvbox-material hard dark (`#1d2021` background, `#d79921` gold active workspace).
+
+Config: `~/.config/sketchybar/sketchybarrc` + `~/.config/sketchybar/plugins/`
+
+After install, uncomment the VPN/Docker/TimelyMeet alias lines in `sketchybarrc` with correct names from `sketchybar --query default_menu_items`.

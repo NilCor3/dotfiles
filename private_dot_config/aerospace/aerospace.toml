@@ -1,0 +1,173 @@
+config-version = 2
+
+start-at-login = true
+
+# Start Sketchybar and JankyBorders together with AeroSpace
+after-startup-command = [
+    'exec-and-forget sketchybar',
+    'exec-and-forget borders active_color=0xffd79921 inactive_color=0xff504945 width=4.0',
+]
+
+# Notify Sketchybar on workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+# Mouse jumps to center of focused monitor when switching workspaces across monitors
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Prevent macOS from hiding tiled windows
+automatically-unhide-macos-hidden-apps = true
+
+# Accordion: main pane grows, others stack on right
+default-root-container-layout = 'accordion'
+accordion-padding = 30
+
+# Wide monitor → horizontal splits, tall monitor → vertical
+default-root-container-orientation = 'auto'
+
+# Workspaces always exist even when empty
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+[gaps]
+inner.horizontal = 6
+inner.vertical   = 6
+outer.left       = 6
+outer.right      = 6
+outer.top        = 6
+outer.bottom     = 6
+
+# ── Monitor assignments ────────────────────────────────────────────────────────
+# ⚠️  Run 'aerospace list-monitors' after first launch and replace the
+#     placeholder strings below with your actual monitor names.
+[workspace-to-monitor-force-assignment]
+1 = 'main'        # main dev monitor  — update after: aerospace list-monitors
+2 = 'main'
+3 = 'main'
+4 = 'main'
+5 = 'main'
+6 = 'secondary'   # right monitor     — update after: aerospace list-monitors
+7 = 'secondary'
+8 = 'secondary'
+9 = 'built-in'    # laptop screen     — update after: aerospace list-monitors
+
+# ── Main keybindings (Hyper = Cmd+Ctrl+Alt+Shift via CapsLock) ────────────────
+[mode.main.binding]
+    # Disable accidental app hide
+    cmd-h     = []
+    cmd-alt-h = []
+
+    # Focus windows — Hyper + hjkl
+    cmd+ctrl+alt+shift-h = 'focus left'
+    cmd+ctrl+alt+shift-j = 'focus down'
+    cmd+ctrl+alt+shift-k = 'focus up'
+    cmd+ctrl+alt+shift-l = 'focus right'
+
+    # Move windows — Cmd+Ctrl+Alt + hjkl (3 modifiers, no Shift)
+    cmd+ctrl+alt-h = 'move left'
+    cmd+ctrl+alt-j = 'move down'
+    cmd+ctrl+alt-k = 'move up'
+    cmd+ctrl+alt-l = 'move right'
+
+    # Switch workspace — Hyper + 1-9
+    cmd+ctrl+alt+shift-1 = 'workspace 1'
+    cmd+ctrl+alt+shift-2 = 'workspace 2'
+    cmd+ctrl+alt+shift-3 = 'workspace 3'
+    cmd+ctrl+alt+shift-4 = 'workspace 4'
+    cmd+ctrl+alt+shift-5 = 'workspace 5'
+    cmd+ctrl+alt+shift-6 = 'workspace 6'
+    cmd+ctrl+alt+shift-7 = 'workspace 7'
+    cmd+ctrl+alt+shift-8 = 'workspace 8'
+    cmd+ctrl+alt+shift-9 = 'workspace 9'
+
+    # Move window to workspace — Cmd+Ctrl+Alt + 1-9
+    cmd+ctrl+alt-1 = 'move-node-to-workspace 1'
+    cmd+ctrl+alt-2 = 'move-node-to-workspace 2'
+    cmd+ctrl+alt-3 = 'move-node-to-workspace 3'
+    cmd+ctrl+alt-4 = 'move-node-to-workspace 4'
+    cmd+ctrl+alt-5 = 'move-node-to-workspace 5'
+    cmd+ctrl+alt-6 = 'move-node-to-workspace 6'
+    cmd+ctrl+alt-7 = 'move-node-to-workspace 7'
+    cmd+ctrl+alt-8 = 'move-node-to-workspace 8'
+    cmd+ctrl+alt-9 = 'move-node-to-workspace 9'
+
+    # Fullscreen
+    cmd+ctrl+alt+shift-f = 'fullscreen'
+
+    # Toggle float / tile
+    cmd+ctrl+alt+shift-space = 'layout floating tiling'
+
+    # Cycle layout: accordion → horizontal tiles → vertical tiles
+    cmd+ctrl+alt+shift-comma = 'layout accordion horizontal vertical'
+
+    # Resize mode
+    cmd+ctrl+alt+shift-r = 'mode resize'
+
+    # Reload config
+    cmd+ctrl+alt+shift-c = 'reload-config'
+
+# ── Resize mode ───────────────────────────────────────────────────────────────
+[mode.resize.binding]
+    h     = 'resize width -50'
+    l     = 'resize width +50'
+    j     = 'resize height +50'
+    k     = 'resize height -50'
+    enter = 'mode main'
+    esc   = 'mode main'
+
+# ── App → Workspace assignments ───────────────────────────────────────────────
+
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = 'move-node-to-workspace 1'
+
+# Testing browsers → workspace 2
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2'
+
+# IntelliJ IDEA (both Ultimate and CE)
+# ⚠️  Run 'aerospace list-apps' to confirm your exact bundle ID
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij.ce'
+run = 'move-node-to-workspace 3'
+
+# Zen Browser → workspace 6 (primary browsing on right monitor)
+# For testing, use Cmd+Ctrl+Alt-2 to move it to workspace 2
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen'
+run = 'move-node-to-workspace 6'
+
+# Chat & media → workspace 9 (laptop screen)
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.WhatsApp'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace 9'
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace 9'
+
+# Colony game (winit/wgpu — matched by window title) → float
+[[on-window-detected]]
+if.window-title-regex-substring = 'Colony'
+run = 'layout floating'
