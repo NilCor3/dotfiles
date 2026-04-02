@@ -160,7 +160,7 @@ alias pgc='pgcli'
 alias ps='procs'
 
 # --- Editor ---
-alias nv='nvim'
+alias e='nvim'
 alias :e='$EDITOR'
 alias :o='$EDITOR'
 
