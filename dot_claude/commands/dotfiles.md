@@ -62,10 +62,10 @@ Key configs tracked in chezmoi:
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editors: `.config/helix/` (config, languages, scripts) and `.config/nvim/` (lazy.nvim config, plugins, bin scripts)
 - Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
-- Window manager: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace). AeroSpace shows the current workspace in its native menu bar icon (default, no extra status bar).
+- Window manager: `.config/aerospace/` (aerospace.toml + misc-workspace.sh). AeroSpace shows the current workspace in its native menu bar icon.
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
-- Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
-- Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
+- Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`, `.config/yazi/yazi.toml`
+- Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `.default-npm-packages`, `README.md`
 - Scripts: `diff-macos-defaults.sh`, `hx/`
 - Navi cheats: `.local/share/navi/cheats/personal.cheat`
 - GitHub Copilot CLI: `.copilot/config.json`, `.copilot/agents/`
@@ -292,29 +292,42 @@ AeroSpace is an i3-like tiling window manager. Modifier: **Hyper** (Caps Lock �
 **Workspaces:**
 | # | Name | Monitor | Apps |
 |---|------|---------|------|
-| 1 | dev | main | WezTerm |
+| 1 | dev | main (P24h-2L (1)) | WezTerm |
 | 2 | test | main | Chrome, Firefox, Safari |
 | 3 | ide | main | IntelliJ |
-| 4–5 | — | main | reserved |
-| 6 | browser | right | Zen Browser |
-| 7–8 | — | right | reserved |
+| 4 | extra | main | — |
+| 5 | misc | main | unassigned apps |
+| 6 | browser | left (P24h-2L (2)) | Zen Browser |
+| 7 | extra | left | — |
+| 8 | misc | left | unassigned apps |
 | 9 | laptop | built-in | Slack, WhatsApp, Discord, Spotify |
 
 Colony game window → float (matched by title regex).
 
 **Key binds:**
-- `Hyper+hjkl` — focus window
+- `Hyper+hjkl` — focus window (wraps around workspace edge)
 - `Cmd+Ctrl+Alt+hjkl` — move window (3 modifiers, no Shift)
-- `Hyper+1–9` — switch workspace; `Cmd+Ctrl+Alt+1–9` — move window to workspace
-- `Hyper+f` fullscreen · `Hyper+Space` toggle float · `Hyper+,` cycle layout · `Hyper+r` resize mode
+- `Hyper+1–9` — switch workspace (focuses correct monitor automatically)
+- `Cmd+Ctrl+Alt+1–9` — move current window to workspace
+- `Hyper+Space` — toggle float/tile
+- `Hyper+,` — toggle h_accordion ↔ h_tiles (side-by-side)
+- `Hyper+v` — join focused window with right neighbor into vertical sub-container
+- `Hyper+f` — flatten nested containers
+- `Hyper+b` — balance all window sizes
+- `Hyper+Tab` — switch to previous workspace
+- `Hyper+r` — resize mode (then hjkl, Esc to exit)
+- `Hyper+c` — reload config
 
-**⚠️ Post-install (once):**
-```sh
-aerospace list-monitors   # → verify [workspace-to-monitor-force-assignment] in aerospace.toml
-aerospace list-apps       # → confirm IntelliJ bundle ID
-```
+**Monitor mapping (confirmed, regex-escaped in config):**
+- `'P24h-2L \(1\)'` = main dev monitor (AeroSpace numeric ID: 1)
+- `'P24h-2L \(2\)'` = left browser monitor (AeroSpace numeric ID: 2)
+- `'Built-in Retina Display'` = laptop (AeroSpace numeric ID: 3)
 
-Config: `~/.config/aerospace/aerospace.toml`
+> ⚠️ `workspace-to-monitor-force-assignment` requires escaped parens: `'P24h-2L \(1\)'`  
+> ⚠️ AeroSpace numeric monitor IDs are primary-display-first, not left→right by position
+
+Config: `~/.config/aerospace/aerospace.toml`  
+Misc routing: `~/.config/aerospace/misc-workspace.sh`
 
 ---
 
