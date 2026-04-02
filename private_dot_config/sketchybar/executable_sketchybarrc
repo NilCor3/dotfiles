@@ -47,12 +47,10 @@ sketchybar \
     background.corner_radius=6 \
     background.height=24
 
-# ── AeroSpace workspaces (left) ───────────────────────────────────────────────
 # ── AeroSpace workspaces (left, per monitor) ──────────────────────────────────
 # Display numbers: swap if workspaces appear on wrong screen
-# Run: sketchybar --query default_menu_items and check display ordering
-DISPLAY_MAIN=1    # P24h-2L (1)          — workspaces 1-5
-DISPLAY_RIGHT=3   # P24h-2L (2)          — workspaces 6-8
+DISPLAY_MAIN=1    # P24h-2L (1)          — workspaces 1-5 (right monitor, main dev)
+DISPLAY_LEFT=3    # P24h-2L (2)          — workspaces 6-8 (left monitor, browser)
 DISPLAY_LAPTOP=2  # Built-in Retina      — workspace 9
 
 sketchybar --add event aerospace_workspace_change
@@ -62,8 +60,8 @@ WS_NAMES[1]="dev"     WS_NAMES[2]="test"    WS_NAMES[3]="ide"
 WS_NAMES[4]="4"       WS_NAMES[5]="5"       WS_NAMES[6]="browser"
 WS_NAMES[7]="7"       WS_NAMES[8]="8"       WS_NAMES[9]="laptop"
 WS_DISPLAY[1]=$DISPLAY_MAIN   WS_DISPLAY[2]=$DISPLAY_MAIN   WS_DISPLAY[3]=$DISPLAY_MAIN
-WS_DISPLAY[4]=$DISPLAY_MAIN   WS_DISPLAY[5]=$DISPLAY_MAIN   WS_DISPLAY[6]=$DISPLAY_RIGHT
-WS_DISPLAY[7]=$DISPLAY_RIGHT  WS_DISPLAY[8]=$DISPLAY_RIGHT  WS_DISPLAY[9]=$DISPLAY_LAPTOP
+WS_DISPLAY[4]=$DISPLAY_MAIN   WS_DISPLAY[5]=$DISPLAY_MAIN   WS_DISPLAY[6]=$DISPLAY_LEFT
+WS_DISPLAY[7]=$DISPLAY_LEFT   WS_DISPLAY[8]=$DISPLAY_LEFT   WS_DISPLAY[9]=$DISPLAY_LAPTOP
 
 for sid in 1 2 3 4 5 6 7 8 9; do
   sketchybar \
