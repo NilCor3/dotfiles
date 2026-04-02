@@ -62,7 +62,7 @@ Key configs tracked in chezmoi:
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editors: `.config/helix/` (config, languages, scripts) and `.config/nvim/` (lazy.nvim config, plugins, bin scripts)
 - Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
-- Window manager + status bar: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace) and `.config/sketchybar/` (Sketchybar, replaces macOS menu bar)
+- Window manager: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace). Status bar: a-bar (native macOS menu bar app, GUI config, no chezmoi tracking needed)
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
@@ -310,33 +310,21 @@ Colony game window → float (matched by title regex).
 
 **⚠️ Post-install (once):**
 ```sh
-aerospace list-monitors   # → update [workspace-to-monitor-force-assignment] in aerospace.toml
+aerospace list-monitors   # → verify [workspace-to-monitor-force-assignment] in aerospace.toml
 aerospace list-apps       # → confirm IntelliJ bundle ID
-sketchybar --query default_menu_items  # → confirm alias names for VPN/Docker/TimelyMeet
 ```
 
 Config: `~/.config/aerospace/aerospace.toml`
 
 ---
 
-## Sketchybar status bar
+## a-bar status bar
 
-Sketchybar replaces the macOS menu bar (hidden via `_HIHideMenuBar=true`).
-App menus still accessible via `Ctrl+F2` (focus hidden menu bar) or `⌘?` (search).
+a-bar is a native macOS menu bar app that shows AeroSpace workspaces.
+Install: `brew tap Jean-Tinland/a-bar && brew install --cask a-bar`
 
-**Bar layout:**
-```
-[1 dev][2 test]...[9 laptop]    Mon 2 Apr 14:32    [♫][⌨][↓↑][cpu][mem][🔋][🔊][wifi][bt][···]
-```
+- Enable the **Spaces (AeroSpace)** widget in a-bar settings
+- Workspace pills update automatically via `exec-on-workspace-change` hook in `aerospace.toml`
+- No Screen Recording permission needed (unlike Sketchybar aliases)
+- GUI configuration only, not tracked in chezmoi
 
-- Left: AeroSpace workspace pills (gold = active, dim = has windows, faint = empty)
-- Center: clock (`Mon %-d %b  %H:%M`)
-- Right: now playing · keyboard layout · network speed · CPU% · memory · battery · volume · WiFi alias · Bluetooth alias · `···` overflow popup
-
-**Overflow popup:** click `···` to see VPN, Docker, TimelyMeet, and other native bar items.
-
-**Theme:** gruvbox-material hard dark (`#1d2021` background, `#d79921` gold active workspace).
-
-Config: `~/.config/sketchybar/sketchybarrc` + `~/.config/sketchybar/plugins/`
-
-After install, uncomment the VPN/Docker/TimelyMeet alias lines in `sketchybarrc` with correct names from `sketchybar --query default_menu_items`.
