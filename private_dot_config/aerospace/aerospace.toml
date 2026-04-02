@@ -58,53 +58,53 @@ outer.bottom     = 6
     cmd-alt-h = []
 
     # Focus windows — Hyper + hjkl
-    cmd+ctrl+alt+shift-h = 'focus left'
-    cmd+ctrl+alt+shift-j = 'focus down'
-    cmd+ctrl+alt+shift-k = 'focus up'
-    cmd+ctrl+alt+shift-l = 'focus right'
+    "cmd+ctrl+alt+shift-h" = 'focus left'
+    "cmd+ctrl+alt+shift-j" = 'focus down'
+    "cmd+ctrl+alt+shift-k" = 'focus up'
+    "cmd+ctrl+alt+shift-l" = 'focus right'
 
     # Move windows — Cmd+Ctrl+Alt + hjkl (3 modifiers, no Shift)
-    cmd+ctrl+alt-h = 'move left'
-    cmd+ctrl+alt-j = 'move down'
-    cmd+ctrl+alt-k = 'move up'
-    cmd+ctrl+alt-l = 'move right'
+    "cmd+ctrl+alt-h" = 'move left'
+    "cmd+ctrl+alt-j" = 'move down'
+    "cmd+ctrl+alt-k" = 'move up'
+    "cmd+ctrl+alt-l" = 'move right'
 
     # Switch workspace — Hyper + 1-9
-    cmd+ctrl+alt+shift-1 = 'workspace 1'
-    cmd+ctrl+alt+shift-2 = 'workspace 2'
-    cmd+ctrl+alt+shift-3 = 'workspace 3'
-    cmd+ctrl+alt+shift-4 = 'workspace 4'
-    cmd+ctrl+alt+shift-5 = 'workspace 5'
-    cmd+ctrl+alt+shift-6 = 'workspace 6'
-    cmd+ctrl+alt+shift-7 = 'workspace 7'
-    cmd+ctrl+alt+shift-8 = 'workspace 8'
-    cmd+ctrl+alt+shift-9 = 'workspace 9'
+    "cmd+ctrl+alt+shift-1" = 'workspace 1'
+    "cmd+ctrl+alt+shift-2" = 'workspace 2'
+    "cmd+ctrl+alt+shift-3" = 'workspace 3'
+    "cmd+ctrl+alt+shift-4" = 'workspace 4'
+    "cmd+ctrl+alt+shift-5" = 'workspace 5'
+    "cmd+ctrl+alt+shift-6" = 'workspace 6'
+    "cmd+ctrl+alt+shift-7" = 'workspace 7'
+    "cmd+ctrl+alt+shift-8" = 'workspace 8'
+    "cmd+ctrl+alt+shift-9" = 'workspace 9'
 
     # Move window to workspace — Cmd+Ctrl+Alt + 1-9
-    cmd+ctrl+alt-1 = 'move-node-to-workspace 1'
-    cmd+ctrl+alt-2 = 'move-node-to-workspace 2'
-    cmd+ctrl+alt-3 = 'move-node-to-workspace 3'
-    cmd+ctrl+alt-4 = 'move-node-to-workspace 4'
-    cmd+ctrl+alt-5 = 'move-node-to-workspace 5'
-    cmd+ctrl+alt-6 = 'move-node-to-workspace 6'
-    cmd+ctrl+alt-7 = 'move-node-to-workspace 7'
-    cmd+ctrl+alt-8 = 'move-node-to-workspace 8'
-    cmd+ctrl+alt-9 = 'move-node-to-workspace 9'
+    "cmd+ctrl+alt-1" = 'move-node-to-workspace 1'
+    "cmd+ctrl+alt-2" = 'move-node-to-workspace 2'
+    "cmd+ctrl+alt-3" = 'move-node-to-workspace 3'
+    "cmd+ctrl+alt-4" = 'move-node-to-workspace 4'
+    "cmd+ctrl+alt-5" = 'move-node-to-workspace 5'
+    "cmd+ctrl+alt-6" = 'move-node-to-workspace 6'
+    "cmd+ctrl+alt-7" = 'move-node-to-workspace 7'
+    "cmd+ctrl+alt-8" = 'move-node-to-workspace 8'
+    "cmd+ctrl+alt-9" = 'move-node-to-workspace 9'
 
     # Fullscreen
-    cmd+ctrl+alt+shift-f = 'fullscreen'
+    "cmd+ctrl+alt+shift-f" = 'fullscreen'
 
     # Toggle float / tile
-    cmd+ctrl+alt+shift-space = 'layout floating tiling'
+    "cmd+ctrl+alt+shift-space" = 'layout floating tiling'
 
     # Cycle layout: accordion → horizontal tiles → vertical tiles
-    cmd+ctrl+alt+shift-comma = 'layout accordion horizontal vertical'
+    "cmd+ctrl+alt+shift-comma" = 'layout accordion horizontal vertical'
 
     # Resize mode
-    cmd+ctrl+alt+shift-r = 'mode resize'
+    "cmd+ctrl+alt+shift-r" = 'mode resize'
 
     # Reload config
-    cmd+ctrl+alt+shift-c = 'reload-config'
+    "cmd+ctrl+alt+shift-c" = 'reload-config'
 
 # ── Resize mode ───────────────────────────────────────────────────────────────
 [mode.resize.binding]
