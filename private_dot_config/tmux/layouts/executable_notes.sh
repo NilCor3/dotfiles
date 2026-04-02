@@ -12,30 +12,35 @@ ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 # ── Window 1: todos ───────────────────────────────────────────────────────────
 tmux new-session -d -s "$SESSION" -n "todos" -c "$CWD/todos" -x "$COLS" -y "$ROWS"
 
-# Top pane: helix editing inbox
+# Left pane: editor opening inbox
 tmux send-keys -t "$SESSION:todos.1" "$EDITOR $CWD/todos/inbox.md" Enter
-tmux select-pane -t "$SESSION:todos.1" -T "helix"
+tmux select-pane -t "$SESSION:todos.1" -T "editor"
+tmux set-option -p -t "$SESSION:todos.1" @user_title "editor"
 
-# Bottom 15%: shell (split first so helix + todos share remaining 85%)
-tmux split-window -t "$SESSION:todos.1" -v -l 15% -c "$CWD"
-tmux select-pane -t "$SESSION:todos.2" -T "shell"
-
-# Split helix area (85%) in half → helix ~42.5%, todos ~42.5%
-tmux split-window -t "$SESSION:todos.1" -v -l 50% -c "$CWD/todos"
+# Split right 40% for todos list
+tmux split-window -t "$SESSION:todos.1" -h -l 40% -c "$CWD/todos"
 tmux select-pane -t "$SESSION:todos.2" -T "todos"
+tmux set-option -p -t "$SESSION:todos.2" @user_title "todos"
 tmux send-keys -t "$SESSION:todos.2" "tl" Enter
+
+# Split todos pane: shell at bottom 30%
+tmux split-window -t "$SESSION:todos.2" -v -l 30% -c "$CWD"
+tmux select-pane -t "$SESSION:todos.3" -T "shell"
+tmux set-option -p -t "$SESSION:todos.3" @user_title "shell"
 
 # ── Window 2: notes ───────────────────────────────────────────────────────────
 tmux new-window -t "$SESSION" -n "notes" -c "$CWD"
 
-# Top 80%: helix for browsing notes
+# Left pane: editor for browsing notes
 tmux send-keys -t "$SESSION:notes.1" "$EDITOR $CWD" Enter
-tmux select-pane -t "$SESSION:notes.1" -T "helix"
+tmux select-pane -t "$SESSION:notes.1" -T "editor"
+tmux set-option -p -t "$SESSION:notes.1" @user_title "editor"
 
-# Bottom 20%: shell for note commands
-tmux split-window -t "$SESSION:notes.1" -v -l 20% -c "$CWD"
+# Split right 20% for shell
+tmux split-window -t "$SESSION:notes.1" -h -l 20% -c "$CWD"
 tmux select-pane -t "$SESSION:notes.2" -T "shell"
+tmux set-option -p -t "$SESSION:notes.2" @user_title "shell"
 
-# Focus todos window, helix pane
+# Focus todos window, editor pane
 tmux select-window -t "$SESSION:todos"
 tmux select-pane -t "$SESSION:todos.1"

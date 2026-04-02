@@ -1,7 +1,7 @@
 #!/bin/sh
-# dev.sh — vertical monitor layout
+# dev.sh — horizontal monitor layout
 # Usage: dev.sh <session-name> <cwd>
-# Top 70%: helix; Bottom 30%: two shells side by side
+# Left 70%: editor; Right 30%: shell (top) + tests (bottom)
 
 SESSION="$1"
 CWD="${2:-$HOME}"
@@ -19,17 +19,20 @@ ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 
 tmux new-session -d -s "$SESSION" -n "dev" -c "$CWD" -x "$COLS" -y "$ROWS"
 
-# Top pane already exists (pane 1) — start helix
+# Left pane (pane 1) — editor
 tmux send-keys -t "$SESSION:dev.1" "$EDITOR ." Enter
-tmux select-pane -t "$SESSION:dev.1" -T "helix"
+tmux select-pane -t "$SESSION:dev.1" -T "editor"
+tmux set-option -p -t "$SESSION:dev.1" @user_title "editor"
 
-# Split bottom 30% for first shell
-tmux split-window -t "$SESSION:dev.1" -v -l 30% -c "$CWD"
+# Split right 30% for shell
+tmux split-window -t "$SESSION:dev.1" -h -l 30% -c "$CWD"
 tmux select-pane -t "$SESSION:dev.2" -T "shell"
+tmux set-option -p -t "$SESSION:dev.2" @user_title "shell"
 
-# Split right for second shell
-tmux split-window -t "$SESSION:dev.2" -h -c "$CWD"
+# Split shell pane in half vertically for tests
+tmux split-window -t "$SESSION:dev.2" -v -l 50% -c "$CWD"
 tmux select-pane -t "$SESSION:dev.3" -T "tests"
+tmux set-option -p -t "$SESSION:dev.3" @user_title "tests"
 
-# Focus back on helix pane
+# Focus back on editor pane
 tmux select-pane -t "$SESSION:dev.1"

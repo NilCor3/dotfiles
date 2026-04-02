@@ -1,5 +1,5 @@
 #!/bin/sh
-# ai.sh — copilot top 70%, shell bottom 30%
+# ai.sh — copilot left 70%, shell right 30%
 # Usage: ai.sh <session-name> <cwd>
 
 SESSION="$1"
@@ -17,13 +17,15 @@ ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 
 tmux new-session -d -s "$SESSION" -n "ai" -c "$CWD" -x "$COLS" -y "$ROWS"
 tmux select-pane -t "$SESSION:ai.1" -T "copilot"
+tmux set-option -p -t "$SESSION:ai.1" @user_title "copilot"
 
-# Start copilot --resume via mise in the top pane
+# Start copilot --resume via mise in the left pane
 tmux send-keys -t "$SESSION:ai.1" "/opt/homebrew/bin/mise exec -- copilot --resume" Enter
 
-# Split bottom 30% for shell
-tmux split-window -t "$SESSION:ai.1" -v -l 30% -c "$CWD"
+# Split right 30% for shell
+tmux split-window -t "$SESSION:ai.1" -h -l 30% -c "$CWD"
 tmux select-pane -t "$SESSION:ai.2" -T "shell"
+tmux set-option -p -t "$SESSION:ai.2" @user_title "shell"
 
-# Focus top pane
+# Focus left pane
 tmux select-pane -t "$SESSION:ai.1"
