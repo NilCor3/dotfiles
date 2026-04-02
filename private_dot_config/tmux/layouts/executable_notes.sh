@@ -13,7 +13,7 @@ ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 tmux new-session -d -s "$SESSION" -n "todos" -c "$CWD/todos" -x "$COLS" -y "$ROWS"
 
 # Top pane: helix editing inbox
-tmux send-keys -t "$SESSION:todos.1" "hx $CWD/todos/inbox.md" Enter
+tmux send-keys -t "$SESSION:todos.1" "$EDITOR $CWD/todos/inbox.md" Enter
 tmux select-pane -t "$SESSION:todos.1" -T "helix"
 
 # Bottom 15%: shell (split first so helix + todos share remaining 85%)
@@ -29,7 +29,7 @@ tmux send-keys -t "$SESSION:todos.2" "tl" Enter
 tmux new-window -t "$SESSION" -n "notes" -c "$CWD"
 
 # Top 80%: helix for browsing notes
-tmux send-keys -t "$SESSION:notes.1" "hx $CWD" Enter
+tmux send-keys -t "$SESSION:notes.1" "$EDITOR $CWD" Enter
 tmux select-pane -t "$SESSION:notes.1" -T "helix"
 
 # Bottom 20%: shell for note commands

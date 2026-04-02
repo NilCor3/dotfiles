@@ -20,7 +20,7 @@ ROWS=${ROWS:-$(tput lines 2>/dev/null || echo 50)}
 tmux new-session -d -s "$SESSION" -n "dev" -c "$CWD" -x "$COLS" -y "$ROWS"
 
 # Top pane already exists (pane 1) — start helix
-tmux send-keys -t "$SESSION:dev.1" "hx ." Enter
+tmux send-keys -t "$SESSION:dev.1" "$EDITOR ." Enter
 tmux select-pane -t "$SESSION:dev.1" -T "helix"
 
 # Split bottom 30% for first shell

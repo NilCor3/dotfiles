@@ -226,17 +226,17 @@ for line in sys.stdin:
 # --- Notes ---
 export NOTES_DIR="$HOME/notes"
 
-n()      { hx "$NOTES_DIR" }
-ns()     { hx "$NOTES_DIR/scratch.md" }
+n()      { $EDITOR "$NOTES_DIR" }
+ns()     { $EDITOR "$NOTES_DIR/scratch.md" }
 ngl()    { glow "$NOTES_DIR" }
 ng() {
   local query="${1:?usage: ng <pattern>}"
   local file
   file=$(rg "$query" "$NOTES_DIR" -l | fzf --preview "rg --color=always '$query' {}")
-  [[ -n "$file" ]] && hx "$file"
+  [[ -n "$file" ]] && $EDITOR "$file"
 }
 
-# Live interactive content search — type to filter, opens hx at matching line
+# Live interactive content search — type to filter, opens $EDITOR at matching line
 ngs() {
   local result
   result=$(
@@ -247,7 +247,7 @@ ngs() {
         --preview 'bat --color=always --highlight-line {2} {1}' \
         --preview-window 'right:60%:+{2}-5'
   )
-  [[ -n "$result" ]] && hx "${result%%:*}:$(echo "$result" | cut -d: -f2)"
+  [[ -n "$result" ]] && $EDITOR "${result%%:*}:$(echo "$result" | cut -d: -f2)"
 }
 
 nj() {
@@ -255,7 +255,7 @@ nj() {
   if [[ ! -f "$file" ]]; then
     printf -- "---\ntype: daily\ndate: %s\n---\n\n# %s\n\n" "$(date +%Y-%m-%d)" "$(date +%Y-%m-%d)" > "$file"
   fi
-  hx "$file"
+  $EDITOR "$file"
 }
 
 nmeet() {
@@ -264,7 +264,7 @@ nmeet() {
   if [[ ! -f "$file" ]]; then
     printf -- "---\ntype: meeting\ntags: []\ndate: %s\n---\n\n# %s\n\n## Attendees\n\n## Notes\n\n## Actions\n" "$(date +%Y-%m-%d)" "$title" > "$file"
   fi
-  hx "$file"
+  $EDITOR "$file"
 }
 
 nissue() {
@@ -273,7 +273,7 @@ nissue() {
   if [[ ! -f "$file" ]]; then
     printf -- "---\ntype: issue\ntags: []\ndate: %s\nissue: %s\n---\n\n# %s\n\n## Context\n\n## Notes\n" "$(date +%Y-%m-%d)" "$id" "$id" > "$file"
   fi
-  hx "$file"
+  $EDITOR "$file"
 }
 
 nn() {
@@ -283,7 +283,7 @@ nn() {
   if [[ ! -f "$file" ]]; then
     printf -- "---\ntype: ref\ntags: []\ndate: %s\n---\n\n# %s\n\n" "$(date +%Y-%m-%d)" "$(basename "${note_path%.md}")" > "$file"
   fi
-  hx "$file"
+  $EDITOR "$file"
 }
 
 nsync() {
@@ -308,37 +308,37 @@ nf() {
   local q="${1:-}"
   local file
   file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --query "$q" --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && hx "$file"
+  [[ -n "$file" ]] && $EDITOR "$file"
 }
 
 nft() {
   local ftype="${1:?usage: nft meeting|issue|daily|ref|system|scratch}"
   local file
   file=$(rg "^type: $ftype" "$NOTES_DIR" -l | fzf --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && hx "$file"
+  [[ -n "$file" ]] && $EDITOR "$file"
 }
 
 ntag() {
   local tag="${1:?usage: ntag blink}"
   local file
   file=$(rg "tags:.*\b${tag}\b" "$NOTES_DIR" -l | fzf --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && hx "$file"
+  [[ -n "$file" ]] && $EDITOR "$file"
 }
 
 # --- Todo ---
 export TODOS_DIR="$NOTES_DIR/todos"
 
-# ta [text] — add to inbox (with text: appends directly; without: opens inbox in hx)
+# ta [text] — add to inbox (with text: appends directly; without: opens inbox in $EDITOR)
 ta() {
   if [[ -n "$*" ]]; then
     echo "- [ ] $*" >> "$TODOS_DIR/inbox.md"
     echo "Added to inbox: $*"
   else
-    hx "$TODOS_DIR/inbox.md"
+    $EDITOR "$TODOS_DIR/inbox.md"
   fi
 }
 
-# tl — fzf over all open todos, select to open file at that line in hx
+# tl — fzf over all open todos, select to open file at that line in $EDITOR
 tl() {
   # Detect notes/todos context: if in notes session + todos window, helix is always pane 1
   local helix_pane=""
@@ -365,7 +365,7 @@ tl() {
       tmux send-keys -t "$helix_pane" Escape
       tmux send-keys -t "$helix_pane" ":open ${file}:${line}" Enter
     else
-      hx "+$line" "$file"
+      $EDITOR "+$line" "$file"
       return
     fi
   done
@@ -391,13 +391,13 @@ td() {
 # tp [file] — open a todo project file (fzf if no arg)
 tp() {
   if [[ -n "$1" ]]; then
-    hx "$TODOS_DIR/${1%.md}.md"
+    $EDITOR "$TODOS_DIR/${1%.md}.md"
   else
     local file
     file=$(fd --type f --extension md . "$TODOS_DIR" \
       | sed "s|$TODOS_DIR/||" \
       | fzf --prompt="project > " --preview="bat --color=always $TODOS_DIR/{}")
-    [[ -n "$file" ]] && hx "$TODOS_DIR/$file"
+    [[ -n "$file" ]] && $EDITOR "$TODOS_DIR/$file"
   fi
 }
 
@@ -412,7 +412,7 @@ tg() {
   local file line
   file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
   line=$(echo "$result" | cut -d: -f2)
-  hx "+$line" "$file"
+  $EDITOR "+$line" "$file"
 }
 
 # --- AI ---
@@ -440,7 +440,7 @@ fga()   { git status --short | fzf -m | awk '{print $2}' | xargs git add }
 fkill() { ps aux | fzf | awk '{print $2}' | xargs kill }
 fcd()   { cd "$(fd --type d | fzf)" }
 fh()    { print -z $(fc -l 1 | fzf --tac | sed 's/^ *[0-9]* *//') }
-fhx()   { hx $(fzf --preview 'bat --color=always {}') }
+fhx()   { $EDITOR $(fzf --preview 'bat --color=always {}') }
 
 # Function to find a directory and insert it into the command line
 fzf-redraw-prompt() {

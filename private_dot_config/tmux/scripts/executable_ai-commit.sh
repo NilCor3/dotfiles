@@ -49,7 +49,7 @@ case "$choice" in
   e|E)
     TMPFILE=$(mktemp /tmp/ai-commit-XXXXXX.txt)
     printf '%s\n' "$MSG" > "$TMPFILE"
-    hx "$TMPFILE"
+    $EDITOR "$TMPFILE"
     EDITED=$(cat "$TMPFILE")
     rm -f "$TMPFILE"
     if [ -n "$EDITED" ]; then
