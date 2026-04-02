@@ -2,15 +2,14 @@ config-version = 2
 
 start-at-login = true
 
-# Start Sketchybar and JankyBorders together with AeroSpace
+# Start JankyBorders with AeroSpace (focused window border highlight)
 after-startup-command = [
-    'exec-and-forget sketchybar',
     'exec-and-forget borders active_color=0xffd79921 inactive_color=0xff504945 width=4.0',
 ]
 
-# Notify Sketchybar on workspace change
+# Notify a-bar on workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+    'osascript -e "tell application \"a-bar\" to refresh \"aerospace\"" 2>/dev/null || true'
 ]
 
 # Mouse jumps to center of focused monitor when switching workspaces across monitors
@@ -34,7 +33,7 @@ inner.horizontal = 6
 inner.vertical   = 6
 outer.left       = 6
 outer.right      = 6
-outer.top        = 38
+outer.top        = 6
 outer.bottom     = 6
 
 # ── Monitor assignments ────────────────────────────────────────────────────────
@@ -72,19 +71,19 @@ outer.bottom     = 6
     "cmd-ctrl-alt-l" = 'move right'
 
     # Switch workspace — Hyper + 1-9
-    # focus-monitor uses single-token substring pattern (space separates multiple patterns)
-    # (1) → P24h-2L (1) = main dev monitor
-    # (2) → P24h-2L (2) = left browser monitor
-    # Retina → Built-in Retina Display = laptop
-    "cmd-ctrl-alt-shift-1" = ['focus-monitor (1)', 'workspace 1']
-    "cmd-ctrl-alt-shift-2" = ['focus-monitor (1)', 'workspace 2']
-    "cmd-ctrl-alt-shift-3" = ['focus-monitor (1)', 'workspace 3']
-    "cmd-ctrl-alt-shift-4" = ['focus-monitor (1)', 'workspace 4']
-    "cmd-ctrl-alt-shift-5" = ['focus-monitor (1)', 'workspace 5']
-    "cmd-ctrl-alt-shift-6" = ['focus-monitor (2)', 'workspace 6']
-    "cmd-ctrl-alt-shift-7" = ['focus-monitor (2)', 'workspace 7']
-    "cmd-ctrl-alt-shift-8" = ['focus-monitor (2)', 'workspace 8']
-    "cmd-ctrl-alt-shift-9" = ['focus-monitor Retina', 'workspace 9']
+    # Monitor IDs (from 'aerospace list-monitors', ordered left→right by X position):
+    #   1 = P24h-2L (2)          = left browser monitor
+    #   2 = P24h-2L (1)          = main dev monitor
+    #   3 = Built-in Retina      = laptop
+    "cmd-ctrl-alt-shift-1" = ['focus-monitor 2', 'workspace 1']
+    "cmd-ctrl-alt-shift-2" = ['focus-monitor 2', 'workspace 2']
+    "cmd-ctrl-alt-shift-3" = ['focus-monitor 2', 'workspace 3']
+    "cmd-ctrl-alt-shift-4" = ['focus-monitor 2', 'workspace 4']
+    "cmd-ctrl-alt-shift-5" = ['focus-monitor 2', 'workspace 5']
+    "cmd-ctrl-alt-shift-6" = ['focus-monitor 1', 'workspace 6']
+    "cmd-ctrl-alt-shift-7" = ['focus-monitor 1', 'workspace 7']
+    "cmd-ctrl-alt-shift-8" = ['focus-monitor 1', 'workspace 8']
+    "cmd-ctrl-alt-shift-9" = ['focus-monitor 3', 'workspace 9']
 
     # Move window to workspace — Cmd+Ctrl+Alt + 1-9
     "cmd-ctrl-alt-1" = 'move-node-to-workspace 1'

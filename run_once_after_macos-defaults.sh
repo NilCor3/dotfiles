@@ -88,9 +88,8 @@ defaults write eu.exelban.Stats Clock_widget -string ""
 # Window management (AeroSpace + Sketchybar)
 ###############################################################################
 
-# Hide the macOS native menu bar — Sketchybar replaces it
-# App menus still accessible via Ctrl+F2 or Cmd+?
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
+# macOS native menu bar — restore it (a-bar provides workspace indicators)
+defaults write NSGlobalDomain _HIHideMenuBar -bool false
 
 # Drag windows by holding Ctrl+Cmd and dragging any part (not just title bar)
 defaults write NSGlobalDomain NSWindowShouldDragOnGesture -bool true
