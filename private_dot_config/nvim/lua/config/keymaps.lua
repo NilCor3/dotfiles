@@ -110,6 +110,16 @@ vim.keymap.set('n', '<leader>uG', function()
   require('copilot.suggestion').toggle_auto_trigger()
 end, { desc = 'Toggle Copilot ghost text' })
 
+vim.keymap.set('n', '<leader>ur', function()
+  for name, _ in pairs(package.loaded) do
+    if name:match('^plugins%.') or name:match('^config%.') then
+      package.loaded[name] = nil
+    end
+  end
+  dofile(vim.env.MYVIMRC)
+  vim.notify('Config reloaded', vim.log.levels.INFO)
+end, { desc = 'Reload config' })
+
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   if args.bang then
     vim.b.disable_autoformat = true
