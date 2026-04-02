@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install jdtls (Eclipse JDT Language Server), lombok, and java-debug-adapter
+# Install jdtls (Eclipse JDT Language Server) and lombok
 # into ~/.local/share/nvim-java/ without Mason.
 # Runs once per machine (chezmoi run_once_).
 set -euo pipefail
@@ -8,8 +8,8 @@ DIR="$HOME/.local/share/nvim-java"
 mkdir -p "$DIR"
 
 # ── jdtls ────────────────────────────────────────────────────────────────────
-JDTLS_VERSION="1.43.0"
-JDTLS_MILESTONE="202504241530"
+JDTLS_VERSION="1.57.0"
+JDTLS_MILESTONE="202602261110"
 JDTLS_TAR="jdt-language-server-${JDTLS_VERSION}-${JDTLS_MILESTONE}.tar.gz"
 JDTLS_URL="https://download.eclipse.org/jdtls/milestones/${JDTLS_VERSION}/${JDTLS_TAR}"
 
@@ -34,19 +34,6 @@ if [[ ! -f "$DIR/lombok.jar" ]]; then
   echo "lombok installed."
 else
   echo "lombok already installed, skipping."
-fi
-
-# ── java-debug-adapter ───────────────────────────────────────────────────────
-DEBUG_VERSION="0.53.0"
-DEBUG_JAR="com.microsoft.java.debug.plugin-${DEBUG_VERSION}.jar"
-DEBUG_URL="https://github.com/microsoft/java-debug/releases/download/${DEBUG_VERSION}/${DEBUG_JAR}"
-
-if [[ ! -f "$DIR/java-debug.jar" ]]; then
-  echo "Downloading java-debug-adapter ${DEBUG_VERSION}..."
-  curl -fsSL "$DEBUG_URL" -o "$DIR/java-debug.jar"
-  echo "java-debug-adapter installed."
-else
-  echo "java-debug-adapter already installed, skipping."
 fi
 
 echo "Java LSP setup complete: $DIR"

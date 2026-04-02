@@ -23,73 +23,73 @@ BORDER=0xff3c3836
 # ── Bar ───────────────────────────────────────────────────────────────────────
 sketchybar \
   --bar \
-    position=top \
-    height=32 \
-    margin=0 \
-    color=$BG \
-    border_color=$BORDER \
-    border_width=0 \
-    shadow=off \
-    topmost=window \
-    font_smoothing=off
+  position=top \
+  height=32 \
+  margin=0 \
+  color=$BG \
+  border_color=$BORDER \
+  border_width=0 \
+  shadow=off \
+  topmost=window \
+  font_smoothing=off
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
 sketchybar \
   --default \
-    icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
-    label.font="JetBrainsMono Nerd Font:Regular:12.0" \
-    icon.color=$FG \
-    label.color=$FG \
-    icon.padding_left=6 \
-    icon.padding_right=2 \
-    label.padding_left=2 \
-    label.padding_right=6 \
-    background.corner_radius=6 \
-    background.height=24
+  icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
+  label.font="JetBrainsMono Nerd Font:Regular:12.0" \
+  icon.color=$FG \
+  label.color=$FG \
+  icon.padding_left=6 \
+  icon.padding_right=2 \
+  label.padding_left=2 \
+  label.padding_right=6 \
+  background.corner_radius=6 \
+  background.height=24
 
 # ── AeroSpace workspaces (left, per monitor) ──────────────────────────────────
 # Display numbers: swap if workspaces appear on wrong screen
-DISPLAY_MAIN=1    # P24h-2L (1)          — workspaces 1-5 (right monitor, main dev)
-DISPLAY_LEFT=3    # P24h-2L (2)          — workspaces 6-8 (left monitor, browser)
-DISPLAY_LAPTOP=2  # Built-in Retina      — workspace 9
+DISPLAY_MAIN=1   # P24h-2L (1)          — workspaces 1-5 (right monitor, main dev)
+DISPLAY_LEFT=2   # P24h-2L (2)          — workspaces 6-8 (left monitor, browser)
+DISPLAY_LAPTOP=3 # Built-in Retina      — workspace 9
 
 sketchybar --add event aerospace_workspace_change
 
 declare -A WS_NAMES WS_DISPLAY
-WS_NAMES[1]="dev"     WS_NAMES[2]="test"    WS_NAMES[3]="ide"
-WS_NAMES[4]="4"       WS_NAMES[5]="5"       WS_NAMES[6]="browser"
-WS_NAMES[7]="7"       WS_NAMES[8]="8"       WS_NAMES[9]="laptop"
-WS_DISPLAY[1]=$DISPLAY_MAIN   WS_DISPLAY[2]=$DISPLAY_MAIN   WS_DISPLAY[3]=$DISPLAY_MAIN
-WS_DISPLAY[4]=$DISPLAY_MAIN   WS_DISPLAY[5]=$DISPLAY_MAIN   WS_DISPLAY[6]=$DISPLAY_LEFT
-WS_DISPLAY[7]=$DISPLAY_LEFT   WS_DISPLAY[8]=$DISPLAY_LEFT   WS_DISPLAY[9]=$DISPLAY_LAPTOP
+WS_NAMES[1]="dev" WS_NAMES[2]="test" WS_NAMES[3]="ide"
+WS_NAMES[4]="extra" WS_NAMES[5]="misc" WS_NAMES[6]="browser"
+WS_NAMES[7]="extra" WS_NAMES[8]="misc" WS_NAMES[9]="laptop"
+WS_DISPLAY[1]=$DISPLAY_MAIN WS_DISPLAY[2]=$DISPLAY_MAIN WS_DISPLAY[3]=$DISPLAY_MAIN
+WS_DISPLAY[4]=$DISPLAY_MAIN WS_DISPLAY[5]=$DISPLAY_MAIN WS_DISPLAY[6]=$DISPLAY_LEFT
+WS_DISPLAY[7]=$DISPLAY_LEFT WS_DISPLAY[8]=$DISPLAY_LEFT WS_DISPLAY[9]=$DISPLAY_LAPTOP
 
 for sid in 1 2 3 4 5 6 7 8 9; do
   sketchybar \
     --add item "space.$sid" left \
     --subscribe "space.$sid" aerospace_workspace_change \
     --set "space.$sid" \
-      display="${WS_DISPLAY[$sid]}" \
-      icon="$sid" \
-      icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
-      label="${WS_NAMES[$sid]}" \
-      label.font="JetBrainsMono Nerd Font:Regular:11.0" \
-      label.color=$FG_DIM \
-      background.drawing=off \
-      background.color=$INACTIVE_BG \
-      padding_left=2 \
-      padding_right=2 \
-      click_script="aerospace workspace $sid" \
-      script="$PLUGIN_DIR/aerospace.sh $sid"
+    display="${WS_DISPLAY[$sid]}" \
+    icon="$sid" \
+    icon.font="JetBrainsMono Nerd Font:Bold:12.0" \
+    label="${WS_NAMES[$sid]}" \
+    label.font="JetBrainsMono Nerd Font:Regular:11.0" \
+    label.color=$FG_DIM \
+    background.drawing=off \
+    background.color=$INACTIVE_BG \
+    padding_left=2 \
+    padding_right=2 \
+    click_script="aerospace workspace $sid" \
+    script="$PLUGIN_DIR/aerospace.sh $sid"
 done
 
 # Bracket for shared workspace background strip
 sketchybar \
   --add bracket workspaces '/space\..*/' \
   --set workspaces \
-    background.drawing=on \
-    background.color=0x221d2021 \
-    background.corner_radius=8 \
-    background.height=28
+  background.drawing=on \
+  background.color=0x221d2021 \
+  background.corner_radius=8 \
+  background.height=28
 
 # Small spacer after workspaces
 sketchybar \
@@ -100,11 +100,11 @@ sketchybar \
 sketchybar \
   --add item clock center \
   --set clock \
-    icon.drawing=off \
-    label.font="JetBrainsMono Nerd Font:Bold:13.0" \
-    label.color=$GOLD \
-    update_freq=30 \
-    script="$PLUGIN_DIR/clock.sh" \
+  icon.drawing=off \
+  label.font="JetBrainsMono Nerd Font:Bold:13.0" \
+  label.color=$GOLD \
+  update_freq=30 \
+  script="$PLUGIN_DIR/clock.sh" \
   --subscribe clock system_woke
 
 # ── Right side ────────────────────────────────────────────────────────────────
@@ -113,75 +113,75 @@ sketchybar \
 sketchybar \
   --add item media right \
   --set media \
-    icon="󰎆" \
-    icon.color=$PURPLE \
-    label.max_chars=35 \
-    update_freq=5 \
-    drawing=off \
-    script="$PLUGIN_DIR/media.sh" \
-    click_script="nowplaying-cli togglePlayPause"
+  icon="󰎆" \
+  icon.color=$PURPLE \
+  label.max_chars=35 \
+  update_freq=5 \
+  drawing=off \
+  script="$PLUGIN_DIR/media.sh" \
+  click_script="nowplaying-cli togglePlayPause"
 
 # Keyboard layout
 sketchybar \
   --add item keyboard right \
   --set keyboard \
-    icon="⌨" \
-    icon.color=$FG_DIM \
-    label.color=$FG_DIM \
-    update_freq=0 \
-    script="$PLUGIN_DIR/keyboard.sh" \
+  icon="⌨" \
+  icon.color=$FG_DIM \
+  label.color=$FG_DIM \
+  update_freq=0 \
+  script="$PLUGIN_DIR/keyboard.sh" \
   --subscribe keyboard AppleSelectedInputSourcesChangedNotification
 
 # Network speed
 sketchybar \
   --add item network right \
   --set network \
-    icon="↓↑" \
-    icon.color=$AQUA \
-    label.color=$FG_DIM \
-    update_freq=3 \
-    script="$PLUGIN_DIR/network.sh"
+  icon="↓↑" \
+  icon.color=$AQUA \
+  label.color=$FG_DIM \
+  update_freq=3 \
+  script="$PLUGIN_DIR/network.sh"
 
 # CPU usage
 sketchybar \
   --add item cpu right \
   --set cpu \
-    icon="󰻠" \
-    icon.color=$AQUA \
-    update_freq=3 \
-    script="$PLUGIN_DIR/cpu.sh"
+  icon="󰻠" \
+  icon.color=$AQUA \
+  update_freq=3 \
+  script="$PLUGIN_DIR/cpu.sh"
 
 # Memory usage
 sketchybar \
   --add item memory right \
   --set memory \
-    icon="󰍛" \
-    icon.color=$PURPLE \
-    update_freq=10 \
-    script="$PLUGIN_DIR/memory.sh"
+  icon="󰍛" \
+  icon.color=$PURPLE \
+  update_freq=10 \
+  script="$PLUGIN_DIR/memory.sh"
 
 # Battery
 sketchybar \
   --add item battery right \
   --set battery \
-    update_freq=60 \
-    script="$PLUGIN_DIR/battery.sh" \
+  update_freq=60 \
+  script="$PLUGIN_DIR/battery.sh" \
   --subscribe battery system_woke power_source_change
 
 # Volume
 sketchybar \
   --add item volume right \
   --set volume \
-    icon="󰕾" \
-    update_freq=0 \
-    script="$PLUGIN_DIR/volume.sh" \
+  icon="󰕾" \
+  update_freq=0 \
+  script="$PLUGIN_DIR/volume.sh" \
   --subscribe volume volume_change system_woke
 
 # ── Aliases (native menu bar items mirrored) ──────────────────────────────────
 # Note: run 'sketchybar --query default_menu_items' to confirm exact names
 # Items are commented out until you verify exact names on your system
 
-sketchybar --add alias "Control Center,WiFi"      right
+sketchybar --add alias "Control Center,WiFi" right
 sketchybar --add alias "Control Center,Bluetooth" right
 
 # VPN — uncomment and fix name after running: sketchybar --query default_menu_items
@@ -198,19 +198,19 @@ sketchybar --add alias "Control Center,Bluetooth" right
 sketchybar \
   --add item overflow right \
   --set overflow \
-    icon="···" \
-    icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
-    icon.color=$FG_DIM \
-    icon.padding_left=8 \
-    icon.padding_right=8 \
-    label.drawing=off \
-    click_script="sketchybar --set overflow popup.drawing=toggle" \
-    popup.background.color=$BG \
-    popup.background.border_color=$BORDER \
-    popup.background.border_width=1 \
-    popup.background.corner_radius=8 \
-    popup.horizontal=true \
-    popup.align=right
+  icon="···" \
+  icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
+  icon.color=$FG_DIM \
+  icon.padding_left=8 \
+  icon.padding_right=8 \
+  label.drawing=off \
+  click_script="sketchybar --set overflow popup.drawing=toggle" \
+  popup.background.color=$BG \
+  popup.background.border_color=$BORDER \
+  popup.background.border_width=1 \
+  popup.background.corner_radius=8 \
+  popup.horizontal=true \
+  popup.align=right
 
 # Add other aliases inside the overflow popup:
 # sketchybar --add alias "SomeApp,Item-0" popup.overflow

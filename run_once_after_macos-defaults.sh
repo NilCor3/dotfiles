@@ -45,33 +45,6 @@ defaults write com.apple.finder NewWindowTarget -string "PfAF"
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 ###############################################################################
-# AltTab
-###############################################################################
-
-defaults write com.lwouis.alt-tab-macos appsToShow -int 0
-defaults write com.lwouis.alt-tab-macos appsToShow2 -int 0
-defaults write com.lwouis.alt-tab-macos screensToShow -int 0
-defaults write com.lwouis.alt-tab-macos screensToShow2 -int 1
-defaults write com.lwouis.alt-tab-macos showFullscreenWindows -int 0
-# Show hidden windows (2 = show with reduced opacity)
-defaults write com.lwouis.alt-tab-macos showHiddenWindows -int 2
-defaults write com.lwouis.alt-tab-macos showHiddenWindows2 -int 2
-# Show minimized windows (2 = show with reduced opacity)
-defaults write com.lwouis.alt-tab-macos showMinimizedWindows -int 2
-defaults write com.lwouis.alt-tab-macos showMinimizedWindows2 -int 2
-# Follow focus with cursor
-defaults write com.lwouis.alt-tab-macos cursorFollowFocus -bool true
-# Enable vim-style j/k navigation
-defaults write com.lwouis.alt-tab-macos vimKeysEnabled -bool true
-# Thumbnail style (1 = AppSwitcher style)
-defaults write com.lwouis.alt-tab-macos shortcutStyle2 -int 1
-# Max window thumbnail width as % of row
-defaults write com.lwouis.alt-tab-macos windowMaxWidthInRow -int 30
-# Window order (0 = most recently used)
-defaults write com.lwouis.alt-tab-macos windowOrder -int 0
-defaults write com.lwouis.alt-tab-macos windowOrder2 -int 0
-
-###############################################################################
 # HyperKey
 ###############################################################################
 
@@ -133,4 +106,4 @@ for app in Dock Finder; do
   killall "$app" &>/dev/null || true
 done
 
-echo "Done. You may need to restart AltTab, HyperKey, and AeroSpace manually. Launch AeroSpace first to grant Accessibility permission."
+echo "Done. You may need to restart HyperKey and AeroSpace manually. Launch AeroSpace first to grant Accessibility permission."

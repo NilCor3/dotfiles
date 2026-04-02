@@ -187,10 +187,8 @@ brew install \
 brew install --cask \
   wezterm \
   raycast \
-  alt-tab \
   hyperkey \
-  finicky \
-  amethyst \
+  nikitabobko/tap/aerospace \
   zen \
   bitwarden \
   bettermouse \
@@ -202,6 +200,11 @@ brew install --cask \
   utm \
   font-fira-mono-nerd-font \
   copilot-cli@prerelease
+
+brew install \
+  FelixKratz/formulae/sketchybar \
+  FelixKratz/formulae/borders \
+  nowplaying-cli
 ```
 
 **App Store** (install manually):
@@ -1097,9 +1100,10 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 
 | App | Purpose | Config |
 |-----|---------|--------|
-| [Amethyst](https://ianyh.com/amethyst/) | Tiling window manager | `~/.config/amethyst/amethyst.yml` in chezmoi |
+| [AeroSpace](https://github.com/nikitabobko/AeroSpace) | i3-style tiling WM | `~/.config/aerospace/aerospace.toml` in chezmoi |
+| [Sketchybar](https://felixkratz.github.io/SketchyBar/) | Custom menu bar (replaces macOS bar) | `~/.config/sketchybar/` in chezmoi |
+| [JankyBorders](https://github.com/FelixKratz/JankyBorders) | Focused window border highlight | launched by AeroSpace |
 | [Raycast](https://raycast.com) | Launcher, replaces Spotlight | iCloud sync |
-| [AltTab](https://alt-tab-macos.netlify.app) | Windows-style app switcher | plist backup |
 | [HyperKey](https://hyperkey.app) | Caps Lock → Hyper (⌃⌥⇧⌘) | plist backup |
 | [Finicky](https://github.com/johnste/finicky) | Browser router | `~/.finicky.js` in chezmoi |
 | [Zen](https://zen-browser.app) | Default browser (Firefox-based) | Firefox account sync |
@@ -1116,14 +1120,14 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 
 | App | Method | Location |
 |-----|--------|----------|
-| Amethyst | chezmoi | `~/.config/amethyst/amethyst.yml` |
+| AeroSpace | chezmoi | `~/.config/aerospace/aerospace.toml` |
+| Sketchybar | chezmoi | `~/.config/sketchybar/` |
 | Finicky | chezmoi | `~/.finicky.js` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
 | Bitwarden | Cloud-synced | Log in → enable SSH Agent |
 | Zen | Firefox account | Sign in → reinstall extensions |
 | HyperKey | plist script | `~/.config/backups/plists/com.knollsoft.Hyperkey.plist` |
-| AltTab | plist script | `~/.config/backups/plists/com.lwouis.alt-tab-macos.plist` |
 | Docker Desktop | No backup | Reconfigure defaults |
 | TimeyMeet | No config | Grant Calendar access |
 | Keyboard Pilot | No export | Reconfigure per-app rules manually |
@@ -1134,13 +1138,36 @@ Plist backup/restore:
 ~/.config/backups/plists/restore-plists.sh  # import (fresh install)
 ```
 
-#### Amethyst
+#### AeroSpace
 
-Config tracked in chezmoi. First launch: Accessibility permission required.
+i3-style tiling WM. Config in `~/.config/aerospace/aerospace.toml`.
 
-Tiled apps (all others float): WezTerm, Zen, Chrome, VS Code, Slack, Discord, WhatsApp, Spotify, Docker Desktop, Bitwarden, Seashore.
+First launch: Accessibility permission required. Run `aerospace list-monitors` and `aerospace list-apps` to verify monitor/bundle IDs match the config.
 
-Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen · `⌃⌥⇧ W/E/R` throw to screen · `⌥⇧ Space` cycle layout · `⌥⇧ D` fullscreen · `⌥⇧ T` toggle float.
+**Modifier (Hyper):** Caps Lock via HyperKey → `⌃⌥⇧⌘`
+
+| Action | Shortcut |
+|--------|----------|
+| Focus window | Hyper + H/J/K/L |
+| Move window | Cmd+Ctrl+Alt + H/J/K/L |
+| Switch workspace | Hyper + 1–9 |
+| Move to workspace | Cmd+Ctrl+Alt + 1–9 |
+| macOS native fullscreen | Hyper + F |
+| Toggle float/tile | Hyper + Space |
+| Resize mode | Hyper + R |
+| Reload config | Hyper + C |
+
+**Workspaces:** 1=dev · 2=test · 3=ide · 4=extra · 5=misc (main monitor) | 6=browser · 7=extra · 8=misc (left monitor) | 9=laptop
+
+**App assignments:** WezTerm→1, Chrome/Firefox/Safari→2, IntelliJ→3, Zen→6, Slack/WA/Discord/Spotify→9, unassigned→misc workspace for current monitor
+
+#### Sketchybar
+
+Replaces macOS menu bar. Config in `~/.config/sketchybar/`.
+
+- macOS bar hidden via System Settings → Control Centre → "Automatically hide and show the menu bar: Always"
+- App menus accessible via `Ctrl+F2` or `⌘?`
+- **Screen Recording permission required** for alias items (WiFi, Bluetooth): System Settings → Privacy & Security → Screen Recording → enable Sketchybar
 
 #### Finicky
 

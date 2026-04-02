@@ -21,7 +21,7 @@ automatically-unhide-macos-hidden-apps = true
 
 # Accordion: main pane grows, others stack on right
 default-root-container-layout = 'accordion'
-accordion-padding = 30
+accordion-padding = 0
 
 # Wide monitor → horizontal splits, tall monitor → vertical
 default-root-container-orientation = 'auto'
@@ -93,8 +93,8 @@ outer.bottom     = 6
     "cmd-ctrl-alt-8" = 'move-node-to-workspace 8'
     "cmd-ctrl-alt-9" = 'move-node-to-workspace 9'
 
-    # Fullscreen
-    "cmd-ctrl-alt-shift-f" = 'fullscreen'
+    # Fullscreen (macOS native — goes to own Space, immune to AeroSpace tiling)
+    "cmd-ctrl-alt-shift-f" = 'macos-native-fullscreen'
 
     # Toggle float / tile
     "cmd-ctrl-alt-shift-space" = 'layout floating tiling'
@@ -173,3 +173,7 @@ run = 'move-node-to-workspace 9'
 [[on-window-detected]]
 if.window-title-regex-substring = 'Colony'
 run = 'layout floating'
+
+# Catch-all: unassigned apps → misc workspace for the monitor they opened on
+[[on-window-detected]]
+run = 'exec-and-forget ~/.config/aerospace/misc-workspace.sh'
