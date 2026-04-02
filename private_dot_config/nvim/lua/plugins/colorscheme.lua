@@ -11,7 +11,9 @@ return {
       -- Override JSX/HTML tag highlight groups so tags pop in .tsx/.jsx files.
       -- Scoped to ColorScheme autocmd so overrides survive :colorscheme reloads.
       local function set_tag_highlights()
-        -- HTML tags (div, span, button…): bold orange — stands out from JS code
+        -- React components (<Generic/>, <MyButton>): purple — distinct from JS functions
+        vim.api.nvim_set_hl(0, '@tag', { fg = '#d3869b', bold = true })
+        -- HTML tags (div, span, button…): bold orange
         vim.api.nvim_set_hl(0, '@tag.builtin', { fg = '#e78a4e', bold = true })
         -- <, >, </,  />: aqua — visible punctuation, doesn't compete with the name
         vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = '#89b482' })
