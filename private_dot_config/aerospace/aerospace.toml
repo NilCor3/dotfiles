@@ -93,9 +93,6 @@ outer.bottom     = 6
     "cmd-ctrl-alt-8" = 'move-node-to-workspace 8'
     "cmd-ctrl-alt-9" = 'move-node-to-workspace 9'
 
-    # Fullscreen (macOS native — goes to own Space, immune to AeroSpace tiling)
-    "cmd-ctrl-alt-shift-f" = 'macos-native-fullscreen'
-
     # Toggle float / tile
     "cmd-ctrl-alt-shift-space" = 'layout floating tiling'
 
