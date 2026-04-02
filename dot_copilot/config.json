@@ -29,9 +29,7 @@
     "https://docs.github.com",
     "https://raw.githubusercontent.com",
     "https://yazi-rs.github.io",
-    "http://localhost:11434",
+    "http://localhost:11434"
   ],
-  "firstLaunchAt": "2026-03-11T00:00:00.000Z",
-  "model": "claude-sonnet-4.6",
-  "effortLevel": "medium"
+  "firstLaunchAt": "2026-03-11T00:00:00.000Z"
 }

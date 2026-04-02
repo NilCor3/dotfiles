@@ -191,8 +191,7 @@ brew install --cask \
   hyperkey \
   jordanbaird-ice \
   finicky \
-  nikitabobko/tap/aerospace \
-  sketchybar \
+  amethyst \
   zen \
   bitwarden \
   bettermouse \
@@ -1100,8 +1099,7 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 
 | App | Purpose | Config |
 |-----|---------|--------|
-| [AeroSpace](https://github.com/nikitabobko/AeroSpace) | i3-style tiling window manager | `~/.config/aerospace/aerospace.toml` in chezmoi |
-| [Sketchybar](https://github.com/FelixKratz/SketchyBar) | Scriptable status bar (replaces macOS menu bar) | `~/.config/sketchybar/` in chezmoi |
+| [Amethyst](https://ianyh.com/amethyst/) | Tiling window manager | `~/.config/amethyst/amethyst.yml` in chezmoi |
 | [Raycast](https://raycast.com) | Launcher, replaces Spotlight | iCloud sync |
 | [AltTab](https://alt-tab-macos.netlify.app) | Windows-style app switcher | plist backup |
 | [HyperKey](https://hyperkey.app) | Caps Lock → Hyper (⌃⌥⇧⌘) | plist backup |
@@ -1122,8 +1120,7 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 
 | App | Method | Location |
 |-----|--------|----------|
-| AeroSpace | chezmoi | `~/.config/aerospace/aerospace.toml` |
-| Sketchybar | chezmoi | `~/.config/sketchybar/` |
+| Amethyst | chezmoi | `~/.config/amethyst/amethyst.yml` |
 | Finicky | chezmoi | `~/.finicky.js` |
 | Marta | chezmoi | `~/Library/Application Support/org.yanex.marta/conf.marco` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
@@ -1143,32 +1140,13 @@ Plist backup/restore:
 ~/.config/backups/plists/restore-plists.sh  # import (fresh install)
 ```
 
-#### AeroSpace + Sketchybar
+#### Amethyst
 
-**AeroSpace** is an i3-like tiling window manager. Config tracked in chezmoi. First launch: grant Accessibility permission in System Settings → Privacy & Security → Accessibility.
+Config tracked in chezmoi. First launch: Accessibility permission required.
 
-Workspaces: `1=dev` (main) · `2=test` (main) · `3=ide` (main) · `4-5` reserved · `6=browser` (right monitor) · `7-8` reserved · `9=laptop` (built-in).
+Tiled apps (all others float): WezTerm, Zen, Chrome, VS Code, Slack, Discord, WhatsApp, Spotify, Docker Desktop, Bitwarden, Seashore.
 
-App auto-assignment: WezTerm→1 · Chrome/Firefox/Safari→2 · IntelliJ→3 · Zen→6 · Slack/WA/Discord/Spotify→9 · Colony (game)→float.
-
-| Bind | Action |
-|------|--------|
-| `Hyper+hjkl` | Focus window |
-| `Cmd+Ctrl+Alt+hjkl` | Move window |
-| `Hyper+1–9` | Switch workspace |
-| `Cmd+Ctrl+Alt+1–9` | Move window to workspace |
-| `Hyper+f` | Fullscreen |
-| `Hyper+Space` | Toggle float/tile |
-| `Hyper+,` | Cycle layout |
-| `Hyper+r` | Resize mode |
-
-⚠️ After first launch run `aerospace list-monitors` and `aerospace list-apps` to update monitor/bundle-ID assignments in `aerospace.toml`.
-
-**Sketchybar** replaces the macOS menu bar. Config in `~/.config/sketchybar/`. macOS menu bar is hidden (`_HIHideMenuBar=true`) — access app menus via `Ctrl+F2` or `⌘?`.
-
-Bar layout: `[workspaces]` left · `Mon 2 Apr 14:32` center · `[media][kbd][net][cpu][mem][bat][vol][wifi][bt][···]` right.
-
-Post-install: run `sketchybar --query default_menu_items` to find exact alias names for VPN, Docker, and TimelyMeet, then uncomment those lines in `sketchybarrc`.
+Key shortcuts: `⌥⇧ J/K` focus prev/next · `⌥⇧ W/E/R` focus screen · `⌃⌥⇧ W/E/R` throw to screen · `⌥⇧ Space` cycle layout · `⌥⇧ D` fullscreen · `⌥⇧ T` toggle float.
 
 #### Finicky
 

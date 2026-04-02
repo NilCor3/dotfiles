@@ -5,5 +5,5 @@ mise.toml
 .project
 .classpath
 .settings/
-
-CODESTYLE.md
+# .claude/
+# .github/

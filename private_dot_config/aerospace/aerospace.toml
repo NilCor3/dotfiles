@@ -41,7 +41,7 @@ outer.bottom     = 6
 # ⚠️  Run 'aerospace list-monitors' after first launch and replace the
 #     placeholder strings below with your actual monitor names.
 [workspace-to-monitor-force-assignment]
-# P24h-2L (1) = main dev monitor (right), P24h-2L (2) = left browser monitor
+# P24h-2L (1) = main dev monitor (left), P24h-2L (2) = right browser monitor
 # Swap (1)/(2) if workspaces land on the wrong screen
 1 = 'P24h-2L (1)'
 2 = 'P24h-2L (1)'

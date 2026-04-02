@@ -9,6 +9,16 @@
         "installedAt": "2026-03-31T15:38:29.936Z",
         "lastUpdated": "2026-03-31T15:38:29.936Z"
       }
+    ],
+    "gopls-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/joakim.karlsson/.claude/plugins/cache/claude-plugins-official/gopls-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-04-01T07:48:18.575Z",
+        "lastUpdated": "2026-04-01T07:48:18.575Z",
+        "gitCommitSha": "b091cb4179d3b62a6e2a39910461c7ec7165b1ef"
+      }
     ]
   }
 }
