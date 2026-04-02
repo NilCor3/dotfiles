@@ -88,8 +88,8 @@ defaults write eu.exelban.Stats Clock_widget -string ""
 # Window management (AeroSpace + Sketchybar)
 ###############################################################################
 
-# macOS native menu bar — hide it (a-bar replaces it)
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
+# macOS native menu bar — visible (AeroSpace shows workspace in its own menu bar icon)
+defaults write NSGlobalDomain _HIHideMenuBar -bool false
 
 # Drag windows by holding Ctrl+Cmd and dragging any part (not just title bar)
 defaults write NSGlobalDomain NSWindowShouldDragOnGesture -bool true

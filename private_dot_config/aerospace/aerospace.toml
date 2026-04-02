@@ -5,11 +5,12 @@ start-at-login = true
 # Start JankyBorders with AeroSpace (focused window border highlight)
 after-startup-command = [
     'exec-and-forget borders active_color=0xffd79921 inactive_color=0xff504945 width=4.0',
-]
-
-# Notify a-bar on workspace change
-exec-on-workspace-change = ['/bin/bash', '-c',
-    'osascript -e "tell application \"a-bar\" to refresh \"aerospace\"" 2>/dev/null || true'
+    # Workaround: workspace-to-monitor-force-assignment is broken in 0.20.3-Beta.
+    # Seed the workspace-monitor binding by visiting one workspace on each monitor at startup.
+    'focus-monitor 2',
+    'workspace 6',
+    'focus-monitor 1',
+    'workspace 1',
 ]
 
 # Mouse jumps to center of focused monitor when switching workspaces across monitors
@@ -33,23 +34,23 @@ inner.horizontal = 6
 inner.vertical   = 6
 outer.left       = 6
 outer.right      = 6
-outer.top        = 43
+outer.top        = 6
 outer.bottom     = 6
 
 # ── Monitor assignments ────────────────────────────────────────────────────────
 # ⚠️  Run 'aerospace list-monitors' after first launch and replace the
 #     placeholder strings below with your actual monitor names.
 [workspace-to-monitor-force-assignment]
-# P24h-2L (1) = main dev monitor (left), P24h-2L (2) = right browser monitor
-# Swap (1)/(2) if workspaces land on the wrong screen
-1 = 'P24h-2L (1)'
-2 = 'P24h-2L (1)'
-3 = 'P24h-2L (1)'
-4 = 'P24h-2L (1)'
-5 = 'P24h-2L (1)'
-6 = 'P24h-2L (2)'
-7 = 'P24h-2L (2)'
-8 = 'P24h-2L (2)'
+# P24h-2L (1) = main dev monitor, P24h-2L (2) = left browser monitor
+# Parentheses must be regex-escaped (\() so they match literally
+1 = 'P24h-2L \(1\)'
+2 = 'P24h-2L \(1\)'
+3 = 'P24h-2L \(1\)'
+4 = 'P24h-2L \(1\)'
+5 = 'P24h-2L \(1\)'
+6 = 'P24h-2L \(2\)'
+7 = 'P24h-2L \(2\)'
+8 = 'P24h-2L \(2\)'
 9 = 'Built-in Retina Display'
 
 # ── Main keybindings (Hyper = Cmd+Ctrl+Alt+Shift via CapsLock) ────────────────
@@ -58,11 +59,11 @@ outer.bottom     = 6
     cmd-h     = []
     cmd-alt-h = []
 
-    # Focus windows — Hyper + hjkl
-    "cmd-ctrl-alt-shift-h" = 'focus left'
-    "cmd-ctrl-alt-shift-j" = 'focus down'
-    "cmd-ctrl-alt-shift-k" = 'focus up'
-    "cmd-ctrl-alt-shift-l" = 'focus right'
+    # Focus windows — Hyper + hjkl (wraps around at workspace edge)
+    "cmd-ctrl-alt-shift-h" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace left'
+    "cmd-ctrl-alt-shift-j" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace down'
+    "cmd-ctrl-alt-shift-k" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace up'
+    "cmd-ctrl-alt-shift-l" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace right'
 
     # Move windows — Cmd+Ctrl+Alt + hjkl (3 modifiers, no Shift)
     "cmd-ctrl-alt-h" = 'move left'
@@ -71,18 +72,18 @@ outer.bottom     = 6
     "cmd-ctrl-alt-l" = 'move right'
 
     # Switch workspace — Hyper + 1-9
-    # Monitor IDs (from 'aerospace list-monitors', ordered left→right by X position):
-    #   1 = P24h-2L (2)          = left browser monitor
-    #   2 = P24h-2L (1)          = main dev monitor
+    # Monitor IDs (from 'aerospace list-monitors'):
+    #   1 = P24h-2L (2)          = main dev monitor
+    #   2 = P24h-2L (1)          = left browser monitor
     #   3 = Built-in Retina      = laptop
-    "cmd-ctrl-alt-shift-1" = ['focus-monitor 2', 'workspace 1']
-    "cmd-ctrl-alt-shift-2" = ['focus-monitor 2', 'workspace 2']
-    "cmd-ctrl-alt-shift-3" = ['focus-monitor 2', 'workspace 3']
-    "cmd-ctrl-alt-shift-4" = ['focus-monitor 2', 'workspace 4']
-    "cmd-ctrl-alt-shift-5" = ['focus-monitor 2', 'workspace 5']
-    "cmd-ctrl-alt-shift-6" = ['focus-monitor 1', 'workspace 6']
-    "cmd-ctrl-alt-shift-7" = ['focus-monitor 1', 'workspace 7']
-    "cmd-ctrl-alt-shift-8" = ['focus-monitor 1', 'workspace 8']
+    "cmd-ctrl-alt-shift-1" = ['focus-monitor 1', 'workspace 1']
+    "cmd-ctrl-alt-shift-2" = ['focus-monitor 1', 'workspace 2']
+    "cmd-ctrl-alt-shift-3" = ['focus-monitor 1', 'workspace 3']
+    "cmd-ctrl-alt-shift-4" = ['focus-monitor 1', 'workspace 4']
+    "cmd-ctrl-alt-shift-5" = ['focus-monitor 1', 'workspace 5']
+    "cmd-ctrl-alt-shift-6" = ['focus-monitor 2', 'workspace 6']
+    "cmd-ctrl-alt-shift-7" = ['focus-monitor 2', 'workspace 7']
+    "cmd-ctrl-alt-shift-8" = ['focus-monitor 2', 'workspace 8']
     "cmd-ctrl-alt-shift-9" = ['focus-monitor 3', 'workspace 9']
 
     # Move window to workspace — Cmd+Ctrl+Alt + 1-9
@@ -101,6 +102,19 @@ outer.bottom     = 6
 
     # Toggle layout: accordion ↔ horizontal tiles (Hyper+,)
     "cmd-ctrl-alt-shift-comma" = 'layout h_accordion h_tiles'
+
+    # Nested container: join focused window + right neighbor into a vertical sub-container (Hyper+v)
+    # Usage: with A|B|C tiled, focus B → hyper-v → creates A | [B/C] stacked vertically
+    "cmd-ctrl-alt-shift-v" = ['join-with right', 'layout v_tiles']
+
+    # Flatten all nested containers back to a single level (Hyper+f)
+    "cmd-ctrl-alt-shift-f" = 'flatten-workspace-tree'
+
+    # Balance all tiled window sizes equally (Hyper+b)
+    "cmd-ctrl-alt-shift-b" = 'balance-sizes'
+
+    # Switch to previous workspace (Hyper+Tab)
+    "cmd-ctrl-alt-shift-tab" = 'workspace-back-and-forth'
 
     # Resize mode
     "cmd-ctrl-alt-shift-r" = 'mode resize'

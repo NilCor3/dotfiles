@@ -62,7 +62,7 @@ Key configs tracked in chezmoi:
   - Shell aliases (git, go, cargo, etc.) are defined directly in `.zshrc`
 - Editors: `.config/helix/` (config, languages, scripts) and `.config/nvim/` (lazy.nvim config, plugins, bin scripts)
 - Terminal + multiplexer: `.config/wezterm/` (GPU terminal, fonts, window only) and `.config/tmux/` (panes, windows, sessions, layouts, picker)
-- Window manager: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace). Status bar: a-bar (native macOS menu bar app, GUI config, no chezmoi tracking needed)
+- Window manager: `.config/aerospace/aerospace.toml` (i3-style tiling, AeroSpace). AeroSpace shows the current workspace in its native menu bar icon (default, no extra status bar).
 - Git: `.gitconfig`, `.gitignore`, `.gitattributes`, `.config/git/personal.gitconfig`
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`, `.config/pgcli/config`
 - Misc: `.finicky.js`, `.ideavimrc`, `.yarnrc`, `README.md`
@@ -317,14 +317,4 @@ aerospace list-apps       # → confirm IntelliJ bundle ID
 Config: `~/.config/aerospace/aerospace.toml`
 
 ---
-
-## a-bar status bar
-
-a-bar is a native macOS menu bar app that shows AeroSpace workspaces.
-Install: `brew tap Jean-Tinland/a-bar && brew install --cask a-bar`
-
-- Enable the **Spaces (AeroSpace)** widget in a-bar settings
-- Workspace pills update automatically via `exec-on-workspace-change` hook in `aerospace.toml`
-- No Screen Recording permission needed (unlike Sketchybar aliases)
-- GUI configuration only, not tracked in chezmoi
 

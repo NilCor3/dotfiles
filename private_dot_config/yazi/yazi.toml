@@ -1,0 +1,15 @@
+[opener]
+edit = [
+    { run = 'hx "$@"', block = true, desc = "Edit" }
+]
+
+[preview]
+# WezTerm supports the kitty protocol, which is the most robust for images
+image_filter = "lanczos3"
+image_quality = 90
+max_width = 1500
+max_height = 1500
+
+[manager]
+# Ensure yazi doesn't try to use its own internal terminal emulator logic
+shell = ["sh", "-c"]

@@ -202,7 +202,6 @@ brew install --cask \
   copilot-cli@prerelease
 
 brew install \
-  Jean-Tinland/a-bar/a-bar \
   FelixKratz/formulae/borders
 ```
 
@@ -1100,7 +1099,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | App | Purpose | Config |
 |-----|---------|--------|
 | [AeroSpace](https://github.com/nikitabobko/AeroSpace) | i3-style tiling WM | `~/.config/aerospace/aerospace.toml` in chezmoi |
-| [a-bar](https://www.jeantinland.com/toolbox/a-bar/) | Native menu bar with AeroSpace workspace widget | GUI config |
 | [JankyBorders](https://github.com/FelixKratz/JankyBorders) | Focused window border highlight | launched by AeroSpace |
 | [Raycast](https://raycast.com) | Launcher, replaces Spotlight | iCloud sync |
 | [HyperKey](https://hyperkey.app) | Caps Lock → Hyper (⌃⌥⇧⌘) | plist backup |
@@ -1120,7 +1118,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | App | Method | Location |
 |-----|--------|----------|
 | AeroSpace | chezmoi | `~/.config/aerospace/aerospace.toml` |
-| a-bar | GUI config | No backup needed |
 | Finicky | chezmoi | `~/.finicky.js` |
 | Raycast | Export/Import | `~/.config/backups/raycast-settings.rayconfig` |
 | BetterMouse | Export/Import | `~/.config/backups/bettermouse-settings.bms` |
@@ -1159,14 +1156,6 @@ First launch: Accessibility permission required. Run `aerospace list-monitors` a
 **Workspaces:** 1=dev · 2=test · 3=ide · 4=extra · 5=misc (main monitor) | 6=browser · 7=extra · 8=misc (left monitor) | 9=laptop
 
 **App assignments:** WezTerm→1, Chrome/Firefox/Safari→2, IntelliJ→3, Zen→6, Slack/WA/Discord/Spotify→9, unassigned→misc workspace for current monitor
-
-#### a-bar
-
-Native macOS menu bar app with AeroSpace Spaces widget. Shows workspaces per monitor, clickable to switch. No Screen Recording permission needed.
-
-Install: `brew tap Jean-Tinland/a-bar && brew install --cask a-bar`
-
-Enable the **Spaces (AeroSpace)** widget in a-bar settings. Workspace pills update automatically via `exec-on-workspace-change` hook in `aerospace.toml`.
 
 #### Finicky
 
