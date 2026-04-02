@@ -34,7 +34,7 @@ inner.horizontal = 6
 inner.vertical   = 6
 outer.left       = 6
 outer.right      = 6
-outer.top        = 6
+outer.top        = 38
 outer.bottom     = 6
 
 # ── Monitor assignments ────────────────────────────────────────────────────────
@@ -71,16 +71,16 @@ outer.bottom     = 6
     "cmd-ctrl-alt-k" = 'move up'
     "cmd-ctrl-alt-l" = 'move right'
 
-    # Switch workspace — Hyper + 1-9
-    "cmd-ctrl-alt-shift-1" = 'workspace 1'
-    "cmd-ctrl-alt-shift-2" = 'workspace 2'
-    "cmd-ctrl-alt-shift-3" = 'workspace 3'
-    "cmd-ctrl-alt-shift-4" = 'workspace 4'
-    "cmd-ctrl-alt-shift-5" = 'workspace 5'
-    "cmd-ctrl-alt-shift-6" = 'workspace 6'
-    "cmd-ctrl-alt-shift-7" = 'workspace 7'
-    "cmd-ctrl-alt-shift-8" = 'workspace 8'
-    "cmd-ctrl-alt-shift-9" = 'workspace 9'
+    # Switch workspace — Hyper + 1-9 (includes focus-monitor to reliably jump across monitors)
+    "cmd-ctrl-alt-shift-1" = ['focus-monitor P24h-2L (1)', 'workspace 1']
+    "cmd-ctrl-alt-shift-2" = ['focus-monitor P24h-2L (1)', 'workspace 2']
+    "cmd-ctrl-alt-shift-3" = ['focus-monitor P24h-2L (1)', 'workspace 3']
+    "cmd-ctrl-alt-shift-4" = ['focus-monitor P24h-2L (1)', 'workspace 4']
+    "cmd-ctrl-alt-shift-5" = ['focus-monitor P24h-2L (1)', 'workspace 5']
+    "cmd-ctrl-alt-shift-6" = ['focus-monitor P24h-2L (2)', 'workspace 6']
+    "cmd-ctrl-alt-shift-7" = ['focus-monitor P24h-2L (2)', 'workspace 7']
+    "cmd-ctrl-alt-shift-8" = ['focus-monitor P24h-2L (2)', 'workspace 8']
+    "cmd-ctrl-alt-shift-9" = ['focus-monitor Built-in Retina Display', 'workspace 9']
 
     # Move window to workspace — Cmd+Ctrl+Alt + 1-9
     "cmd-ctrl-alt-1" = 'move-node-to-workspace 1'
@@ -96,8 +96,8 @@ outer.bottom     = 6
     # Toggle float / tile
     "cmd-ctrl-alt-shift-space" = 'layout floating tiling'
 
-    # Cycle layout: accordion → horizontal tiles → vertical tiles
-    "cmd-ctrl-alt-shift-comma" = 'layout accordion horizontal vertical'
+    # Toggle layout: accordion ↔ tiling (Hyper+,)
+    "cmd-ctrl-alt-shift-comma" = 'layout accordion tiling'
 
     # Resize mode
     "cmd-ctrl-alt-shift-r" = 'mode resize'
