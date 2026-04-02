@@ -106,7 +106,7 @@ HISTFILE=~/.zsh_history
 ################
 ### ENVIRONMENT
 ################
-export EDITOR='hx'
+export EDITOR='nvim'
 export PATH="$HOME/.local/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 export SSH_AUTH_SOCK=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock
 
@@ -159,9 +159,10 @@ alias jsr='json-server'
 alias pgc='pgcli'
 alias ps='procs'
 
-# --- Open with Helix (vim muscle memory) ---
-alias :e='hx'
-alias :o='hx'
+# --- Editor ---
+alias n='nvim'
+alias :e='$EDITOR'
+alias :o='$EDITOR'
 
 # --- Go ---
 alias gob='go build ./...'
