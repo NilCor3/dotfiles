@@ -188,6 +188,7 @@ brew install --cask \
   wezterm \
   raycast \
   hyperkey \
+  thaw \
   nikitabobko/tap/aerospace \
   zen \
   bitwarden \
@@ -1108,6 +1109,7 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | [BetterMouse](https://better-mouse.com) | Mouse customization | Export/Import |
 | [Keyboard Pilot](https://apps.apple.com/app/keyboard-pilot/id1496719023) | Per-app keyboard routing | GUI only |
 | [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) | Meeting join buttons in menu bar | No config |
+| [Thaw](https://github.com/stonerl/Thaw) | Menu bar item manager (fork of Ice) | plist script |
 | [Docker Desktop](https://docker.com/products/docker-desktop) | Container runtime | Sensible defaults |
 | [Stats](https://github.com/exelban/stats) | System stats in menu bar | GUI only |
 | [PearCleaner](https://itsalin.com/appInfo/?id=pearcleaner) | App uninstaller | No config |
@@ -1124,6 +1126,7 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | Bitwarden | Cloud-synced | Log in → enable SSH Agent |
 | Zen | Firefox account | Sign in → reinstall extensions |
 | HyperKey | plist script | `~/.config/backups/plists/com.knollsoft.Hyperkey.plist` |
+| Thaw | plist script | `~/.config/backups/plists/com.stonerl.Thaw.plist` |
 | Docker Desktop | No backup | Reconfigure defaults |
 | TimeyMeet | No config | Grant Calendar access |
 | Keyboard Pilot | No export | Reconfigure per-app rules manually |

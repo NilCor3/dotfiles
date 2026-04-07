@@ -7,7 +7,7 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 plists=(
-  com.jordanbaird.Ice
+  com.stonerl.Thaw
   com.lwouis.alt-tab-macos
   com.knollsoft.Hyperkey
 )
