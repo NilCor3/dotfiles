@@ -38,7 +38,7 @@ local config = {
 	disable_default_key_bindings = true,
 
 	native_macos_fullscreen_mode = false,
-	window_decorations = "RESIZE",
+	window_decorations = "NONE", -- no native chrome: AeroSpace tiles perfectly with no height overshoot
 	-- Open large enough for Amethyst to tile immediately (avoids float-small-windows threshold)
 	initial_cols = 220,
 	initial_rows = 100,
