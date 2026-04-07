@@ -38,7 +38,11 @@ local config = {
 	disable_default_key_bindings = true,
 
 	native_macos_fullscreen_mode = false,
-	window_decorations = "NONE", -- no native chrome: AeroSpace tiles perfectly with no height overshoot
+	-- RESIZE keeps the native resize border (no title bar text) which is required
+	-- for AeroSpace to tile the window via macOS AX API (AXSize/AXPosition).
+	-- NONE disables that border and breaks tiling. The ~28px height overshoot is
+	-- a separate issue caused by the macOS menu bar, not the decoration mode.
+	window_decorations = "RESIZE",
 	-- Open large enough for Amethyst to tile immediately (avoids float-small-windows threshold)
 	initial_cols = 220,
 	initial_rows = 100,
