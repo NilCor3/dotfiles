@@ -10,7 +10,7 @@
       "login": "NilCor3"
     }
   ],
-  "render_markdown": true,
+  "renderMarkdown": true,
   "theme": "auto",
   "trusted_folders": [
     "/tmp",

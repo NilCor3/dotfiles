@@ -188,7 +188,6 @@ brew install --cask \
   wezterm \
   raycast \
   hyperkey \
-  thaw \
   nikitabobko/tap/aerospace \
   zen \
   bitwarden \
@@ -1109,7 +1108,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | [BetterMouse](https://better-mouse.com) | Mouse customization | Export/Import |
 | [Keyboard Pilot](https://apps.apple.com/app/keyboard-pilot/id1496719023) | Per-app keyboard routing | GUI only |
 | [TimeyMeet](https://apps.apple.com/app/timelyMeet/id1611090219) | Meeting join buttons in menu bar | No config |
-| [Thaw](https://github.com/stonerl/Thaw) | Menu bar item manager (fork of Ice) | plist script |
 | [Docker Desktop](https://docker.com/products/docker-desktop) | Container runtime | Sensible defaults |
 | [Stats](https://github.com/exelban/stats) | System stats in menu bar | GUI only |
 | [PearCleaner](https://itsalin.com/appInfo/?id=pearcleaner) | App uninstaller | No config |
@@ -1126,7 +1124,6 @@ Set in `~/.zshrc`. Enable: Bitwarden → Settings → SSH Agent.
 | Bitwarden | Cloud-synced | Log in → enable SSH Agent |
 | Zen | Firefox account | Sign in → reinstall extensions |
 | HyperKey | plist script | `~/.config/backups/plists/com.knollsoft.Hyperkey.plist` |
-| Thaw | plist script | `~/.config/backups/plists/com.stonerl.Thaw.plist` |
 | Docker Desktop | No backup | Reconfigure defaults |
 | TimeyMeet | No config | Grant Calendar access |
 | Keyboard Pilot | No export | Reconfigure per-app rules manually |
@@ -1141,34 +1138,22 @@ Plist backup/restore:
 
 i3-style tiling WM. Config in `~/.config/aerospace/aerospace.toml`.
 
-First launch: Accessibility permission required.
-
-**Monitor mapping:**
-- `P24h-2L (1)` = main dev monitor → WS 1–5
-- `P24h-2L (2)` = left browser monitor → WS 6–8
-- Built-in Retina = laptop → WS 9
-
-> ⚠️ Monitor name patterns in `workspace-to-monitor-force-assignment` must escape parentheses: `'P24h-2L \(1\)'`
-> ⚠️ AeroSpace numeric IDs (`focus-monitor 1/2/3`) are primary-display-first, not left→right
+First launch: Accessibility permission required. Run `aerospace list-monitors` and `aerospace list-apps` to verify monitor/bundle IDs match the config.
 
 **Modifier (Hyper):** Caps Lock via HyperKey → `⌃⌥⇧⌘`
 
 | Action | Shortcut |
 |--------|----------|
-| Focus window (wraps) | Hyper + H/J/K/L |
+| Focus window | Hyper + H/J/K/L |
 | Move window | Cmd+Ctrl+Alt + H/J/K/L |
 | Switch workspace | Hyper + 1–9 |
-| Move window to workspace | Cmd+Ctrl+Alt + 1–9 |
+| Move to workspace | Cmd+Ctrl+Alt + 1–9 |
+| macOS native fullscreen | Hyper + F |
 | Toggle float/tile | Hyper + Space |
-| Toggle h-accordion ↔ h-tiles | Hyper + , |
-| Nested vertical split | Hyper + V |
-| Flatten nested containers | Hyper + F |
-| Balance window sizes | Hyper + B |
-| Previous workspace | Hyper + Tab |
 | Resize mode | Hyper + R |
 | Reload config | Hyper + C |
 
-**Workspaces:** 1=dev · 2=test · 3=ide · 4=extra · 5=misc (main) | 6=browser · 7=extra · 8=misc (left) | 9=laptop
+**Workspaces:** 1=dev · 2=test · 3=ide · 4=extra · 5=misc (main monitor) | 6=browser · 7=extra · 8=misc (left monitor) | 9=laptop
 
 **App assignments:** WezTerm→1, Chrome/Firefox/Safari→2, IntelliJ→3, Zen→6, Slack/WA/Discord/Spotify→9, unassigned→misc workspace for current monitor
 
