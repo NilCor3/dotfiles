@@ -65,11 +65,11 @@ outer.bottom     = 6
     "cmd-ctrl-alt-shift-k" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace up'
     "cmd-ctrl-alt-shift-l" = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace right'
 
-    # Move windows — Cmd+Ctrl+Alt + hjkl (3 modifiers, no Shift)
-    "cmd-ctrl-alt-h" = 'move left'
-    "cmd-ctrl-alt-j" = 'move down'
-    "cmd-ctrl-alt-k" = 'move up'
-    "cmd-ctrl-alt-l" = 'move right'
+    # Move windows — Hyper + yuio (row above hjkl: same hand, one row up = move)
+    "cmd-ctrl-alt-shift-y" = 'move left'
+    "cmd-ctrl-alt-shift-u" = 'move down'
+    "cmd-ctrl-alt-shift-i" = 'move up'
+    "cmd-ctrl-alt-shift-o" = 'move right'
 
     # Switch workspace — Hyper + 1-9
     # Monitor IDs (from 'aerospace list-monitors'):
@@ -188,6 +188,8 @@ run = 'move-node-to-workspace 9'
 if.window-title-regex-substring = 'Colony'
 run = 'layout floating'
 
-# Catch-all: unassigned apps → misc workspace for the monitor they opened on
+# Catch-all: float all unrecognised apps so they stay on the current workspace.
+# Dialogs, preference panes, and one-off utilities appear where you are.
+# Named apps above this rule are tiled and routed to their workspace.
 [[on-window-detected]]
-run = 'exec-and-forget ~/.config/aerospace/misc-workspace.sh'
+run = 'layout floating'
