@@ -119,6 +119,9 @@ outer.bottom     = 6
     # Resize mode
     "cmd-ctrl-alt-shift-r" = 'mode resize'
 
+    # Move mode (sticky — enter with Hyper+m, exit with esc/enter)
+    "cmd-ctrl-alt-shift-m" = 'mode move'
+
     # Reload config
     "cmd-ctrl-alt-shift-c" = 'reload-config'
 
@@ -128,6 +131,31 @@ outer.bottom     = 6
     l     = 'resize width +50'
     j     = 'resize height +50'
     k     = 'resize height -50'
+    enter = 'mode main'
+    esc   = 'mode main'
+
+# ── Move mode (sticky) ────────────────────────────────────────────────────────
+# Hyper+m to enter. hjkl/yuio move window within workspace (mode persists).
+# 1-9 move window to workspace N and follow it (mode persists for fine-tuning).
+# esc/enter to return to main mode.
+[mode.move.binding]
+    h = 'move left'
+    j = 'move down'
+    k = 'move up'
+    l = 'move right'
+    y = 'move left'
+    u = 'move down'
+    i = 'move up'
+    o = 'move right'
+    "1" = ['move-node-to-workspace 1', 'focus-monitor 1', 'workspace 1']
+    "2" = ['move-node-to-workspace 2', 'focus-monitor 1', 'workspace 2']
+    "3" = ['move-node-to-workspace 3', 'focus-monitor 1', 'workspace 3']
+    "4" = ['move-node-to-workspace 4', 'focus-monitor 1', 'workspace 4']
+    "5" = ['move-node-to-workspace 5', 'focus-monitor 1', 'workspace 5']
+    "6" = ['move-node-to-workspace 6', 'focus-monitor 2', 'workspace 6']
+    "7" = ['move-node-to-workspace 7', 'focus-monitor 2', 'workspace 7']
+    "8" = ['move-node-to-workspace 8', 'focus-monitor 2', 'workspace 8']
+    "9" = ['move-node-to-workspace 9', 'focus-monitor 3', 'workspace 9']
     enter = 'mode main'
     esc   = 'mode main'
 
