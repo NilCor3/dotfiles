@@ -1,5 +1,5 @@
 {
-  "model": "sonnet",
+  "model": "opus[1m]",
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true

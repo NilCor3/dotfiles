@@ -5,5 +5,8 @@ mise.toml
 .project
 .classpath
 .settings/
-# .claude/
-# .github/
+.claude/
+.github/
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md

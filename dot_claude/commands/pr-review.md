@@ -48,6 +48,13 @@ Get the full diff:
 git diff <fork>..<branch>
 ```
 
+For each finding, look up the exact line number:
+```bash
+git diff <fork>..<branch> -- <file> | grep -n "<relevant snippet>"
+# or to get line numbers from the branch HEAD:
+git show <branch>:<file> | grep -n "<relevant snippet>"
+```
+
 ### Step 2: Review the diff
 
 Evaluate across these dimensions:
@@ -81,7 +88,7 @@ For each issue:
 
 #### [label] Short title
 
-**File:** `path/to/file.go:42`  
+**File:** `path/to/file.go:42`  ← exact file path and line number from the diff or `git show`  
 **Severity:** 🔴 Critical / 🟠 High / 🟡 Medium / 🔵 Low / ⚪ Suggestion
 
 ```language
