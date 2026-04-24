@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "postgres-blink": {
+      "type": "local",
+      "command": "docker",
+      "tools": ["*"],
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "POSTGRES_HOST",
+        "-e",
+        "POSTGRES_PORT",
+        "-e",
+        "POSTGRES_USER",
+        "-e",
+        "POSTGRES_PASSWORD",
+        "-e",
+        "POSTGRES_DATABASE",
+        "writenotenow/postgres-mcp:latest"
+      ],
+      "env": {
+        "POSTGRES_HOST": "{{ .postgresBlinkHost }}",
+        "POSTGRES_PORT": "{{ .postgresBlinkPort }}",
+        "POSTGRES_USER": "{{ .postgresBlinkUser }}",
+        "POSTGRES_PASSWORD": "{{ .postgresBlinkPassword }}",
+        "POSTGRES_DATABASE": "{{ .postgresBlinkDatabase }}"
+      }
+    },
+    "duckduckgo": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "duckduckgo-mcp-server"]
+    }
+  }
+}
