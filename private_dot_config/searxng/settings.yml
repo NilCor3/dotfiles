@@ -1,0 +1,24 @@
+use_default_settings: true
+
+server:
+  bind_address: "0.0.0.0"
+  secret_key: "change-this-to-something-secure"
+  port: 8080
+  limiter: false
+
+search:
+  safe_search: 0
+  formats:
+    - html
+    - json
+
+engines:
+  - name: google
+    engine: google
+    shortcut: g
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: d
+  - name: bing
+    engine: bing
+    shortcut: b
