@@ -329,6 +329,17 @@ ntag() {
 # --- Todo ---
 export TODOS_DIR="$NOTES_DIR/todos"
 
+# Shell wrapper for 't use' — allows the binary to set env vars in this shell.
+# 't use work/billing'   → sets $T_CONTEXT
+# 't use --clear'        → unsets $T_CONTEXT
+function t() {
+  if [[ "$1" == "use" ]]; then
+    eval "$(command t use-eval "${@:2}")"
+  else
+    command t "$@"
+  fi
+}
+
 # _todo_find_project — resolve a name to a project file path (or empty)
 _todo_find_project() {
   local name="$1"
