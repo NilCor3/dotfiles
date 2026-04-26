@@ -226,104 +226,25 @@ for line in sys.stdin:
 
 # --- Notes ---
 export NOTES_DIR="$HOME/notes"
-
-n()      { $EDITOR "$NOTES_DIR" }
-ns()     { $EDITOR "$NOTES_DIR/scratch.md" }
-ngl()    { glow "$NOTES_DIR" }
-ng() {
-  local query="${1:?usage: ng <pattern>}"
-  local file
-  file=$(rg "$query" "$NOTES_DIR" -l | fzf --preview "rg --color=always '$query' {}")
-  [[ -n "$file" ]] && $EDITOR "$file"
-}
-
-# Live interactive content search — type to filter, opens $EDITOR at matching line
-ngs() {
-  local result
-  result=$(
-    rg --color=always --line-number --no-heading . "$NOTES_DIR" 2>/dev/null |
-    fzf --disabled --ansi \
-        --bind "change:reload:rg --color=always --line-number --no-heading {q} $NOTES_DIR 2>/dev/null || true" \
-        --delimiter : \
-        --preview 'bat --color=always --highlight-line {2} {1}' \
-        --preview-window 'right:60%:+{2}-5'
-  )
-  [[ -n "$result" ]] && $EDITOR "${result%%:*}:$(echo "$result" | cut -d: -f2)"
-}
-
-nj() {
-  local file="$NOTES_DIR/journal/$(date +%Y-%m-%d).md"
-  if [[ ! -f "$file" ]]; then
-    printf -- "---\ntype: daily\ndate: %s\n---\n\n# %s\n\n" "$(date +%Y-%m-%d)" "$(date +%Y-%m-%d)" > "$file"
+# All notes commands handled by ~/.local/bin/n
+# Legacy short aliases kept for muscle memory
+alias nj='n j'
+alias nmeet='n m'
+alias nissue='n i'
+alias nf='n f'
+alias ns='n s'
+alias ngs='n s'
+alias ng='n g'
+alias nsync='n sync'
+alias ngl='glow "$NOTES_DIR"'
+# n() without args: open notes dir in editor (keep old behavior)
+# Override to fall back to opening dir if no subcommand
+n() {
+  if [[ $# -eq 0 ]]; then
+    $EDITOR "$NOTES_DIR"
+  else
+    command n "$@"
   fi
-  $EDITOR "$file"
-}
-
-nmeet() {
-  local title="${1:-meeting}"
-  local file="$NOTES_DIR/work/meet-$(date +%Y-%m-%d)-${title// /-}.md"
-  if [[ ! -f "$file" ]]; then
-    printf -- "---\ntype: meeting\ntags: []\ndate: %s\n---\n\n# %s\n\n## Attendees\n\n## Notes\n\n## Actions\n" "$(date +%Y-%m-%d)" "$title" > "$file"
-  fi
-  $EDITOR "$file"
-}
-
-nissue() {
-  local id="${1:?usage: nissue NOV-123}"
-  local file="$NOTES_DIR/work/issue-${id}.md"
-  if [[ ! -f "$file" ]]; then
-    printf -- "---\ntype: issue\ntags: []\ndate: %s\nissue: %s\n---\n\n# %s\n\n## Context\n\n## Notes\n" "$(date +%Y-%m-%d)" "$id" "$id" > "$file"
-  fi
-  $EDITOR "$file"
-}
-
-nn() {
-  local note_path="${1:?usage: nn work/my-note.md}"
-  local file="$NOTES_DIR/$note_path"
-  mkdir -p "$(dirname "$file")"
-  if [[ ! -f "$file" ]]; then
-    printf -- "---\ntype: ref\ntags: []\ndate: %s\n---\n\n# %s\n\n" "$(date +%Y-%m-%d)" "$(basename "${note_path%.md}")" > "$file"
-  fi
-  $EDITOR "$file"
-}
-
-nsync() {
-  local prev_dir="$PWD"
-  cd "$NOTES_DIR" || return 1
-  git add -A && git commit -m "sync: $(date '+%Y-%m-%d %H:%M')"
-  # post-commit hook auto-pushes
-  cd "$prev_dir"
-}
-
-# Review current note with local AI — pipe through mods for structure/clarity feedback
-nreview() {
-  local file="${1:-}"
-  if [[ -z "$file" ]]; then
-    file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --preview 'bat --color=always {}')
-  fi
-  [[ -z "$file" ]] && return 1
-  cat "$file" | mods -a ollama -m gemma3:4b "Review this markdown note. Check: 1) Is the structure clear? 2) Are there gaps or incomplete sections? 3) Any grammar/clarity issues? Be concise and specific."
-}
-
-nf() {
-  local q="${1:-}"
-  local file
-  file=$(fd --type f --extension md . "$NOTES_DIR" | fzf --query "$q" --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && $EDITOR "$file"
-}
-
-nft() {
-  local ftype="${1:?usage: nft meeting|issue|daily|ref|system|scratch}"
-  local file
-  file=$(rg "^type: $ftype" "$NOTES_DIR" -l | fzf --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && $EDITOR "$file"
-}
-
-ntag() {
-  local tag="${1:?usage: ntag blink}"
-  local file
-  file=$(rg "tags:.*\b${tag}\b" "$NOTES_DIR" -l | fzf --preview 'bat --color=always {}')
-  [[ -n "$file" ]] && $EDITOR "$file"
 }
 
 # --- Todo ---
@@ -340,297 +261,26 @@ function t() {
   fi
 }
 
-# _todo_find_project — resolve a name to a project file path (or empty)
-_todo_find_project() {
-  local name="$1"
-  [[ -z "$name" ]] && return 1
-  # Support domain/project syntax: work/billing → work/billing.md
-  if [[ "$name" == */* ]]; then
-    local f="$TODOS_DIR/${name%.md}.md"
-    [[ -f "$f" ]] && echo "$f" && return 0
-    return 1
-  fi
-  # Exact domain match returns empty (not a project file)
-  [[ -d "$TODOS_DIR/$name" ]] && return 1
-  # Fuzzy match project file across all domains
-  fd --type f --extension md . "$TODOS_DIR" \
-    | grep -i "/${name}" | head -1
-}
+# All todo commands handled by ~/.local/bin/t
+# Legacy aliases kept for muscle memory
+alias ta='t a'
+alias tl='t l'
+alias td='t d'
+alias tp='t p'
+alias tls='t p'
+alias tw='t l work'
+alias tper='t l personal'
+alias tdev='t l dev'
+alias tn='t new'   # tn work billing → t new work billing
+# tg remains available as: t l --tag <tag>
 
-# _todo_search_args — resolve scope to rg search arguments
-# Sets: _rg_target (file or directory path)
-_todo_resolve_target() {
-  local scope="$1"
-  if [[ -z "$scope" ]]; then
-    echo "$TODOS_DIR"
-    return
-  fi
-  # Exact domain match
-  [[ -d "$TODOS_DIR/$scope" ]] && echo "$TODOS_DIR/$scope" && return
-  # Domain/project syntax
-  if [[ "$scope" == */* ]]; then
-    local f="$TODOS_DIR/${scope%.md}.md"
-    [[ -f "$f" ]] && echo "$f" && return
-  fi
-  # Fuzzy match project file
-  local match
-  match=$(_todo_find_project "$scope")
-  if [[ -n "$match" ]]; then
-    echo "$match"
-    return
-  fi
-  # Fallback: try as directory anyway
-  echo "$TODOS_DIR/$scope"
-}
-
-# ta [project] [text] — add todo to project or inbox
-# ta "text"                    → inbox.md
-# ta billing "Fix thing"       → work/billing.md (fuzzy match)
-# ta work "General task"       → work/general.md
-# ta work/billing "Fix thing"  → work/billing.md (explicit)
-ta() {
-  if [[ $# -eq 0 ]]; then
-    $EDITOR "$TODOS_DIR/inbox.md"
-    return
-  fi
-  if [[ $# -eq 1 ]]; then
-    echo "- [ ] $1" >> "$TODOS_DIR/inbox.md"
-    echo "Added to inbox: $1"
-    return
-  fi
-  local target="$1"; shift
-  local text="$*"
-  # Domain/project explicit syntax: work/billing
-  if [[ "$target" == */* ]]; then
-    local f="$TODOS_DIR/${target%.md}.md"
-    if [[ -f "$f" ]]; then
-      echo "- [ ] $text" >> "$f"
-      echo "Added to $target: $text"
-    else
-      echo "Not found: $target. Use tn to create it."
-      return 1
-    fi
-    return
-  fi
-  # Exact domain → general.md
-  if [[ -d "$TODOS_DIR/$target" ]]; then
-    echo "- [ ] $text" >> "$TODOS_DIR/$target/general.md"
-    echo "Added to $target: $text"
-    return
-  fi
-  # Fuzzy match project file
-  local file
-  file=$(_todo_find_project "$target")
-  if [[ -n "$file" ]]; then
-    echo "- [ ] $text" >> "$file"
-    echo "Added to $(echo "$file" | sed "s|$TODOS_DIR/||"): $text"
-  else
-    echo "No project matching '$target'. Use tn to create one."
-    return 1
-  fi
-}
-
-# tl [scope] — fzf over open todos, optionally scoped
-# tl              → all todos
-# tl work         → work/ todos only
-# tl billing      → just work/billing.md todos
-# tl work/billing → explicit project
-tl() {
-  local search_target
-  search_target=$(_todo_resolve_target "$1")
-
-  local helix_pane=""
-  if [[ -n "$TMUX" ]]; then
-    local sess win
-    sess=$(tmux display-message -p '#{session_name}')
-    win=$(tmux display-message -p '#{window_name}')
-    [[ "$sess" == "notes" && "$win" == "todos" ]] && helix_pane="notes:todos.1"
-  fi
-
-  while true; do
-    local result
-    result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$search_target" \
-      | sed "s|${TODOS_DIR}/||" \
-      | fzf --prompt="todos${1:+ ($1)} > " \
-            --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
-            --delimiter=: \
-            --preview-window=right:50%)
-    [[ -z "$result" ]] && return
-    local file line
-    file="${TODOS_DIR}/$(echo "$result" | cut -d: -f1)"
-    line=$(echo "$result" | cut -d: -f2)
-    if [[ -n "$helix_pane" ]]; then
-      tmux send-keys -t "$helix_pane" Escape
-      tmux send-keys -t "$helix_pane" ":open ${file}:${line}" Enter
-    else
-      $EDITOR "+$line" "$file"
-      return
-    fi
-  done
-}
-
-# td [scope] — mark a todo as done (fzf picker)
-td() {
-  local search_target
-  search_target=$(_todo_resolve_target "$1")
-  local result
-  result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$search_target" \
-    | sed "s|${TODOS_DIR}/||" \
-    | fzf --prompt="mark done${1:+ ($1)} > " \
-          --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
-          --delimiter=: \
-          --preview-window=right:50%)
-  [[ -z "$result" ]] && return
-  local file line
-  file="${TODOS_DIR}/$(echo "$result" | cut -d: -f1)"
-  line=$(echo "$result" | cut -d: -f2)
-  sed -i '' -E "${line}s/- \[ ?\]/- [x]/" "$file"
-  echo "Done: $(sed -n "${line}p" "$file")"
-}
-
-# tp [project] — open a project todo file (fzf if no arg)
-tp() {
-  if [[ -n "$1" ]]; then
-    local file
-    file=$(_todo_find_project "$1")
-    if [[ -n "$file" ]]; then
-      $EDITOR "$file"
-    else
-      echo "No project matching '$1'. Use tn to create one."
-      return 1
-    fi
-  else
-    local file
-    file=$(fd --type f --extension md . "$TODOS_DIR" \
-      | sed "s|$TODOS_DIR/||" \
-      | fzf --prompt="project > " --preview="bat --color=always $TODOS_DIR/{}")
-    [[ -n "$file" ]] && $EDITOR "$TODOS_DIR/$file"
-  fi
-}
-
-# tg <pattern> — filter todos by +project, @context, or #tag
-# tg @work       → all todos under work/ + any with literal "@work"
-# tg +billing    → all +billing project todos
-# tg urgent      → all #urgent tagged todos (legacy behavior)
-tg() {
-  local pattern="${1:?usage: tg @work | tg +billing | tg urgent}"
-  local search_args=()
-  if [[ "$pattern" == @* ]]; then
-    local domain="${pattern#@}"
-    if [[ -d "$TODOS_DIR/$domain" ]]; then
-      # Search domain directory (context = directory)
-      search_args=("$TODOS_DIR/$domain")
-    else
-      search_args=(-F "$pattern" "$TODOS_DIR")
-    fi
-  elif [[ "$pattern" == +* ]]; then
-    search_args=(-F "$pattern" "$TODOS_DIR")
-  else
-    search_args=(-F "#${pattern}" "$TODOS_DIR")
-  fi
-
-  local result
-  result=$(rg --with-filename --line-number --no-heading -e "- \[[ x]\]" "${search_args[@]}" \
-    | sed "s|${TODOS_DIR}/||" \
-    | fzf --prompt="${pattern} > " --delimiter=: \
-          --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
-          --preview-window=right:50%)
-  [[ -z "$result" ]] && return
-  local file line
-  file="$TODOS_DIR/$(echo "$result" | cut -d: -f1)"
-  line=$(echo "$result" | cut -d: -f2)
-  $EDITOR "+$line" "$file"
-}
-
-# Domain shortcuts
-tw()   { tl work; }
-tper() { tl personal; }
-tdev() { tl dev; }
-
-# tls [domain] — list projects with open todo counts
-tls() {
-  local search_dir="${1:+$TODOS_DIR/$1}"
-  search_dir="${search_dir:-$TODOS_DIR}"
-  fd --type f --extension md . "$search_dir" | while read -r f; do
-    local rel="${f#$TODOS_DIR/}"
-    local count=$(rg -c -e "- \[ ?\]" "$f" 2>/dev/null || echo 0)
-    [[ "$count" -gt 0 ]] && printf "  %3d  %s\n" "$count" "$rel"
-  done | sort -t/ -k1,1 -k2,2
-}
-
-# tm [target] — move a todo from inbox to a project
-# tm              → fzf pick todo from inbox, then fzf pick target project
-# tm billing      → fzf pick todo from inbox, move to billing project
-tm() {
-  local source="$TODOS_DIR/inbox.md"
-  [[ ! -f "$source" ]] && echo "inbox.md not found" && return 1
-  # Pick a todo from inbox
-  local result
-  result=$(rg --with-filename --line-number --no-heading -e "- \[ ?\]" "$source" \
-    | sed "s|${TODOS_DIR}/||" \
-    | fzf --prompt="move from inbox > " \
-          --preview="bat --color=always --highlight-line={2} ${TODOS_DIR}/{1}" \
-          --delimiter=: \
-          --preview-window=right:50%)
-  [[ -z "$result" ]] && return
-  local src_line todo_text
-  src_line=$(echo "$result" | cut -d: -f2)
-  todo_text=$(sed -n "${src_line}p" "$source")
-  # Pick target project
-  local target_file
-  if [[ -n "$1" ]]; then
-    target_file=$(_todo_find_project "$1")
-    if [[ -z "$target_file" ]]; then
-      echo "No project matching '$1'."
-      return 1
-    fi
-  else
-    local rel
-    rel=$(fd --type f --extension md . "$TODOS_DIR" \
-      | grep -v "inbox.md" | grep -v "someday.md" \
-      | sed "s|$TODOS_DIR/||" \
-      | fzf --prompt="move to > " --preview="bat --color=always $TODOS_DIR/{}")
-    [[ -z "$rel" ]] && return
-    target_file="$TODOS_DIR/$rel"
-  fi
-  # Move: append to target, delete from source
-  echo "$todo_text" >> "$target_file"
-  sed -i '' "${src_line}d" "$source"
-  echo "Moved to $(echo "$target_file" | sed "s|$TODOS_DIR/||"): $todo_text"
-}
-
-# tn <domain> <project> [description] — create a new project todo file
-# tn work billing "Billing service tasks"
-tn() {
-  local domain="${1:?usage: tn work|personal|dev <project> [description]}"
-  local project="${2:?usage: tn $domain <project> [description]}"
-  shift 2
-  local desc="${*:-$project todos}"
-  local dir="$TODOS_DIR/$domain"
-  local file="$dir/${project}.md"
-  if [[ ! -d "$dir" ]]; then
-    echo "Unknown domain: $domain (expected work, personal, or dev)"
-    return 1
-  fi
-  if [[ -f "$file" ]]; then
-    echo "Project already exists: $domain/$project.md"
-    $EDITOR "$file"
-    return
-  fi
-  cat > "$file" <<EOF
----
-type: todo
-project: $project
-context: $domain
-tags: []
-date: $(date +%Y-%m-%d)
----
-# $desc
-
-EOF
-  echo "Created $domain/$project.md"
-  $EDITOR "$file"
-}
+# Shell completions for t and n
+if command -v t &>/dev/null; then
+  source <(command t completion zsh 2>/dev/null)
+fi
+if command -v n &>/dev/null; then
+  source <(command n completion zsh 2>/dev/null)
+fi
 
 # --- AI ---
 alias ai='mods -a ollama -m gemma3:4b'       # local: fast general
