@@ -8,4 +8,4 @@
 - Explicit over clever, simple solutions preferred
 - Minimal comments in code
 - No unnecessary refactoring
-- No Co-authored-by trailers, no statistics in commits
+- No statistics in commits
