@@ -48,6 +48,23 @@ ngl            # browse with glow TUI
 
 `n` with no args opens `~/notes/` in Helix. With args it delegates to `~/.local/bin/n`.
 
+#### Cross-reference search
+
+`n find` searches notes with project/tag/text filters and fzf selection:
+
+```sh
+n find --project work    # notes linked to a project
+n find --tag api         # notes with a specific tag
+n find kafka             # free-text search across all notes
+```
+
+#### Jira-linked notes
+
+```sh
+nmeet --jira             # meeting note auto-linked to active Jira context
+nissue NOV-515           # issue note pre-filled with Jira ticket metadata
+```
+
 ### Tools
 
 - **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references
@@ -87,6 +104,87 @@ Four statuses:
 
 Tasks have IDs in the format `#<project-num>-<task-num>`.
 
+### Projects
+
+Each todo file under `~/notes/todos/` is a project (except `inbox` and `someday`, which are permanent buckets with no lifecycle).
+
+Projects are tracked in `~/notes/projects.json` and have a lifecycle:
+
+```
+active → paused → done → archived
+```
+
+```sh
+t projects                    # list all projects with colored status
+t project info <name>         # show project details
+t project pause <name>        # pause a project
+t project done <name>         # mark project done
+t project archive <name>      # archive a completed project
+t project activate <name>     # reactivate a paused/done project
+```
+
+### Focus
+
+Set a focused task to scope your work. While focused, `t add` creates subtasks under the focused task.
+
+```sh
+t focus              # pick a task to focus on (fzf picker)
+t unfocus            # clear focus
+t add "subtask"      # added as subtask of focused task
+t add --top "task"   # override focus — add as top-level task
+t sub <id> "text"    # add subtask to a specific task
+t sub done <id> "text"  # add an already-completed subtask
+```
+
+The p10k prompt shows 🎯 when a task is focused.
+
+### Query DSL
+
+A mini query language used across most commands for filtering tasks:
+
+```
+p:project t:tag d:<date s:status j:KEY /text #id !
+```
+
+| Token        | Meaning                              |
+|-------------|--------------------------------------|
+| `p:work`    | filter by project                    |
+| `t:backend` | filter by tag                        |
+| `d:<7d`     | due within 7 days                    |
+| `s:active`  | filter by status                     |
+| `j:NOV-515` | filter by Jira key                   |
+| `/billing`  | free-text search in task content     |
+| `#1-3`      | task by ID                           |
+| `!`         | invert/negate the filter             |
+
+Used in: `done`, `cancel`, `start`, `move`, `archive`, `open`, `edit`, `note`, `link-note`.
+
+When a query matches multiple tasks, fzf opens in multi-select mode for bulk operations.
+
+### Jira integration
+
+Link tasks to Jira tickets for status tracking and quick access.
+
+**Config:** Set `jira.base_url` in `~/.config/tn/config.toml` and export `$JIRA_TOKEN`.
+
+```sh
+t add --jira NOV-515 "Fix billing"   # create task linked to Jira ticket
+t info #1-3                          # show task details including Jira status
+t jira-refresh                       # manually refresh cached Jira data
+```
+
+- `t list` shows Jira status alongside tasks
+- `t open` opens the Jira ticket URL in the browser
+- Cache is VPN-resilient: cached data never expires, only updated on `t jira-refresh`
+
+### Review
+
+```sh
+t review      # surface tasks needing attention
+```
+
+Shows: overdue tasks, stale tasks (no activity), paused projects, and empty projects.
+
 ### Shell aliases
 
 All aliases delegate to the `t` binary:
@@ -101,8 +199,6 @@ tper='t l personal'
 tdev='t l dev'
 tn='t new'         # tn work billing → t new work billing
 ```
-
-Filter by tag: `t l --tag <tag>`
 
 `Alt+t` in Helix (normal or insert, `.md` files only) — inserts `- [ ] ` below cursor.
 
@@ -125,18 +221,52 @@ The context determines which todo file is targeted. Resolution order:
 ### t commands
 
 ```sh
-t a [text]         # add task (to current context or inbox)
-t a -p work <text> # add task to a specific context
-t l [context]      # list open tasks (fzf picker)
-t d                # mark task done (fzf picker)
-t cancel           # mark task cancelled (fzf picker)
-t use <context>    # set $T_CONTEXT for the current shell session
-t use --clear      # unset $T_CONTEXT
-t sync             # manual git commit + push
-t doctor           # check config, directories, git status
-t new <ctx> <name> # create a new todo file
-t p                # open/pick a todo file
-t completion zsh   # generate shell completions
+# Task management
+t a [text]              # add task (to current context or inbox)
+t a -p work <text>      # add task to a specific context
+t a --jira NOV-515 <text>  # add task linked to Jira ticket
+t l [context]           # list open tasks (fzf picker)
+t d [query]             # mark task done (fzf picker, supports query DSL)
+t cancel [query]        # mark task cancelled
+t start [query]         # mark task active (in progress)
+
+# Focus
+t focus                 # pick and focus on a task
+t unfocus               # clear focus
+t sub <id> "text"       # add subtask to a task
+t sub done <id> "text"  # add already-completed subtask
+
+# Query & bulk ops
+t open [query]          # open task (or Jira URL) in browser
+t edit [query]          # edit task text
+t move [query]          # move task to another project
+t archive [query]       # archive completed tasks
+t note [query]          # attach a note to a task
+t link-note [query]     # link an existing note to a task
+t info [query]          # show task details (including Jira status)
+
+# Projects
+t projects              # list projects with colored status
+t project info <name>   # show project details
+t project pause <name>  # pause a project
+t project done <name>   # mark project done
+t project archive <name>  # archive a project
+t project activate <name>  # reactivate a project
+
+# Jira
+t jira-refresh          # refresh cached Jira data
+
+# Review
+t review                # surface overdue/stale tasks, paused/empty projects
+
+# Context & config
+t use <context>         # set $T_CONTEXT for the current shell session
+t use --clear           # unset $T_CONTEXT
+t sync                  # manual git commit + push
+t doctor                # check config, directories, git status
+t new <ctx> <name>      # create a new todo file
+t p                     # open/pick a todo file
+t completion zsh        # generate shell completions
 ```
 
 The `t` shell wrapper (in `.zshrc`) intercepts `t use` to run `eval "$(command t use-eval ...)"` so the env var is set in the current shell.
@@ -144,16 +274,21 @@ The `t` shell wrapper (in `.zshrc`) intercepts `t use` to run `eval "$(command t
 ### n commands
 
 ```sh
-n sync             # manual git commit + push for notes
-n doctor           # check config, directories, git status
-n completion zsh   # generate shell completions
+n sync                   # manual git commit + push for notes
+n doctor                 # check config, directories, git status
+n find --project <name>  # search notes by project
+n find --tag <tag>       # search notes by tag
+n find <text>            # free-text note search with fzf
+n completion zsh         # generate shell completions
 ```
 
 ### Config
 
 `~/.config/tn/config.toml`
 
-Contains the `dir_domains` map that associates directory prefixes with todo contexts (e.g. `~/source/` → `work`).
+- `dir_domains` — maps directory prefixes to todo contexts (e.g. `~/source/` → `work`)
+- `jira.base_url` — Jira instance URL for ticket integration
+- `$JIRA_TOKEN` — environment variable for Jira API authentication
 
 ## Auto-sync
 
@@ -163,17 +298,41 @@ Managed via a launchd plist. Ensures notes and todos are always backed up and av
 
 ## MCP Server
 
-The `tn-mcp` binary (`~/.local/bin/tn-mcp`) exposes 12 tools for AI agent access to the notes and todos system. This lets Copilot, Claude, and other AI assistants read, search, create, and manage notes and tasks programmatically.
+The `tn-mcp` binary (`~/.local/bin/tn-mcp`) exposes 15 tools for AI agent access to the notes and todos system. This lets Copilot, Claude, and other AI assistants read, search, create, and manage notes and tasks programmatically.
+
+Includes project management tools: `list_projects`, `get_project`, `update_project`.
 
 ## Workflows
 
-### Morning Standup
+### Morning Routine
 
-1. `nj` → opens today's journal (creates if needed with date frontmatter)
-2. Write standup notes: what I did, what's next, blockers
-3. `tl` → fzf list of open todos, review priorities
-4. `t use work` → set context for the session
-5. `t l` → see work tasks for today
+1. `t review` → see overdue tasks, stale items, paused projects
+2. `t focus` → pick a task to focus on (🎯 appears in prompt)
+3. Work on focused task — `t add "subtask"` creates subtasks under it
+4. `t unfocus` → clear focus when done
+
+### Jira Workflow
+
+1. `t add --jira NOV-515 "Fix billing"` → task linked to Jira ticket
+2. `t info #1-3` → see task details with live Jira status
+3. `n issue NOV-515` → create a linked issue note for deeper investigation
+4. `t open #1-3` → open Jira ticket in browser
+5. `t jira-refresh` → pull latest Jira status (VPN-resilient cache)
+
+### Project Lifecycle
+
+1. Create a todo file: `t new work billing` → `~/notes/todos/work.md`
+2. `t projects` → auto-detected, shown with colored status
+3. Work on tasks, track progress
+4. `t project done work` → mark project complete
+5. `t project archive work` → archive when no longer relevant
+
+### Query Power
+
+1. `t done p:work t:backend` → multi-select backend tasks in work → bulk complete
+2. `t archive s:done` → archive all done tasks
+3. `t l j:NOV-515` → find tasks linked to a Jira ticket
+4. `t move p:inbox` → move inbox tasks to proper projects
 
 ### Capture During a Meeting
 
@@ -188,6 +347,6 @@ The `tn-mcp` binary (`~/.local/bin/tn-mcp`) exposes 12 tools for AI agent access
 1. `ngs` → live interactive search across all notes (opens at exact line)
 2. `nft meeting` → filter notes by type
 3. `ntag api` → filter by tag
-4. `ng kafka` → ripgrep with fzf preview
+4. `n find --project work` → find notes linked to a project
 5. `t l work` → list work todos
 6. `td` → mark a task done via fzf picker
