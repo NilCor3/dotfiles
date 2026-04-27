@@ -1,5 +1,11 @@
 {
   "mcpServers": {
+    "tn": {
+      "type": "local",
+      "command": "{{ .chezmoi.homeDir }}/.local/bin/tn-mcp",
+      "args": [],
+      "tools": ["*"]
+    },
     "postgres-blink": {
       "type": "local",
       "command": "docker",
