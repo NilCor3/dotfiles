@@ -50,6 +50,7 @@
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
     todo_context            # active t context ($T_CONTEXT or .todo.toml)
+    tn_focus                # currently focused task from tn
     direnv                  # direnv status (https://direnv.net/)
     asdf                    # asdf version manager (https://github.com/asdf-vm/asdf)
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
@@ -1585,7 +1586,25 @@
     prompt_todo_context
   }
 
+  # tn_focus: shows the currently focused task from tn state file.
+  # Reads JSON directly for performance (no subprocess spawn).
+  function prompt_tn_focus() {
+    local state_file="${XDG_DATA_HOME:-$HOME/.local/share}/tn/state.json"
+    [[ -r "$state_file" ]] || return
+    local summary
+    if (( $+commands[jq] )); then
+      summary=$(jq -re '.focus.summary // empty' "$state_file" 2>/dev/null)
+    else
+      # Fallback: extract summary with grep/sed
+      summary=$(grep -o '"summary":"[^"]*"' "$state_file" 2>/dev/null | head -1 | sed 's/"summary":"//;s/"$//')
+    fi
+    [[ -n "$summary" ]] || return
+    p10k segment -f magenta -t "🎯 ${summary}"
+  }
 
+  function instant_prompt_tn_focus() {
+    prompt_tn_focus
+  }
 
   # User-defined prompt segments can be customized the same way as built-in segments.
   # typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=208
