@@ -53,7 +53,7 @@ gotestsum = "latest"
 fx = "latest"
 jnv = "latest"
 marksman = "latest"
-ollama = "latest"
+
 "npm:@biomejs/biome" = "latest"
 "npm:tsx" = "latest"
 "npm:knip" = "latest"

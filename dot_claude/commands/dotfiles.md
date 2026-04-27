@@ -221,31 +221,6 @@ Uses `nvim-treesitter` **main** branch (required for nvim 0.12). New API:
 
 ---
 
-## Helix AI inline completion (`ollama-lsp`)
-
-The inline completion (ghost text) feature in Helix is handled by a custom Rust
-LSP server at `~/dev/ollama-lsp/`. Key facts:
-
-- Binary: `~/.local/bin/ollama-ls` (build with `make install` in the project dir)
-- Config: `~/.config/helix/languages.toml` — uses **absolute path** for `command`
-  because Helix does not inherit the shell's PATH
-- The server uses `raw: true` in the ollama API call to bypass the chat template
-  and pass FIM tokens directly to the model
-- `only-features = ["inline-completion"]` is required in each language's
-  `language-servers` list so Helix sends `didOpen`/`didChange` to the server
-- **Toggle** between ollama and Copilot via navi ("Toggle inline AI") — requires
-  a full `hx` restart (`:lsp-restart` alone is not enough)
-- Logs go to stderr; Helix captures them in `~/.cache/helix/helix.log`
-- Model: `qwen2.5-coder:7b` (default, override with `OLLAMA_MODEL` env var)
-
-When modifying the LSP server:
-1. Edit `~/dev/ollama-lsp/src/`
-2. Run `cargo test` — 60+ unit and integration tests
-3. `make install` to deploy
-4. Restart `hx` to pick up the new binary
-
----
-
 ## tmux keybinding conventions
 
 Leader key is `Ctrl+Space`. All bindings require the prefix first.
@@ -260,7 +235,6 @@ Key patterns to know when modifying tmux config:
 - **Resize mode** (sticky): `r` → h/j/k/l fine, H/J/K/L coarse, Esc to exit
 - **Copy mode**: `e` → vi copy (v select, C-v block, y yank)
 - **Session/picker**: `g` → lazygit popup (project root), `p` → fzf session/layout picker
-- **AI commit**: `G` → tmux popup: generates commit message from staged diff via ollama, offers commit/edit/cancel
 - **Rename**: `R` window, `P` pane (shown in pane border top)
 - **Detach**: `d`
 - **Help**: `?` → popup with all bindings

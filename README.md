@@ -24,7 +24,7 @@ Each area has its own doc with full reference and workflow scenarios:
 | [Dev Tools](docs/dev-tools.md) | Go (air, gotestsum, dlv) · Rust (bacon, nextest) · TypeScript · JSON/YAML |
 | [HTTP, DB & Kafka](docs/http-and-data.md) | xh · httpyac · hurl · prism · pgcli · kcat · kaskade |
 | [Notes & Todos](docs/notes-and-todos.md) | Plain markdown notes · tn CLI (`t`/`n`) · MCP server · auto-sync |
-| [AI Tools](docs/ai.md) | Copilot CLI (agents, skills, MCP) · Claude Code · ollama · mods |
+| [AI Tools](docs/ai.md) | Copilot CLI (agents, skills, MCP) · Claude Code |
 | [macOS](docs/macos.md) | AeroSpace · apps · backup/restore · system utilities |
 
 ---
@@ -41,7 +41,7 @@ Each area has its own doc with full reference and workflow scenarios:
 - 📦 **[mise](https://mise.jdx.dev)** — polyglot runtime manager (Go, Node, Java, Python, Rust tools)
 - 🐚 **Zsh + Zinit** with curated plugins, aliases, and `navi` cheatsheet
 - 📝 **[tn](docs/notes-and-todos.md)** — Go CLI for notes & todos with MCP server and auto-sync
-- 🤖 **[AI tools](docs/ai.md)** — Copilot CLI (10 agents, 3 skills), Claude Code, ollama + mods
+- 🤖 **[AI tools](docs/ai.md)** — Copilot CLI (10 agents, 3 skills), Claude Code
 - 🍎 **macOS defaults** applied via reproducible shell script with drift detection
 
 ---
@@ -117,7 +117,6 @@ brew install \
   wget \
   markdown-oxide \
   usage \
-  mods \
   pgcli \
   postgres-language-server \
   slides \

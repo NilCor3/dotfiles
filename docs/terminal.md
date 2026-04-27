@@ -10,7 +10,7 @@ Key plugins: `fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-
 
 ### bat
 
-**[bat](https://github.com/sharkdp/bat)** (mise) — `cat` with syntax highlighting and line numbers. Used automatically in all fzf previews (`nf`, `nft`, `fhx`, etc.).
+**[bat](https://github.com/sharkdp/bat)** (mise) — `cat` with syntax highlighting and line numbers. Used automatically in all fzf previews (`n find`, `n find --type`, `fhx`, etc.).
 
 ```sh
 bat file.rs                        # syntax-highlighted file view
@@ -69,7 +69,6 @@ Sub-keys **mirror Helix's `Ctrl+w` window mode** exactly:
 | `Ctrl+Space e` | vi copy mode (v=select, C-v=block, y=yank) |
 | `Ctrl+Space p` | Project picker (fzf: layout → workspace → repo → session) |
 | `Ctrl+Space g` | Lazygit popup |
-| `Ctrl+Space G` | AI commit (staged diff → ollama → commit/edit/cancel) |
 | `Ctrl+Space Q` | pgcli popup |
 | `Ctrl+Space d` | Detach |
 | `Ctrl+Space ?` | Show keybind help popup |

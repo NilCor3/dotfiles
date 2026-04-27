@@ -29,21 +29,21 @@ date: 2026-02-27
 ---
 ```
 
-### Shell functions
+### Shell commands
 
 ```sh
 n              # open ~/notes in Helix
-ns             # open scratch.md
-nj             # create/open today's journal (journal/YYYY-MM-DD.md)
-nmeet <title>  # new meeting note with template (work/meet-YYYY-MM-DD-<title>.md)
-nissue <id>    # new issue note (work/issue-NOV-123.md)
-nn <path>      # new note at relative path (creates frontmatter)
-nf [query]     # fuzzy find by filename → open in Helix
-nft <type>     # filter by frontmatter type
-ntag <tag>     # filter by frontmatter tag
-ng <pattern>   # ripgrep → fzf with match preview
-ngs            # live interactive content search (opens at exact line)
-ngl            # browse with glow TUI
+n search       # open scratch.md
+n journal      # create/open today's journal (journal/YYYY-MM-DD.md)
+n meet <title> # new meeting note with template (work/meet-YYYY-MM-DD-<title>.md)
+n issue <id>   # new issue note (work/issue-NOV-123.md)
+n new <path>   # new note at relative path (creates frontmatter)
+n find [query] # fuzzy find by filename → open in Helix
+n find --type <type>  # filter by frontmatter type
+n tag <tag>    # filter by frontmatter tag
+n grep <pattern>  # ripgrep → fzf with match preview
+n search       # live interactive content search (opens at exact line)
+ngl            # browse with glow TUI (alias for glow $NOTES_DIR)
 ```
 
 `n` with no args opens `~/notes/` in Helix. With args it delegates to `~/.local/bin/n`.
@@ -61,14 +61,14 @@ n find kafka             # free-text search across all notes
 #### Jira-linked notes
 
 ```sh
-nmeet --jira             # meeting note auto-linked to active Jira context
-nissue NOV-515           # issue note pre-filled with Jira ticket metadata
+n meet --jira            # meeting note auto-linked to active Jira context
+n issue NOV-515          # issue note pre-filled with Jira ticket metadata
 ```
 
 ### Tools
 
 - **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references
-- **[glow](https://github.com/charmbracelet/glow)** (mise) — TUI markdown browser; `ngl` opens the whole vault
+- **[glow](https://github.com/charmbracelet/glow)** (mise) — TUI markdown browser; `ngl` opens the whole vault (alias for `glow $NOTES_DIR`)
 
 ### Git sync
 
@@ -185,24 +185,13 @@ t review      # surface tasks needing attention
 
 Shows: overdue tasks, stale tasks (no activity), paused projects, and empty projects.
 
-### Shell aliases
+### Shell integration
 
-All aliases delegate to the `t` binary:
-
-```sh
-ta='t a'           # append to inbox (no args → open inbox in Helix)
-tl='t l'           # fzf list → open in Helix at exact line
-td='t d'           # mark done via fzf picker
-tp='t p'           # open a todo file
-tw='t l work'      # list work todos
-tper='t l personal'
-tdev='t l dev'
-tn='t new'         # tn work billing → t new work billing
-```
+All commands use `t` and `n` directly — no shell aliases needed. The only alias is `ngl` (`glow $NOTES_DIR`).
 
 `Alt+t` in Helix (normal or insert, `.md` files only) — inserts `- [ ] ` below cursor.
 
-tmux `notes` layout: todos window (Helix 42.5% + tl 42.5% + shell 15%) + notes window (Helix 80% + shell 20%). `tl` opens files directly in the Helix pane when in the `notes:todos` session.
+tmux `notes` layout: todos window (Helix 42.5% + `t list` 42.5% + shell 15%) + notes window (Helix 80% + shell 20%). `t list` opens files directly in the Helix pane when in the `notes:todos` session.
 
 ## tn CLI
 
@@ -336,17 +325,17 @@ Includes project management tools: `list_projects`, `get_project`, `update_proje
 
 ### Capture During a Meeting
 
-1. `nmeet sprint-planning` → creates `work/meet-YYYY-MM-DD-sprint-planning.md` with template
+1. `n meet sprint-planning` → creates `work/meet-YYYY-MM-DD-sprint-planning.md` with template
 2. Take notes in Helix
 3. Action items: `Alt+t` → inserts `- [ ] ` checkbox below cursor
-4. After meeting: `ta Fix the billing bug` → quick capture to inbox
+4. After meeting: `t add Fix the billing bug` → quick capture to inbox
 5. Or: `t a -p work Fix billing bug` → add directly to work context
 
 ### Search and Organize
 
-1. `ngs` → live interactive search across all notes (opens at exact line)
-2. `nft meeting` → filter notes by type
-3. `ntag api` → filter by tag
+1. `n search` → live interactive search across all notes (opens at exact line)
+2. `n find --type meeting` → filter notes by type
+3. `n tag api` → filter by tag
 4. `n find --project work` → find notes linked to a project
 5. `t l work` → list work todos
-6. `td` → mark a task done via fzf picker
+6. `t done` → mark a task done via fzf picker

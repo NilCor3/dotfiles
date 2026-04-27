@@ -69,11 +69,6 @@ gc --soft HEAD~1
 # Create fixup commit for a specific commit  [gc]
 gc --fixup <commit>
 
-# AI commit: generate message from staged diff (via ollama in tmux popup)
-# keybind: Ctrl+Space G  (tmux leader + G)
-
-# AI commit: run script directly
-~/.config/tmux/scripts/ai-commit.sh
 
 % git, remote
 
@@ -613,102 +608,49 @@ xh <url> | fx '.<field>'
 n
 
 # Open today's journal entry
-nj
+n journal
 
 # New meeting note
-nmeet <title>
+n meet <title>
 
 # New issue note
-nissue <NOV-123>
+n issue <NOV-123>
 
 # New note at path (relative to ~/notes)
-nn <work/my-note.md>
+n new <work/my-note.md>
 
 # Open scratch.md (quick capture)
-ns
+n search
 
 # Ripgrep search → fzf file picker with match preview
-ng <pattern>
+n grep <pattern>
 
 # Live interactive content search (type to filter, opens hx at exact line)
-ngs
+n search
 
 # Browse notes with glow TUI
 ngl
 
 # Fuzzy find notes by filename
-nf <query>
+n find <query>
 
 # Filter notes by frontmatter type (meeting, issue, daily, ref, system)
-nft <type>
+n find --type <type>
 
 # Filter notes by tag
-ntag <tag>
+n tag <tag>
 
 # Render a single markdown file
 glow <file.md>
 
 # Sync notes to git remote (commit + push)
-nsync
-
-# Review current note with local AI (structure, gaps, clarity)
-nreview
-
-# Review a specific note with local AI
-nreview <path/to/note.md>
+n sync
 
 # Lint markdown file for style issues
 rumdl <file.md>
 
 # Lint all markdown files in directory
 rumdl <directory>
-
-% ai, ollama, mods
-
-# Start ollama as background launchd service (auto-starts on login)
-launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist
-
-# Stop ollama background service
-launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist
-
-# Check if ollama service is running
-curl -s http://localhost:11434
-
-# View ollama service logs
-tail -f /tmp/ollama.log
-
-# Start ollama server (foreground / manual)
-ollama serve
-
-# Pull a model
-ollama pull <gemma3:4b>
-
-# List installed models
-ollama list
-
-# Chat with local model interactively
-ollama run <gemma3:4b>
-
-# Pipe to local AI (general)
-<command> | mods -a ollama -m gemma3:4b "<prompt>"
-
-# Pipe to local coder model
-<command> | mods -a ollama -m qwen2.5-coder:7b "<prompt>"
-
-# Explain code
-cat <file> | ai "explain this code"
-
-# Write a commit message from diff
-git diff | ai "write a concise commit message"
-
-# Review code for issues
-cat <file> | aic "review this for bugs and improvements"
-
-# Summarize a file
-cat <file> | m "summarize this in 3 bullet points"
-
-# Ask a question (no pipe)
-ai "what is the difference between INNER JOIN and LEFT JOIN"
 
 % typescript, biome, tsx, knip
 
@@ -847,28 +789,28 @@ python3 ~/hx/copilot_auth.py
 % todos, notes
 
 # Add todo to inbox
-ta <text>
+t add <text>
 
 # Add todo to inbox (open inbox in helix)
-ta
+t add
 
 # Insert todo checkbox below cursor in Helix (markdown files only)
 # keybind: Alt+t in normal mode
 
 # List all open todos (fzf, opens in helix)
-tl
+t list
 
 # Mark a todo as done (fzf picker)
-td
+t done
 
 # Open a todo project file (fzf)
-tp
+t p
 
 # Open a specific todo project file
-tp <project>
+t p <project>
 
 # Filter todos by tag (fzf, opens in helix)
-tg <tag>
+t list --tag <tag>
 
 % httpyac, http
 

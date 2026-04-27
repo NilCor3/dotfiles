@@ -227,15 +227,6 @@ for line in sys.stdin:
 # --- Notes ---
 export NOTES_DIR="$HOME/notes"
 # All notes commands handled by ~/.local/bin/n
-# Legacy short aliases kept for muscle memory
-alias nj='n j'
-alias nmeet='n m'
-alias nissue='n i'
-alias nf='n f'
-alias ns='n s'
-alias ngs='n s'
-alias ng='n g'
-alias nsync='n sync'
 alias ngl='glow "$NOTES_DIR"'
 # n() without args: open notes dir in editor (keep old behavior)
 # Override to fall back to opening dir if no subcommand
@@ -262,17 +253,6 @@ function t() {
 }
 
 # All todo commands handled by ~/.local/bin/t
-# Legacy aliases kept for muscle memory
-alias ta='t a'
-alias tl='t l'
-alias td='t d'
-alias tp='t p'
-alias tls='t p'
-alias tw='t l work'
-alias tper='t l personal'
-alias tdev='t l dev'
-alias tn='t new'   # tn work billing → t new work billing
-# tg remains available as: t l --tag <tag>
 
 # Shell completions for t and n
 if command -v t &>/dev/null; then
@@ -281,11 +261,6 @@ fi
 if command -v n &>/dev/null; then
   source <(command n completion zsh 2>/dev/null)
 fi
-
-# --- AI ---
-alias ai='mods -a ollama -m gemma3:4b'       # local: fast general
-alias aic='mods -a ollama -m qwen2.5-coder:7b' # local: code
-alias m='mods'                                # shorthand for mods (uses default API)
 
 # --- TypeScript ---
 alias bio='biome'

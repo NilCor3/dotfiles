@@ -66,33 +66,6 @@ Claude Code CLI with custom slash commands in `~/.claude/commands/`:
 | `/pr-review` | Review changes on the current branch |
 | `/todos` | Manage todos via the tn task system |
 
-## ollama + mods
-
-**[ollama](https://ollama.com)** (mise) — local LLMs on Apple Silicon via Metal. Runs as a launchd background service.
-
-```sh
-launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist    # start
-launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist  # stop
-curl -s http://localhost:11434                                    # check
-ollama pull gemma3:4b           # ~2.5GB, general purpose
-ollama pull qwen2.5-coder:7b    # ~4.5GB, code tasks
-```
-
-**[mods](https://github.com/charmbracelet/mods)** (brew) — pipe anything through an LLM:
-
-```sh
-ai='mods -a ollama -m gemma3:4b'          # local general
-aic='mods -a ollama -m qwen2.5-coder:7b'  # local coder
-m='mods'                                   # shorthand (default API)
-
-cat file.go | ai "explain this code"
-git diff | ai "write a concise commit message"
-cat file.go | aic "review this for bugs"
-cat file.md | m "summarize in 3 bullet points"
-```
-
-Use `ai`/`aic` for offline/private work; `m` for cloud models when you need higher quality. Pairs with `nreview <path>` for AI-assisted note review.
-
 ## Workflows
 
 ### Use a Copilot Agent for PR Review
@@ -101,14 +74,6 @@ Use `ai`/`aic` for offline/private work; `m` for cloud models when you need high
 2. `/agent` → browse available agents
 3. Select `PR Reviewer` → or just ask "review this PR" (`infer: true` auto-selects it)
 4. Agent fetches diff, analyzes changes, produces structured review with findings and verdict
-
-### AI-Assisted Commit Messages
-
-1. Stage your changes: `gaa`
-2. From tmux: `Ctrl+Space G` → AI commit popup
-3. Reads staged diff → ollama generates commit message
-4. Review → accept / edit / cancel
-5. Alternative: `git diff --staged | ai "write a commit message"` using mods
 
 ### Access Todos via MCP from AI
 
