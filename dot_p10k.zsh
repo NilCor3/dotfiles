@@ -1561,8 +1561,8 @@
   # typeset -g POWERLEVEL9K_TIME_PREFIX='%fat '
 
   # todo_context: shows active t context from $T_CONTEXT or .todo.toml auto-detection.
-  # Manual (t use): shows "📋 work/billing"
-  # Auto (.todo.toml): shows "📋 work/billing •"
+  # Manual (t use): shows " work/billing"
+  # Auto (.todo.toml): shows " work/billing •"
   function prompt_todo_context() {
     local ctx="$T_CONTEXT"
     local auto_dot=""
@@ -1579,7 +1579,7 @@
       done
     fi
     [[ -z "$ctx" ]] && return
-    p10k segment -f 208 -t "📋 ${ctx}${auto_dot}"
+    p10k segment -f 214 -t " ${ctx}${auto_dot}"
   }
 
   function instant_prompt_todo_context() {
@@ -1595,11 +1595,10 @@
     if (( $+commands[jq] )); then
       summary=$(jq -re '.focus.summary // empty' "$state_file" 2>/dev/null)
     else
-      # Fallback: extract summary with grep/sed
       summary=$(grep -o '"summary":"[^"]*"' "$state_file" 2>/dev/null | head -1 | sed 's/"summary":"//;s/"$//')
     fi
     [[ -n "$summary" ]] || return
-    p10k segment -f magenta -t "🎯 ${summary}"
+    p10k segment -f 108 -t " ${summary}"
   }
 
   function instant_prompt_tn_focus() {
