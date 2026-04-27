@@ -46,9 +46,6 @@
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
-    status                  # exit code of the last command
-    command_execution_time  # duration of the last command
-    background_jobs         # presence of background jobs
     todo_context            # active t context ($T_CONTEXT or .todo.toml)
     tn_focus                # currently focused task from tn
     virtualenv              # python virtual environment
@@ -56,9 +53,12 @@
     go_version              # go version
     java_version            # java version
     rust_version            # rustc version
-    time                    # current time
     # =========================[ Line #2 ]=========================
     newline
+    status                  # exit code of the last command
+    command_execution_time  # duration of the last command
+    background_jobs         # presence of background jobs
+    time                    # current time
   )
 
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
