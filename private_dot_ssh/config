@@ -6,3 +6,9 @@ Host github.com
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_rsa
+
+# Deploy key for tn-sync notes repo (passphrase-free, used by launchd agent)
+Host github-notes
+    Hostname github.com
+    IdentityFile ~/.ssh/id_notes
+    IdentitiesOnly yes
