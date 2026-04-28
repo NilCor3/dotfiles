@@ -81,3 +81,16 @@ grep -rn '://[^@\s]\+:[^@\s]\+@' <file>
 - Tools: `.config/mise/config.toml`, `.config/lazygit/config.yml`
 - Copilot CLI: `.copilot/config.json`, `.copilot/agents/`, `.copilot/skills/`, `.copilot/mcp-config.json`
 - Claude: `.claude/settings.json`, `.claude/commands/`
+- Notes/Tasks: `tn` system at `~/dev/tn` — see `docs/notes-and-todos.md`
+
+## tn system (notes + tasks)
+
+The `tn` system manages notes and tasks in `~/notes/`. Everything is a note (tasks, journals, meetings, projects, people) with YAML frontmatter in a flat directory. A daemon (`tn-index`) provides indexing, sync, and MCP tools.
+
+Key binaries at `~/.local/bin/`: `tn-t` (tasks), `tn-n` (notes), `tn-j` (journal), `tn-index` (daemon), `tn-mcp2` (MCP server).
+
+Daemon managed by launchd: `~/Library/LaunchAgents/com.joakim.tn-index.plist` (chezmoi: `private_Library/LaunchAgents/com.joakim.tn-index.plist.tmpl`).
+
+MCP registered in `~/.claude.json` as `tn-v2` (entry point: `~/.local/bin/tn-mcp2`).
+
+Config: `~/.config/tn/config.toml`. See `docs/notes-and-todos.md` for full command reference.
