@@ -309,9 +309,15 @@ Managed via a launchd plist. Ensures notes and todos are always backed up and av
 
 ## MCP Server
 
-The `tn-mcp` binary (`~/.local/bin/tn-mcp`) exposes 15 tools for AI agent access to the notes and todos system. This lets Copilot, Claude, and other AI assistants read, search, create, and manage notes and tasks programmatically.
+The `tn-mcp` binary (`~/.local/bin/tn-mcp`) exposes 16 tools for AI agent access to the notes and todos system. This lets Copilot, Claude, and other AI assistants read, search, create, and manage notes and tasks programmatically.
 
 Includes project management tools: `list_projects`, `get_project`, `update_project`.
+
+New in recent updates:
+- `move_todo` — move a task to a project file or nest it under another task (by Jira key)
+- `list_todos` and `search_todos` accept a `query` / `dsl` param for DSL filtering (e.g. `s:active +backend`, `NOV-550`)
+- `add_todo` accepts a `jira` param to link a task to a Jira issue on creation
+- `get_task_info` fetches Jira description (configurable max length) and recent comments when the task has a Jira key
 
 ## Workflows
 
@@ -325,7 +331,7 @@ Includes project management tools: `list_projects`, `get_project`, `update_proje
 ### Jira Workflow
 
 1. `t add --jira NOV-515 "Fix billing"` → task linked to Jira ticket
-2. `t info #1-3` → see task details with live Jira status
+2. `t info #1-3` → see task details with live Jira status, description, and recent comments (auto-paged)
 3. `n issue NOV-515` → create a linked issue note for deeper investigation
 4. `t open #1-3` → open Jira ticket in browser
 5. `t jira-refresh` → pull latest Jira status (VPN-resilient cache)
