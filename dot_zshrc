@@ -230,10 +230,9 @@ for line in sys.stdin:
 
 # --- Notes ---
 export NOTES_DIR="$HOME/notes"
-# All notes commands handled by ~/.local/bin/n
 alias ngl='glow "$NOTES_DIR"'
-# n() without args: open notes dir in editor (keep old behavior)
-# Override to fall back to opening dir if no subcommand
+
+# n() without args: open notes dir in editor
 n() {
   if [[ $# -eq 0 ]]; then
     $EDITOR "$NOTES_DIR"
@@ -246,8 +245,6 @@ n() {
 export TODOS_DIR="$NOTES_DIR/todos"
 
 # Shell wrapper for 't use' — allows the binary to set env vars in this shell.
-# 't use work/billing'   → sets $T_CONTEXT
-# 't use --clear'        → unsets $T_CONTEXT
 function t() {
   if [[ "$1" == "use" ]]; then
     eval "$(command t use-eval "${@:2}")"
@@ -256,14 +253,33 @@ function t() {
   fi
 }
 
-# All todo commands handled by ~/.local/bin/t
+# --- TN v2 CLIs ---
+# j: journal (tn-j). No args → open today's journal.
+function j() {
+  if [[ $# -eq 0 ]]; then
+    tn-j new
+  else
+    tn-j "$@"
+  fi
+}
 
-# Shell completions for t and n
+# Shell completions (v1)
 if command -v t &>/dev/null; then
   source <(command t completion zsh 2>/dev/null)
 fi
 if command -v n &>/dev/null; then
   source <(command n completion zsh 2>/dev/null)
+fi
+
+# Shell completions (v2)
+if command -v tn-t &>/dev/null; then
+  source <(tn-t completion zsh 2>/dev/null)
+fi
+if command -v tn-n &>/dev/null; then
+  source <(tn-n completion zsh 2>/dev/null)
+fi
+if command -v tn-j &>/dev/null; then
+  source <(tn-j completion zsh 2>/dev/null)
 fi
 
 # --- TypeScript ---
