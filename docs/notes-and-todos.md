@@ -70,6 +70,23 @@ n issue NOV-515          # issue note pre-filled with Jira ticket metadata
 - **[marksman](https://github.com/artempyanykh/marksman)** (mise) — Helix LSP: `[[wiki link]]` completion, go-to-definition, find-references
 - **[glow](https://github.com/charmbracelet/glow)** (mise) — TUI markdown browser; `ngl` opens the whole vault (alias for `glow $NOTES_DIR`)
 
+### MCP Note Tools
+
+The MCP server (`tn-mcp`) exposes 8 note tools for AI agents:
+
+| Tool | Purpose |
+|------|---------|
+| `list_notes` | List notes with frontmatter metadata; recursive mode; type filter |
+| `search_notes` | Text search + frontmatter filters (project, tag, type) |
+| `read_note` | Read full note content |
+| `create_note` | Create note with type (note/meeting/issue/journal), templates, Jira linking |
+| `update_note` | Edit frontmatter fields (title, tags ±add/remove, project, jira) |
+| `append_to_note` | Append content to existing note |
+| `add_journal_entry` | Timestamped journal entry |
+
+`create_note type=meeting` uses the same template as `n meet` (Attendees/Agenda/Actions).
+`create_note type=issue` uses the same template as `n issue` (Summary/Steps/Notes) with Jira auto-detect.
+
 ### Git sync
 
 Handled automatically by the `tn-sync` launchd daemon (see [Auto-sync](#auto-sync)). Manual sync available via `n sync`.
