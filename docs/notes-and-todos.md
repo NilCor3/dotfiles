@@ -93,13 +93,24 @@ Plain GFM checkboxes in `~/notes/todos/`.
 
 ### Format
 
-Four statuses:
+Five statuses:
 
 ```md
-- [ ] Open task          #tag
+- [ ] Open task          +tag
 - [/] Active (in progress)
 - [x] Done
 - [-] Cancelled
+- [ ] Blocked task       (has a `blocked:` metadata line)
+```
+
+Nested tasks use 2-space indentation per level:
+
+```md
+- [ ] NOV-549: Epic title
+  jira: NOV-549
+  - [ ] NOV-550: Child task
+    jira: NOV-550
+    branch: feature/branch
 ```
 
 Tasks have IDs in the format `#<project-num>-<task-num>`.
@@ -140,22 +151,29 @@ The p10k prompt shows 🎯 when a task is focused.
 
 ### Query DSL
 
-A mini query language used across most commands for filtering tasks:
+A mini query language used across most commands for filtering tasks. Filters within a group are AND-ed; groups separated by ` | ` are OR-ed:
 
 ```
 p:project t:tag d:<date s:status j:KEY /text #id !
 ```
 
-| Token        | Meaning                              |
-|-------------|--------------------------------------|
-| `p:work`    | filter by project                    |
-| `t:backend` | filter by tag                        |
-| `d:<7d`     | due within 7 days                    |
-| `s:active`  | filter by status                     |
-| `j:NOV-515` | filter by Jira key                   |
-| `/billing`  | free-text search in task content     |
-| `#1-3`      | task by ID                           |
-| `!`         | invert/negate the filter             |
+| Token                  | Meaning                                      |
+|------------------------|----------------------------------------------|
+| `p:work`               | filter by project                            |
+| `+backend`             | filter by tag                                |
+| `-+backend`            | exclude tag                                  |
+| `d:<7d` / `d:overdue`  | due before date / overdue                    |
+| `s:active`             | filter by status (open/active/done/blocked)  |
+| `j:NOV-515`            | filter by Jira key                           |
+| `j:NOV-550..556`       | filter by Jira key range                     |
+| `NOV-550`              | bare Jira key (auto-resolved)                |
+| `/billing`             | free-text search in task content             |
+| `#1-3`                 | task by ID                                   |
+| `has:jira`             | tasks with a Jira link                       |
+| `has:children`         | tasks with nested children                   |
+| `depth:0`              | root-level tasks only                        |
+| `-p:work`              | negate any filter with leading `-`           |
+| `p:work \| p:personal` | OR: tasks in work or personal                |
 
 Used in: `done`, `cancel`, `start`, `move`, `archive`, `open`, `edit`, `note`, `link-note`.
 
@@ -214,7 +232,8 @@ The context determines which todo file is targeted. Resolution order:
 t a [text]              # add task (to current context or inbox)
 t a -p work <text>      # add task to a specific context
 t a --jira NOV-515 <text>  # add task linked to Jira ticket
-t l [context]           # list open tasks (fzf picker)
+t l [context]           # list open tasks; children indented under parents
+t l [context] --flat    # flat list without nesting indentation
 t d [query]             # mark task done (fzf picker, supports query DSL)
 t cancel [query]        # mark task cancelled
 t start [query]         # mark task active (in progress)
@@ -228,7 +247,10 @@ t sub done <id> "text"  # add already-completed subtask
 # Query & bulk ops
 t open [query]          # open task (or Jira URL) in browser
 t edit [query]          # edit task text
-t move [query]          # move task to another project
+t move <src> <dest>     # move task to project, or nest under another task
+t move NOV-550 NOV-549  # nest task as child of epic
+t move NOV-550..556 NOV-549  # bulk-nest Jira range under epic
+t move NOV-550 --top    # promote nested task to top level
 t archive [query]       # archive completed tasks
 t note [query]          # attach a note to a task
 t link-note [query]     # link an existing note to a task
