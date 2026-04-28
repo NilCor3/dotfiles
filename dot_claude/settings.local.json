@@ -39,7 +39,16 @@
       "Bash(echo $PATH)",
       "Bash(rustfmt --version)",
       "Bash(find ~/.claude -name dotfiles* -o -name *.md)",
-      "Bash(grep -n \"^---$\\\\|^## \" ~/.local/share/chezmoi/README.md)"
+      "Bash(grep -n \"^---$\\\\|^## \" ~/.local/share/chezmoi/README.md)",
+      "mcp__tn__list_todos",
+      "mcp__tn__search_todos",
+      "mcp__tn__get_task_info",
+      "mcp__tn__get_context",
+      "mcp__tn__list_notes",
+      "mcp__tn__search_notes",
+      "mcp__tn__read_note",
+      "mcp__tn__list_projects",
+      "mcp__tn__get_project"
     ]
   }
 }
